@@ -22,25 +22,33 @@
 
 int16_t yawError, yawPreError;
 double yawP, yawI, yawD;
-double yawKp = 0.65, yawKd = 0, yawKi = 0;
+double yawKp = 0.65;
+double yawKd = 0;
+double yawKi = 0;
 double yawPID;
 #define MAX_YAW_PID 100
 #define MIN_YAW_PID -MAX_YAW_PID
 
 int16_t roRError, roRPreError;
 double roRP, roRI, roRD;
-double roRKp, roRKd, roRKi;
-int16_t roRPID;
+double roRKp;
+double roRKd;
+double roRKi;
+double roRPID;
 
 int16_t roLError, roLPreError;
 double roLP, roLI, roLD;
-double roLKp, roLKd, roLKi;
-int16_t roLPID;
+double roLKp;
+double roLKd;
+double roLKi;
+double roLPID;
 
-int16_t pitError, pitPreError;
+double pitError, pitPreError;
 double pitP, pitI, pitD;
-double pitKp, pitKd, pitKi;
-int16_t pitPID;
+double pitKp = 1.0;
+double pitKd;
+double pitKi;
+double pitPID;
 
 void controlMotor1(int _speed);
 void controlMotor2(int _speed);

@@ -129,7 +129,7 @@ int main(void)
 	  controlMotor3(brainRxPacket[motor3Speed], brainRxPacket[motor3Dir]);
 	  controlMotor4(brainRxPacket[motor4Speed], brainRxPacket[motor4Dir]);
 	  tracking++;
-	  HAL_Delay(500);
+	  HAL_Delay(0);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

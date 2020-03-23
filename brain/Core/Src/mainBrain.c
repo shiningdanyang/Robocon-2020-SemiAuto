@@ -149,10 +149,6 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-//	  compassRequest();
-//	  compassGetData();
-//	  PIDyaw(compassData, 900);
-
 //	  legControl(legInitShoot);
 //	  rigtArmControl(rigtArmSetBall);
 //	  HAL_Delay(3000);
@@ -168,23 +164,26 @@ int main(void)
 
 
 
-	  compassRequest();
-	  compassGetData();
-	  HAL_GPIO_WritePin(GPIOB,GPIO_PIN_0,GPIO_PIN_SET);
-	  PIDyaw(300, compassData);
-	  controlMotor1(yawPID);
-	  controlMotor2(yawPID);
-	  controlMotor3(yawPID);
-	  controlMotor4(yawPID);
-	  spinalCordTxPacket[8] = compassData;
-	  tracking++;
-//	  HAL_Delay(500);
-//	  spinalCordTxPacket[0] = 'a';
-//	  spinalCordTxPacket[1] = 'b';
-//	  spinalCordTxPacket[2] = 'c';
-//	  HAL_UART_Transmit_IT(&huart6, spinalCordTxPacket, 3);
+//	  compassRequest();
+//	  compassGetData();
+//	  HAL_GPIO_WritePin(GPIOB,GPIO_PIN_0,GPIO_PIN_SET);
+//	  PIDyaw(300, compassData);
+//	  controlMotor1(yawPID);
+//	  controlMotor2(yawPID);
+//	  controlMotor3(yawPID);
+//	  controlMotor4(yawPID);
+//	  spinalCordTxPacket[8] = compassData;
 //	  tracking++;
-//	  HAL_Delay(500);
+
+
+
+
+	  readADC();
+	  PIDpit(0, 2000);
+	  PIDroR(0, 0);
+	  PIDyaw(0, 0);
+	  roL_pit_yaw_mixSpeed();
+	  tracking++;
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
