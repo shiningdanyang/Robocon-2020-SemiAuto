@@ -50,7 +50,6 @@ double PIDyaw(int _yawValue, int _yawSetpoint)
 #define _CCW 0
 
 
-
 // float motor1Speed;
 // float motor2Speed;
 // float motor3Speed;
