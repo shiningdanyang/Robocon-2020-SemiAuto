@@ -178,12 +178,47 @@ int main(void)
 
 
 
-	  readADC();
-	  PIDpit(0, 2000);
-	  PIDroR(0, 0);
-	  PIDyaw(0, 0);
-	  roL_pit_yaw_mixSpeed();
-	  tracking++;
+//	  readADC();
+//	  PIDpit(0, 2000);
+//	  PIDroR(0, 0);
+//	  PIDyaw(0, 0);
+//	  roL_pit_yaw_mixSpeed();
+//	  tracking++;
+
+
+
+	  for(int i = 0; i > -255; --i)
+	  {
+		  controlMotor1(i);
+		  controlMotor2(i);
+		  controlMotor3(i);
+		  controlMotor4(i);
+		  HAL_Delay(20);
+	  }
+	  for(int i = -255; i < 0; ++i)
+	  {
+		  controlMotor1(i);
+		  controlMotor2(i);
+		  controlMotor3(i);
+		  controlMotor4(i);
+		  HAL_Delay(20);
+	  }
+	  for(int i = 0; i < 255; ++i)
+	  {
+		  controlMotor1(i);
+		  controlMotor2(i);
+		  controlMotor3(i);
+		  controlMotor4(i);
+		  HAL_Delay(20);
+	  }
+	  for(int i = 255; i > 0; --i)
+	  {
+		  controlMotor1(i);
+		  controlMotor2(i);
+		  controlMotor3(i);
+		  controlMotor4(i);
+		  HAL_Delay(20);
+	  }
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

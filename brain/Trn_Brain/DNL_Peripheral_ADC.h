@@ -4,6 +4,12 @@
 #define roll hadc1
 #define pitch hadc3
 
+int16_t leftRawDistance;
+int16_t rigtRawDistance;
+int16_t pitchRawDistance;
+double a_Linear = 0.09117;
+double b_Linear = 10.04528;
+
 void readADC(void);
 
 uint16_t rollRawValue[2];
@@ -20,6 +26,9 @@ void readADC()
 {
 	HAL_ADC_Start_DMA(&roll, (uint32_t*)rollRawValue, 2);
 	HAL_ADC_Start_DMA(&pitch, (uint32_t*)pitchRawValue, 1);
+	rigtRawDistance = a_Linear *rollRawValue[rigt] + b_Linear;
+	leftRawDistance = a_Linear *rollRawValue[left] + b_Linear;
+	pitchRawDistance = a_Linear *pitchRawValue[0] + b_Linear;
 }
 
 void filterADC()
