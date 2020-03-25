@@ -7,7 +7,7 @@
 int16_t leftRawDistance;
 int16_t rigtRawDistance;
 int16_t pitchRawDistance;
-double a_Linear = 0.09107;
+double a_Linear = 0.09007;
 double b_Linear = 10.04528;
 
 void readADC(void);
