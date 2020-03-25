@@ -40,11 +40,11 @@ double roRPID;
 
 int16_t roLError, roLPreError;
 double roLP, roLI, roLD;
-double roLKp = 0.65;
+double roLKp = 5;
 double roLKd;
 double roLKi;
 double roLPID;
-#define MAX_ROL_PID 100
+#define MAX_ROL_PID 50
 #define MIN_ROL_PID -MAX_ROL_PID
 
 double pitError, pitPreError;
