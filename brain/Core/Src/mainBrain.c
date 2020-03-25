@@ -149,6 +149,7 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+/////////////test shoot/////////////////////////////////////////////
 //	  legControl(legInitShoot);
 //	  rigtArmControl(rigtArmSetBall);
 //	  HAL_Delay(3000);
@@ -161,9 +162,9 @@ int main(void)
 //	  legControl(legEnd);
 //	  HAL_Delay(5000);
 //	  HAL_Delay(500);
+///////////////////////////////////////////////////////////////////////
 
-
-
+//////////////////////test xoay la bàn////////////////////////////////
 //	  compassRequest();
 //	  compassGetData();
 //	  HAL_GPIO_WritePin(GPIOB,GPIO_PIN_0,GPIO_PIN_SET);
@@ -174,51 +175,53 @@ int main(void)
 //	  controlMotor4(yawPID);
 //	  spinalCordTxPacket[8] = compassData;
 //	  tracking++;
+//////////////////////////////////////////////////////////////////////
 
 
+///////////////PID left////////////////////////////////
+	  readADC();
+	  PIDpit(0, 0);
+	  PIDroL(leftRawDistance, 200);
+//	  PIDroL(_roLValue, _roLSetpoint)
+	  PIDyaw(0, 0);
+	  roL_pit_yaw_mixSpeed();
+	  tracking++;
+//////////////////////////////////////////////////
 
-
-//	  readADC();
-//	  PIDpit(0, 2000);
-//	  PIDroR(0, 0);
-//	  PIDyaw(0, 0);
-//	  roL_pit_yaw_mixSpeed();
-//	  tracking++;
-
-
-
-	  for(int i = 0; i > -255; --i)
-	  {
-		  controlMotor1(i);
-		  controlMotor2(i);
-		  controlMotor3(i);
-		  controlMotor4(i);
-		  HAL_Delay(20);
-	  }
-	  for(int i = -255; i < 0; ++i)
-	  {
-		  controlMotor1(i);
-		  controlMotor2(i);
-		  controlMotor3(i);
-		  controlMotor4(i);
-		  HAL_Delay(20);
-	  }
-	  for(int i = 0; i < 255; ++i)
-	  {
-		  controlMotor1(i);
-		  controlMotor2(i);
-		  controlMotor3(i);
-		  controlMotor4(i);
-		  HAL_Delay(20);
-	  }
-	  for(int i = 255; i > 0; --i)
-	  {
-		  controlMotor1(i);
-		  controlMotor2(i);
-		  controlMotor3(i);
-		  controlMotor4(i);
-		  HAL_Delay(20);
-	  }
+//////////test PWM//////////////////////////////////////////////////////////
+//	  for(int i = 0; i > -255; --i)
+//	  {
+//		  controlMotor1(i);
+//		  controlMotor2(i);
+//		  controlMotor3(i);
+//		  controlMotor4(i);
+//		  HAL_Delay(20);
+//	  }
+//	  for(int i = -255; i < 0; ++i)
+//	  {
+//		  controlMotor1(i);
+//		  controlMotor2(i);
+//		  controlMotor3(i);
+//		  controlMotor4(i);
+//		  HAL_Delay(20);
+//	  }
+//	  for(int i = 0; i < 255; ++i)
+//	  {
+//		  controlMotor1(i);
+//		  controlMotor2(i);
+//		  controlMotor3(i);
+//		  controlMotor4(i);
+//		  HAL_Delay(20);
+//	  }
+//	  for(int i = 255; i > 0; --i)
+//	  {
+//		  controlMotor1(i);
+//		  controlMotor2(i);
+//		  controlMotor3(i);
+//		  controlMotor4(i);
+//		  HAL_Delay(20);
+//	  }
+	  /////////////////////////////////////////////////////////////////////////
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

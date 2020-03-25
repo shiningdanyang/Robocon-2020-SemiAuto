@@ -35,6 +35,8 @@ double roRKp;
 double roRKd;
 double roRKi;
 double roRPID;
+#define MAX_ROR_PID 100
+#define MIN_ROR_PID -MAX_ROR_PID
 
 int16_t roLError, roLPreError;
 double roLP, roLI, roLD;
@@ -42,6 +44,8 @@ double roLKp;
 double roLKd;
 double roLKi;
 double roLPID;
+#define MAX_ROL_PID 100
+#define MIN_ROL_PID -MAX_ROL_PID
 
 double pitError, pitPreError;
 double pitP, pitI, pitD;
@@ -49,6 +53,8 @@ double pitKp = 1.0;
 double pitKd;
 double pitKi;
 double pitPID;
+#define MAX_PIT_PID 100
+#define MIN_PIT_PID -MAX_PIT_PID
 
 void controlMotor1(int _speed);
 void controlMotor2(int _speed);
@@ -63,6 +69,8 @@ int trackingControlMotor1;
 int trackingControlMotor2;
 int trackingControlMotor3;
 int trackingControlMotor4;
+
+#define BRAKE_SPEED 1
 
 void controlMotor1(int _speed)
 {
@@ -155,6 +163,14 @@ double PIDroR(int _roRValue, int _roRSetpoint)
 	roRD = roRError - roRPreError;
 	roRI = roRError + roRI;
 	roRPID = roRKp*roRP + roRKd*roRD + roRKi*roRI;
+	if(roRPID > MAX_ROR_PID)
+	{
+		roRPID = MAX_ROR_PID;
+	}
+	if(roRPID < MIN_ROR_PID)
+	{
+		roRPID = MIN_ROR_PID;
+	}
 	roRPreError = roRError;
 	return roRPID;
 }
@@ -166,6 +182,14 @@ double PIDroL(int _roLValue, int _roLSetpoint)
 	roLD = roLError - roLPreError;
 	roLI = roLError + roLI;
 	roLPID = roLKp*roLP + roLKd*roLD + roLKi*roLI;
+	if(roLPID > MAX_ROL_PID)
+	{
+		roLPID = MAX_ROL_PID;
+	}
+	if(roLPID < MIN_ROL_PID)
+	{
+		roLPID = MIN_ROL_PID;
+	}
 	roLPreError = roLError;
 	return roLPID;
 }
@@ -177,6 +201,14 @@ double PIDpit(int _pitValue, int _pitSetpoint)
 	pitD = pitError - pitPreError;
 	pitI = pitError + pitI;
 	pitPID = pitKp*pitP + pitKd*pitD + pitKi*pitI;
+	if(pitPID > MAX_PIT_PID)
+	{
+		pitPID = MAX_PIT_PID;
+	}
+	if(pitPID < MIN_PIT_PID)
+	{
+		pitPID = MIN_PIT_PID;
+	}
 	pitPreError = pitError;
 	return pitPID;
 }
@@ -229,6 +261,14 @@ int constantMoving(int _speed, double _dir_deg)
 	controlMotor3(  _speed *sin(-deg2Rad(_dir_deg) + M_PI/4) - 0);
 	controlMotor4(  _speed *cos(-deg2Rad(_dir_deg) + M_PI/4) + 0);
 	return 1;
+}
+
+void brake(void)
+{
+	controlMotor1(BRAKE_SPEED);
+	controlMotor2(-BRAKE_SPEED);
+	controlMotor3(BRAKE_SPEED);
+	controlMotor4(-BRAKE_SPEED);
 }
 
 // int _motor1Speed = speedPID *sin(desireAngle + 45) + 0;

@@ -7,10 +7,11 @@
 int16_t leftRawDistance;
 int16_t rigtRawDistance;
 int16_t pitchRawDistance;
-double a_Linear = 0.09117;
+double a_Linear = 0.09107;
 double b_Linear = 10.04528;
 
 void readADC(void);
+void filterADC(void);
 
 uint16_t rollRawValue[2];
 uint16_t pitchRawValue[1];
@@ -22,7 +23,7 @@ uint16_t _pitchFilterWindow[10] = {0,0,0,0,0,0,0,0,0,0};
 uint16_t _pitchFinalFilter;
 
 
-void readADC()
+void readADC(void)
 {
 	HAL_ADC_Start_DMA(&roll, (uint32_t*)rollRawValue, 2);
 	HAL_ADC_Start_DMA(&pitch, (uint32_t*)pitchRawValue, 1);
@@ -31,7 +32,7 @@ void readADC()
 	pitchRawDistance = a_Linear *pitchRawValue[0] + b_Linear;
 }
 
-void filterADC()
+void filterADC(void)
 {
 	_rollLeftFilterWindow[0] = rollRawValue[left];
 	_rollRigtFilterWindow[0] = rollRawValue[rigt];
