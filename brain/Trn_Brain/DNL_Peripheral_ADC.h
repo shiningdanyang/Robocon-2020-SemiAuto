@@ -27,8 +27,8 @@ void readADC(void)
 {
 	HAL_ADC_Start_DMA(&roll, (uint32_t*)rollRawValue, 2);
 	HAL_ADC_Start_DMA(&pitch, (uint32_t*)pitchRawValue, 1);
-	rigtRawDistance = a_Linear *rollRawValue[rigt] + b_Linear;
-	leftRawDistance = a_Linear *rollRawValue[left] + b_Linear;
+	leftRawDistance = a_Linear *rollRawValue[rigt] + b_Linear;
+	rigtRawDistance = a_Linear *rollRawValue[left] + b_Linear;
 	pitchRawDistance = a_Linear *pitchRawValue[0] + b_Linear;
 }
 

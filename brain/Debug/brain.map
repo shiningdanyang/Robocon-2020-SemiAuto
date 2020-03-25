@@ -144,7 +144,6 @@ _rollRigtFinalFilter
                     0x2               Core/Src/mainBrain.o
 spinalCordRxPacket  0x9               Core/Src/mainBrain.o
 trackingLeftArm     0x4               Core/Src/mainBrain.o
-roLKp               0x8               Core/Src/mainBrain.o
 pitKi               0x8               Core/Src/mainBrain.o
 htim12              0x40              Core/Src/mainBrain.o
 spinalCordRxCplt    0x1               Core/Src/mainBrain.o
@@ -6007,7 +6006,7 @@ LOAD d:/st/stm32cubeide_1.1.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.exte
                 0x000000000800e428                . = ALIGN (0x4)
                 0x000000000800e428                _sidata = LOADADDR (.data)
 
-.data           0x0000000024000000       0xb0 load address 0x000000000800e428
+.data           0x0000000024000000       0xb8 load address 0x000000000800e428
                 0x0000000024000000                . = ALIGN (0x4)
                 0x0000000024000000                _sdata = .
  *(.data)
@@ -6028,127 +6027,128 @@ LOAD d:/st/stm32cubeide_1.1.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.exte
                 0x0000000024000020                b_Linear
  .data.yawKp    0x0000000024000028        0x8 Core/Src/mainBrain.o
                 0x0000000024000028                yawKp
- .data.pitKp    0x0000000024000030        0x8 Core/Src/mainBrain.o
-                0x0000000024000030                pitKp
+ .data.roLKp    0x0000000024000030        0x8 Core/Src/mainBrain.o
+                0x0000000024000030                roLKp
+ .data.pitKp    0x0000000024000038        0x8 Core/Src/mainBrain.o
+                0x0000000024000038                pitKp
  .data.SystemCoreClock
-                0x0000000024000038        0x4 Core/Src/system_stm32h7xx.o
-                0x0000000024000038                SystemCoreClock
+                0x0000000024000040        0x4 Core/Src/system_stm32h7xx.o
+                0x0000000024000040                SystemCoreClock
  .data.SystemD2Clock
-                0x000000002400003c        0x4 Core/Src/system_stm32h7xx.o
-                0x000000002400003c                SystemD2Clock
+                0x0000000024000044        0x4 Core/Src/system_stm32h7xx.o
+                0x0000000024000044                SystemD2Clock
  .data.uwTickPrio
-                0x0000000024000040        0x4 Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal.o
-                0x0000000024000040                uwTickPrio
+                0x0000000024000048        0x4 Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal.o
+                0x0000000024000048                uwTickPrio
  .data.uwTickFreq
-                0x0000000024000044        0x1 Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal.o
-                0x0000000024000044                uwTickFreq
- *fill*         0x0000000024000045        0x3 
+                0x000000002400004c        0x1 Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal.o
+                0x000000002400004c                uwTickFreq
+ *fill*         0x000000002400004d        0x3 
  .data._impure_ptr
-                0x0000000024000048        0x4 d:/st/stm32cubeide_1.1.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.0.0.201904181610/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv5/hard\libc_nano.a(lib_a-impure.o)
-                0x0000000024000048                _impure_ptr
+                0x0000000024000050        0x4 d:/st/stm32cubeide_1.1.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.0.0.201904181610/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv5/hard\libc_nano.a(lib_a-impure.o)
+                0x0000000024000050                _impure_ptr
  .data.impure_data
-                0x000000002400004c       0x60 d:/st/stm32cubeide_1.1.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.0.0.201904181610/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv5/hard\libc_nano.a(lib_a-impure.o)
+                0x0000000024000054       0x60 d:/st/stm32cubeide_1.1.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.0.0.201904181610/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv5/hard\libc_nano.a(lib_a-impure.o)
  .data.__fdlib_version
-                0x00000000240000ac        0x1 d:/st/stm32cubeide_1.1.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.0.0.201904181610/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv5/hard\libm.a(lib_a-s_lib_ver.o)
-                0x00000000240000ac                __fdlib_version
-                0x00000000240000b0                . = ALIGN (0x4)
- *fill*         0x00000000240000ad        0x3 
-                0x00000000240000b0                _edata = .
+                0x00000000240000b4        0x1 d:/st/stm32cubeide_1.1.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.0.0.201904181610/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv5/hard\libm.a(lib_a-s_lib_ver.o)
+                0x00000000240000b4                __fdlib_version
+                0x00000000240000b8                . = ALIGN (0x4)
+ *fill*         0x00000000240000b5        0x3 
+                0x00000000240000b8                _edata = .
 
-.igot.plt       0x00000000240000b0        0x0 load address 0x000000000800e4d8
- .igot.plt      0x00000000240000b0        0x0 d:/st/stm32cubeide_1.1.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.0.0.201904181610/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/thumb/v7e-m/fpv5/hard/crtbegin.o
-                0x00000000240000b0                . = ALIGN (0x4)
+.igot.plt       0x00000000240000b8        0x0 load address 0x000000000800e4e0
+ .igot.plt      0x00000000240000b8        0x0 d:/st/stm32cubeide_1.1.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.0.0.201904181610/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/thumb/v7e-m/fpv5/hard/crtbegin.o
+                0x00000000240000b8                . = ALIGN (0x4)
 
-.bss            0x00000000240000b0      0x6a4 load address 0x000000000800e4d8
-                0x00000000240000b0                _sbss = .
-                0x00000000240000b0                __bss_start__ = _sbss
+.bss            0x00000000240000b8      0x69c load address 0x000000000800e4e0
+                0x00000000240000b8                _sbss = .
+                0x00000000240000b8                __bss_start__ = _sbss
  *(.bss)
- .bss           0x00000000240000b0       0x1c d:/st/stm32cubeide_1.1.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.0.0.201904181610/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/thumb/v7e-m/fpv5/hard/crtbegin.o
+ .bss           0x00000000240000b8       0x1c d:/st/stm32cubeide_1.1.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.0.0.201904181610/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/thumb/v7e-m/fpv5/hard/crtbegin.o
  *(.bss*)
- *fill*         0x00000000240000cc        0x4 
- .bss.yawKd     0x00000000240000d0        0x8 Core/Src/mainBrain.o
-                0x00000000240000d0                yawKd
- .bss.yawKi     0x00000000240000d8        0x8 Core/Src/mainBrain.o
-                0x00000000240000d8                yawKi
+ *fill*         0x00000000240000d4        0x4 
+ .bss.yawKd     0x00000000240000d8        0x8 Core/Src/mainBrain.o
+                0x00000000240000d8                yawKd
+ .bss.yawKi     0x00000000240000e0        0x8 Core/Src/mainBrain.o
+                0x00000000240000e0                yawKi
  *(COMMON)
- COMMON         0x00000000240000e0      0x670 Core/Src/mainBrain.o
-                0x00000000240000e0                pitPreError
-                0x00000000240000e8                roRPreError
-                0x00000000240000ec                manualRobotRxPacket
-                0x00000000240000f8                yawD
-                0x0000000024000100                leftRawDistance
-                0x0000000024000104                rigtArmStatus
-                0x0000000024000108                huart7
-                0x0000000024000194                trackingWait4SpinalCordRx
-                0x0000000024000198                pitD
-                0x00000000240001a0                roLD
-                0x00000000240001a8                rigtRawDistance
-                0x00000000240001b0                roLI
-                0x00000000240001b8                yawPreError
-                0x00000000240001bc                huart3
-                0x0000000024000248                trackingControlMotor3
-                0x000000002400024c                constantMoving_tracking
-                0x0000000024000250                htim15
-                0x0000000024000290                roRPID
-                0x0000000024000298                pitError
-                0x00000000240002a0                pitKd
-                0x00000000240002a8                compassRxPacket
-                0x00000000240002b8                roRI
-                0x00000000240002c0                PS2TxCplt
-                0x00000000240002c4                trackingControlMotor2
-                0x00000000240002c8                roLKd
-                0x00000000240002d0                hdma_adc3
-                0x0000000024000348                yawI
-                0x0000000024000350                yawError
-                0x0000000024000352                _rollLeftFinalFilter
-                0x0000000024000354                roLError
-                0x0000000024000356                compassData
-                0x0000000024000358                yawP
-                0x0000000024000360                roLPID
-                0x0000000024000368                pitI
-                0x0000000024000370                compassRxCplt
-                0x0000000024000374                leftArmElapsedPulses
-                0x0000000024000378                trackingLegShoot
-                0x000000002400037c                hadc1
-                0x00000000240003e0                manualRobotRxCplt
-                0x00000000240003e4                rollRawValue
-                0x00000000240003e8                hadc3
-                0x0000000024000450                pitP
-                0x0000000024000458                trackingControlMotor1
-                0x0000000024000460                roRP
-                0x0000000024000468                huart1
-                0x00000000240004f4                trackingLeg
-                0x00000000240004f8                roLPreError
-                0x00000000240004fc                legEn
-                0x0000000024000500                spinalCordTxCplt
-                0x0000000024000501                PS2RxCplt
-                0x0000000024000504                hdma_adc1
-                0x000000002400057c                leftArmStatus
-                0x0000000024000580                tracking
-                0x0000000024000588                pitPID
-                0x0000000024000590                trackingControlMotor4
-                0x0000000024000594                _pitchFinalFilter
-                0x0000000024000598                roRKi
-                0x00000000240005a0                rigtArmEn
-                0x00000000240005a4                manualRobotTxCplt
-                0x00000000240005a8                roLP
-                0x00000000240005b0                legElapsedPulses
-                0x00000000240005b8                roRKp
-                0x00000000240005c0                trackingWait4SpinalCordTx
-                0x00000000240005c4                rigtArmElapsedPulses
-                0x00000000240005c8                pitchRawValue
-                0x00000000240005d0                yawPID
-                0x00000000240005d8                huart6
-                0x0000000024000664                PS2RxPacket
-                0x000000002400066c                legStatus
-                0x0000000024000670                trackingRigtArm
-                0x0000000024000678                roLKi
-                0x0000000024000680                roRKd
-                0x0000000024000688                compassTxCplt
-                0x000000002400068a                _rollRigtFinalFilter
-                0x000000002400068c                spinalCordRxPacket
-                0x0000000024000698                trackingLeftArm
-                0x00000000240006a0                roLKp
+ COMMON         0x00000000240000e8      0x668 Core/Src/mainBrain.o
+                0x00000000240000e8                pitPreError
+                0x00000000240000f0                roRPreError
+                0x00000000240000f4                manualRobotRxPacket
+                0x0000000024000100                yawD
+                0x0000000024000108                leftRawDistance
+                0x000000002400010c                rigtArmStatus
+                0x0000000024000110                huart7
+                0x000000002400019c                trackingWait4SpinalCordRx
+                0x00000000240001a0                pitD
+                0x00000000240001a8                roLD
+                0x00000000240001b0                rigtRawDistance
+                0x00000000240001b8                roLI
+                0x00000000240001c0                yawPreError
+                0x00000000240001c4                huart3
+                0x0000000024000250                trackingControlMotor3
+                0x0000000024000254                constantMoving_tracking
+                0x0000000024000258                htim15
+                0x0000000024000298                roRPID
+                0x00000000240002a0                pitError
+                0x00000000240002a8                pitKd
+                0x00000000240002b0                compassRxPacket
+                0x00000000240002c0                roRI
+                0x00000000240002c8                PS2TxCplt
+                0x00000000240002cc                trackingControlMotor2
+                0x00000000240002d0                roLKd
+                0x00000000240002d8                hdma_adc3
+                0x0000000024000350                yawI
+                0x0000000024000358                yawError
+                0x000000002400035a                _rollLeftFinalFilter
+                0x000000002400035c                roLError
+                0x000000002400035e                compassData
+                0x0000000024000360                yawP
+                0x0000000024000368                roLPID
+                0x0000000024000370                pitI
+                0x0000000024000378                compassRxCplt
+                0x000000002400037c                leftArmElapsedPulses
+                0x0000000024000380                trackingLegShoot
+                0x0000000024000384                hadc1
+                0x00000000240003e8                manualRobotRxCplt
+                0x00000000240003ec                rollRawValue
+                0x00000000240003f0                hadc3
+                0x0000000024000458                pitP
+                0x0000000024000460                trackingControlMotor1
+                0x0000000024000468                roRP
+                0x0000000024000470                huart1
+                0x00000000240004fc                trackingLeg
+                0x0000000024000500                roLPreError
+                0x0000000024000504                legEn
+                0x0000000024000508                spinalCordTxCplt
+                0x0000000024000509                PS2RxCplt
+                0x000000002400050c                hdma_adc1
+                0x0000000024000584                leftArmStatus
+                0x0000000024000588                tracking
+                0x0000000024000590                pitPID
+                0x0000000024000598                trackingControlMotor4
+                0x000000002400059c                _pitchFinalFilter
+                0x00000000240005a0                roRKi
+                0x00000000240005a8                rigtArmEn
+                0x00000000240005ac                manualRobotTxCplt
+                0x00000000240005b0                roLP
+                0x00000000240005b8                legElapsedPulses
+                0x00000000240005c0                roRKp
+                0x00000000240005c8                trackingWait4SpinalCordTx
+                0x00000000240005cc                rigtArmElapsedPulses
+                0x00000000240005d0                pitchRawValue
+                0x00000000240005d8                yawPID
+                0x00000000240005e0                huart6
+                0x000000002400066c                PS2RxPacket
+                0x0000000024000674                legStatus
+                0x0000000024000678                trackingRigtArm
+                0x0000000024000680                roLKi
+                0x0000000024000688                roRKd
+                0x0000000024000690                compassTxCplt
+                0x0000000024000692                _rollRigtFinalFilter
+                0x0000000024000694                spinalCordRxPacket
+                0x00000000240006a0                trackingLeftArm
                 0x00000000240006a8                pitKi
                 0x00000000240006b0                htim12
                 0x00000000240006f0                spinalCordRxCplt
@@ -6167,7 +6167,7 @@ LOAD d:/st/stm32cubeide_1.1.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.exte
                 0x0000000024000754                __bss_end__ = _ebss
 
 ._user_heap_stack
-                0x0000000024000754      0x604 load address 0x000000000800e4d8
+                0x0000000024000754      0x604 load address 0x000000000800e4e0
                 0x0000000024000758                . = ALIGN (0x8)
  *fill*         0x0000000024000754        0x4 
                 0x0000000024000758                PROVIDE (end = .)

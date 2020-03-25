@@ -40,7 +40,7 @@ double roRPID;
 
 int16_t roLError, roLPreError;
 double roLP, roLI, roLD;
-double roLKp;
+double roLKp = 0.65;
 double roLKd;
 double roLKi;
 double roLPID;
@@ -177,7 +177,7 @@ double PIDroR(int _roRValue, int _roRSetpoint)
 
 double PIDroL(int _roLValue, int _roLSetpoint)
 {
-	roLError = _roLSetpoint - _roLValue;
+	roLError = -_roLSetpoint + _roLValue;
 	roLP = roLError;
 	roLD = roLError - roLPreError;
 	roLI = roLError + roLI;
