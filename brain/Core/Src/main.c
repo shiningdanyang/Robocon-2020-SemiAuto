@@ -54,6 +54,7 @@ UART_HandleTypeDef huart7;
 UART_HandleTypeDef huart1;
 UART_HandleTypeDef huart3;
 UART_HandleTypeDef huart6;
+DMA_HandleTypeDef hdma_usart3_rx;
 
 /* USER CODE BEGIN PV */
 int constantMoving_tracking;
@@ -165,28 +166,83 @@ int main(void)
 ///////////////////////////////////////////////////////////////////////
 
 //////////////////////test xoay la bàn////////////////////////////////
-//	  compassRequest();
-//	  compassGetData();
-//	  HAL_GPIO_WritePin(GPIOB,GPIO_PIN_0,GPIO_PIN_SET);
-//	  PIDyaw(300, compassData);
-//	  controlMotor1(yawPID);
-//	  controlMotor2(yawPID);
-//	  controlMotor3(yawPID);
-//	  controlMotor4(yawPID);
-//	  spinalCordTxPacket[8] = compassData;
-//	  tracking++;
+	  compassRequest();
+	  compassGetData();
+	  HAL_GPIO_WritePin(GPIOB,GPIO_PIN_0,GPIO_PIN_SET);
+	  PIDyaw(300, compassData);
+	  controlMotor1(yawPID);
+	  controlMotor2(yawPID);
+	  controlMotor3(yawPID);
+	  controlMotor4(yawPID);
+	  spinalCordTxPacket[8] = compassData;
+	  tracking++;
 //////////////////////////////////////////////////////////////////////
 
 
 /////////////////PID left////////////////////////////////
-	  readADC();
-	  PIDpit(0, 0);
-	  PIDroL(leftRawDistance, 200);
-//	  PIDroL(_roLValue, _roLSetpoint)
-	  PIDyaw(0, 0);
-	  roL_pit_yaw_mixSpeed();
-
-	  tracking++;
+//	  readADC();
+//	  PIDpit(0, 0);
+//	  PIDroL(leftRawDistance, 200);
+////	  PIDroL(_roLValue, _roLSetpoint)
+//	  PIDyaw(0, 0);
+//	  roL_pit_yaw_mixSpeed();
+////////////////////////////////////////////////////////////
+//	  manualRobotRecei();
+//	  if(manualRobotRxPacket[0] == 's')
+//	  {
+//		  brake();
+//	  }
+//	  else
+//		  if(manualRobotRxPacket[0] == '1')
+//		  {
+//			  constantMoving(50, 0);
+//		  }
+//		  else
+//			  if(manualRobotRxPacket[0] == 'b')
+//			  {
+//				  constantMoving(50, 45);
+//			  }
+//			  else
+//				  if(manualRobotRxPacket[0] == '4')
+//				  {
+//					  constantMoving(50, 90);
+//				  }
+//				  else
+//					  if(manualRobotRxPacket[0] == '7')
+//					  {
+//						  constantMoving(50, 135);
+//					  }
+//					  else
+//						  if(manualRobotRxPacket[0] == '2')
+//						  {
+//							  constantMoving(50, 180);
+//						  }
+//						  else
+//							  if(manualRobotRxPacket[0] == '8')
+//							  {
+//								  constantMoving(50, -135);
+//							  }
+//							  else
+//								  if(manualRobotRxPacket[0] == '3')
+//								  {
+//									  constantMoving(50, -90);
+//								  }
+//								  else
+//									  if(manualRobotRxPacket[0] == 'a')
+//									  {
+//										  constantMoving(50, -45);
+//									  }
+//									  else
+//										  if(manualRobotRxPacket[0] == '5')
+//										  {
+//											  rotate(0);
+//										  }
+//										  else
+//											  if(manualRobotRxPacket[0] == '6')
+//											  {
+//												  rotate(1);
+//											  }
+//	  tracking++;
 ////////////////////////////////////////////////////
 
 //////////test PWM//////////////////////////////////////////////////////////
@@ -560,7 +616,7 @@ static void MX_UART7_Init(void)
 
   /* USER CODE END UART7_Init 1 */
   huart7.Instance = UART7;
-  huart7.Init.BaudRate = 115200;
+  huart7.Init.BaudRate = 9600;
   huart7.Init.WordLength = UART_WORDLENGTH_8B;
   huart7.Init.StopBits = UART_STOPBITS_1;
   huart7.Init.Parity = UART_PARITY_NONE;
@@ -656,7 +712,7 @@ static void MX_USART3_UART_Init(void)
 
   /* USER CODE END USART3_Init 1 */
   huart3.Instance = USART3;
-  huart3.Init.BaudRate = 115200;
+  huart3.Init.BaudRate = 19200;
   huart3.Init.WordLength = UART_WORDLENGTH_8B;
   huart3.Init.StopBits = UART_STOPBITS_1;
   huart3.Init.Parity = UART_PARITY_NONE;
@@ -744,6 +800,7 @@ static void MX_DMA_Init(void)
 
   /* DMA controller clock enable */
   __HAL_RCC_DMA1_CLK_ENABLE();
+  __HAL_RCC_DMA2_CLK_ENABLE();
 
   /* DMA interrupt init */
   /* DMA1_Stream0_IRQn interrupt configuration */
@@ -752,6 +809,9 @@ static void MX_DMA_Init(void)
   /* DMA1_Stream1_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(DMA1_Stream1_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(DMA1_Stream1_IRQn);
+  /* DMA2_Stream2_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA2_Stream2_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(DMA2_Stream2_IRQn);
 
 }
 

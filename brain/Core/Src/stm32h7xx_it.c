@@ -42,7 +42,10 @@
 
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN PV */
-
+extern uint8_t PS2RxPacket[8];
+extern uint8_t PS2CheckbyteCount, PS2Data[6], PS2DataIndex;
+extern int16_t PS2Button, PS2JoyLeft, PS2JoyRigt;
+extern char* controlData;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -61,9 +64,9 @@ extern DMA_HandleTypeDef hdma_adc3;
 extern TIM_HandleTypeDef htim7;
 extern TIM_HandleTypeDef htim12;
 extern TIM_HandleTypeDef htim15;
+extern DMA_HandleTypeDef hdma_usart3_rx;
 extern UART_HandleTypeDef huart7;
 extern UART_HandleTypeDef huart1;
-extern UART_HandleTypeDef huart3;
 extern UART_HandleTypeDef huart6;
 /* USER CODE BEGIN EV */
 
@@ -248,20 +251,6 @@ void USART1_IRQHandler(void)
 }
 
 /**
-  * @brief This function handles USART3 global interrupt.
-  */
-void USART3_IRQHandler(void)
-{
-  /* USER CODE BEGIN USART3_IRQn 0 */
-
-  /* USER CODE END USART3_IRQn 0 */
-  HAL_UART_IRQHandler(&huart3);
-  /* USER CODE BEGIN USART3_IRQn 1 */
-
-  /* USER CODE END USART3_IRQn 1 */
-}
-
-/**
   * @brief This function handles TIM8 break interrupt and TIM12 global interrupt.
   */
 void TIM8_BRK_TIM12_IRQHandler(void)
@@ -287,6 +276,36 @@ void TIM7_IRQHandler(void)
   /* USER CODE BEGIN TIM7_IRQn 1 */
 
   /* USER CODE END TIM7_IRQn 1 */
+}
+
+/**
+  * @brief This function handles DMA2 stream2 global interrupt.
+  */
+void DMA2_Stream2_IRQHandler(void)
+{
+  /* USER CODE BEGIN DMA2_Stream2_IRQn 0 */
+	if(PS2CheckbyteCount == 4 )
+	{
+	  PS2Data[PS2DataIndex++] = PS2RxPacket[0];
+		if(PS2DataIndex > 5)
+		{
+			PS2DataIndex = 0;
+			PS2CheckbyteCount = 0;
+			PS2Button = (PS2Data[0]<<8) | PS2Data[1];
+			PS2JoyRigt = (PS2Data[2]<<8) | PS2Data[3];
+			PS2JoyLeft = (PS2Data[4]<<8) | PS2Data[5];
+		}
+	}
+	if(PS2RxPacket[0] == 0xAA)
+		PS2CheckbyteCount++;
+	else
+		if(PS2CheckbyteCount != 4)
+			PS2CheckbyteCount = 0;
+  /* USER CODE END DMA2_Stream2_IRQn 0 */
+  HAL_DMA_IRQHandler(&hdma_usart3_rx);
+  /* USER CODE BEGIN DMA2_Stream2_IRQn 1 */
+
+  /* USER CODE END DMA2_Stream2_IRQn 1 */
 }
 
 /**

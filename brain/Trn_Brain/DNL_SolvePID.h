@@ -263,6 +263,25 @@ int constantMoving(int _speed, double _dir_deg)
 	return 1;
 }
 
+void rotate(int _dir)
+{
+	if(_dir == 0)
+	{
+		controlMotor1(30);
+		controlMotor2(30);
+		controlMotor3(30);
+		controlMotor4(30);
+	}
+	else
+		if(_dir == 1)
+		{
+			controlMotor1(-30);
+			controlMotor2(-30);
+			controlMotor3(-30);
+			controlMotor4(-30);
+		}
+}
+
 void brake(void)
 {
 	controlMotor1(BRAKE_SPEED);
