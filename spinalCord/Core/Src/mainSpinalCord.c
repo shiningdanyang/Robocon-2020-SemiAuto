@@ -113,7 +113,7 @@ int main(void)
   peripheralPWM_Init();
 //  peripheralUART_Init();
 //  startPeripheralUART();
-  HAL_Delay(2000);
+  HAL_Delay(4000);
   /* USER CODE END 2 */
 
   /* Infinite loop */

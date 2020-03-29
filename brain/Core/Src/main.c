@@ -54,6 +54,7 @@ UART_HandleTypeDef huart7;
 UART_HandleTypeDef huart1;
 UART_HandleTypeDef huart3;
 UART_HandleTypeDef huart6;
+DMA_HandleTypeDef hdma_usart1_rx;
 DMA_HandleTypeDef hdma_usart3_rx;
 
 /* USER CODE BEGIN PV */
@@ -87,9 +88,6 @@ static void MX_USART6_UART_Init(void);
 #include "DNL_PositionControl.h"
 #include "DNL_Callback.h"
 #include "DNL_Loop.h"
-
-
-
 /* USER CODE END 0 */
 
 /**
@@ -143,13 +141,14 @@ int main(void)
 //  leftArmEn = 1;
 //  leftArmStatus = leftArmInit;
   HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_RESET);
-  HAL_Delay(1000);
+  HAL_Delay(2000);
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+//	  testPWM();
 /////////////test shoot/////////////////////////////////////////////
 //	  legControl(legInitShoot);
 //	  rigtArmControl(rigtArmSetBall);
@@ -166,16 +165,33 @@ int main(void)
 ///////////////////////////////////////////////////////////////////////
 
 //////////////////////test xoay la bàn////////////////////////////////
-	  compassRequest();
-	  compassGetData();
-	  HAL_GPIO_WritePin(GPIOB,GPIO_PIN_0,GPIO_PIN_SET);
-	  PIDyaw(300, compassData);
-	  controlMotor1(yawPID);
-	  controlMotor2(yawPID);
-	  controlMotor3(yawPID);
-	  controlMotor4(yawPID);
-	  spinalCordTxPacket[8] = compassData;
-	  tracking++;
+//	  compassRequest();
+//	  compassGetData();
+	  uint16_t startTime = HAL_GetTick();
+	  while(HAL_GetTick()-startTime <10000)
+	  {
+		  HAL_GPIO_WritePin(GPIOB,GPIO_PIN_0,GPIO_PIN_SET);
+		  PIDyaw(900, compassData);
+		  controlMotor1(yawPID);
+		  controlMotor2(yawPID);
+		  controlMotor3(yawPID);
+		  controlMotor4(yawPID);
+		  spinalCordTxPacket[8] = compassData;
+		  tracking++;
+	  }
+	  startTime = HAL_GetTick();
+	  while(HAL_GetTick()-startTime <10000)
+	  {
+		  HAL_GPIO_WritePin(GPIOB,GPIO_PIN_0,GPIO_PIN_SET);
+		  PIDyaw(0, compassData);
+		  controlMotor1(yawPID);
+		  controlMotor2(yawPID);
+		  controlMotor3(yawPID);
+		  controlMotor4(yawPID);
+		  spinalCordTxPacket[8] = compassData;
+		  tracking++;
+	  }
+	  while(1);
 //////////////////////////////////////////////////////////////////////
 
 
@@ -244,41 +260,6 @@ int main(void)
 //											  }
 //	  tracking++;
 ////////////////////////////////////////////////////
-
-//////////test PWM//////////////////////////////////////////////////////////
-//	  for(int i = 0; i > -255; --i)
-//	  {
-//		  controlMotor1(i);
-//		  controlMotor2(i);
-//		  controlMotor3(i);
-//		  controlMotor4(i);
-//		  HAL_Delay(20);
-//	  }
-//	  for(int i = -255; i < 0; ++i)
-//	  {
-//		  controlMotor1(i);
-//		  controlMotor2(i);
-//		  controlMotor3(i);
-//		  controlMotor4(i);
-//		  HAL_Delay(20);
-//	  }
-//	  for(int i = 0; i < 255; ++i)
-//	  {
-//		  controlMotor1(i);
-//		  controlMotor2(i);
-//		  controlMotor3(i);
-//		  controlMotor4(i);
-//		  HAL_Delay(20);
-//	  }
-//	  for(int i = 255; i > 0; --i)
-//	  {
-//		  controlMotor1(i);
-//		  controlMotor2(i);
-//		  controlMotor3(i);
-//		  controlMotor4(i);
-//		  HAL_Delay(20);
-//	  }
-	  /////////////////////////////////////////////////////////////////////////
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -809,6 +790,9 @@ static void MX_DMA_Init(void)
   /* DMA1_Stream1_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(DMA1_Stream1_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(DMA1_Stream1_IRQn);
+  /* DMA1_Stream2_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA1_Stream2_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(DMA1_Stream2_IRQn);
   /* DMA2_Stream2_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(DMA2_Stream2_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(DMA2_Stream2_IRQn);

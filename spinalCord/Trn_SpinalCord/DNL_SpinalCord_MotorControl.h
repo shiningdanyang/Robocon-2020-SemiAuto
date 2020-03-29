@@ -46,8 +46,8 @@ double PIDyaw(int _yawValue, int _yawSetpoint)
 #define FCW GPIO_PIN_SET
 #define CCW GPIO_PIN_RESET
 
-#define _FCW 1
-#define _CCW 0
+#define _FCW 0
+#define _CCW 1
 
 
 // float motor1Speed;

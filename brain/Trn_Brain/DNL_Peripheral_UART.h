@@ -7,6 +7,7 @@ uint8_t compassRxPacket[9];
 uint8_t compassTxCplt;
 uint8_t compassRxCplt;
 int16_t compassData;
+uint8_t compassGetDataPeriod;
 void compassReset(void);
 void compassRequest(void);
 void compassGetData(void);
@@ -72,6 +73,7 @@ void peripheralUART_Init()
 {
 	HAL_UART_Receive_IT(&spinalCord, spinalCordRxPacket, 1);
 	HAL_UART_Receive_DMA(&PS2, PS2RxPacket, 1);
+	HAL_UART_Receive_DMA(&compass, compassRxPacket, 2);
 }
 
 ////////////////////////////////////////////////////////////
@@ -90,13 +92,13 @@ void compassReset(void)
 	compassTxPacket[0] = 'a';
 	HAL_UART_Transmit_IT(&compass, compassTxPacket, 1);
 	wait4CompassTx();
+	compassTxPacket[0] = 'z';
 }
 void compassRequest(void)
 {
-	compassTxPacket[0] = 'z';
 	HAL_UART_Transmit_IT(&compass, compassTxPacket, 1);
-	trackingWait4CompassTx = 0;
-	wait4CompassTx();
+//	trackingWait4CompassTx = 0;
+//	wait4CompassTx();
 //	HAL_UART_Transmit(&compass, compassTxPacket, 1, 50);
 }
 void compassGetData(void)

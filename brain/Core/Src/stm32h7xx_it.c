@@ -42,6 +42,10 @@
 
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN PV */
+extern void compassRequest(void);
+extern uint8_t compassGetDataPeriod;
+extern uint8_t compassRxPacket[2];
+extern int16_t compassData;
 extern uint8_t PS2RxPacket[8];
 extern uint8_t PS2CheckbyteCount, PS2Data[6], PS2DataIndex;
 extern int16_t PS2Button, PS2JoyLeft, PS2JoyRigt;
@@ -64,6 +68,7 @@ extern DMA_HandleTypeDef hdma_adc3;
 extern TIM_HandleTypeDef htim7;
 extern TIM_HandleTypeDef htim12;
 extern TIM_HandleTypeDef htim15;
+extern DMA_HandleTypeDef hdma_usart1_rx;
 extern DMA_HandleTypeDef hdma_usart3_rx;
 extern UART_HandleTypeDef huart7;
 extern UART_HandleTypeDef huart1;
@@ -193,7 +198,12 @@ void PendSV_Handler(void)
 void SysTick_Handler(void)
 {
   /* USER CODE BEGIN SysTick_IRQn 0 */
-
+  compassGetDataPeriod++;
+  if(compassGetDataPeriod > 5)
+  {
+	  compassGetDataPeriod = 0;
+	  compassRequest();
+  }
   /* USER CODE END SysTick_IRQn 0 */
   HAL_IncTick();
   /* USER CODE BEGIN SysTick_IRQn 1 */
@@ -234,6 +244,20 @@ void DMA1_Stream1_IRQHandler(void)
   /* USER CODE BEGIN DMA1_Stream1_IRQn 1 */
 
   /* USER CODE END DMA1_Stream1_IRQn 1 */
+}
+
+/**
+  * @brief This function handles DMA1 stream2 global interrupt.
+  */
+void DMA1_Stream2_IRQHandler(void)
+{
+  /* USER CODE BEGIN DMA1_Stream2_IRQn 0 */
+  compassData = (compassRxPacket[0]<<8)|compassRxPacket[1];
+  /* USER CODE END DMA1_Stream2_IRQn 0 */
+  HAL_DMA_IRQHandler(&hdma_usart1_rx);
+  /* USER CODE BEGIN DMA1_Stream2_IRQn 1 */
+
+  /* USER CODE END DMA1_Stream2_IRQn 1 */
 }
 
 /**

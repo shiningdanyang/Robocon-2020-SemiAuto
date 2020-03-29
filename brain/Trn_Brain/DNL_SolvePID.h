@@ -22,11 +22,11 @@
 
 int16_t yawError, yawPreError;
 double yawP, yawI, yawD;
-double yawKp = 0.65;
+double yawKp = 0.4;
 double yawKd = 0;
 double yawKi = 0;
 double yawPID;
-#define MAX_YAW_PID 100
+#define MAX_YAW_PID 70
 #define MIN_YAW_PID -MAX_YAW_PID
 
 int16_t roRError, roRPreError;
@@ -139,7 +139,7 @@ void controlMotor4(int _speed)
 
 double PIDyaw(int _yawValue, int _yawSetpoint)
 {
-	yawError = _yawSetpoint - _yawValue;
+	yawError = -_yawSetpoint + _yawValue;
 	yawP = yawError;
 	yawD = yawError - yawPreError;
 	yawI = yawError + yawI;
@@ -288,6 +288,42 @@ void brake(void)
 	controlMotor2(-BRAKE_SPEED);
 	controlMotor3(BRAKE_SPEED);
 	controlMotor4(-BRAKE_SPEED);
+}
+
+void testPWM(void)
+{
+  for(int i = 0; i > -255; --i)
+  {
+	  controlMotor1(i);
+	  controlMotor2(i);
+	  controlMotor3(i);
+	  controlMotor4(i);
+	  HAL_Delay(20);
+  }
+  for(int i = -255; i < 0; ++i)
+  {
+	  controlMotor1(i);
+	  controlMotor2(i);
+	  controlMotor3(i);
+	  controlMotor4(i);
+	  HAL_Delay(20);
+  }
+  for(int i = 0; i < 255; ++i)
+  {
+	  controlMotor1(i);
+	  controlMotor2(i);
+	  controlMotor3(i);
+	  controlMotor4(i);
+	  HAL_Delay(20);
+  }
+  for(int i = 255; i > 0; --i)
+  {
+	  controlMotor1(i);
+	  controlMotor2(i);
+	  controlMotor3(i);
+	  controlMotor4(i);
+	  HAL_Delay(20);
+  }
 }
 
 // int _motor1Speed = speedPID *sin(desireAngle + 45) + 0;

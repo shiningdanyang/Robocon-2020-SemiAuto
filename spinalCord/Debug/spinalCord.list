@@ -676,8 +676,8 @@ int main(void)
  80006a8:	f7ff ff3e 	bl	8000528 <peripheralPWM_Init>
 //  peripheralUART_Init();
 //  startPeripheralUART();
-  HAL_Delay(2000);
- 80006ac:	f44f 60fa 	mov.w	r0, #2000	; 0x7d0
+  HAL_Delay(4000);
+ 80006ac:	f44f 607a 	mov.w	r0, #4000	; 0xfa0
  80006b0:	f000 fd9c 	bl	80011ec <HAL_Delay>
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
