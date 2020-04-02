@@ -31,14 +31,14 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 	}
 	else if(huart->Instance == spinalCord.Instance)
 	{
-		if(spinalCordRxPacket[0]!=0)
-		{
-			trackingReceiSpinalCord++;
-			HAL_UART_Transmit_IT(&spinalCord, spinalCordTxPacket, 9);
-			// tracking = 0;
-		}
+//		if(spinalCordRxPacket[0]!=0)
+//		{
+//			trackingReceiSpinalCord++;
+//			HAL_UART_Transmit_IT(&spinalCord, spinalCordTxPacket, 9);
+//			// tracking = 0;
+//		}
 		spinalCordRxCplt = 1;
-		HAL_UART_Receive_IT(&spinalCord, spinalCordRxPacket, 1);
+//		HAL_UART_Receive_IT(&spinalCord, spinalCordRxPacket, 1);
 	}
 	else if(huart->Instance == manualRobot.Instance)
 	{
@@ -54,129 +54,43 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		{
 			if(legStatus == legInitShoot)
 			{
-				HAL_GPIO_WritePin(legDir_GPIO_Port, legDir_Pin, legBackward);
-				HAL_GPIO_TogglePin(legPul_GPIO_Port, legPul_Pin);
+				HAL_GPIO_WritePin(legDir_GPIO_Port, legDir_Pin, legBackward);	//cấu hình legDir để lùi
+				HAL_GPIO_TogglePin(legPul_GPIO_Port, legPul_Pin);				//tạo xung chân legPul
 				trackingLeg++;
 	//			HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_0);
-				legElapsedPulses++;
+				legElapsedPulses++;												//đếm số xung
 				if (legElapsedPulses >= legInitShootPulse)
 				{
-					legEn = 0;
-					legElapsedPulses = 0;
+					legEn = 0;													//kết thúc quá trình điều khiển
+					legElapsedPulses = 0;										//kết thúc quá trình điều khiển
 				}
 			}
 			if(legStatus == legReInitShoot)
 			{
-				HAL_GPIO_WritePin(legDir_GPIO_Port, legDir_Pin, legBackward);
-				HAL_GPIO_TogglePin(legPul_GPIO_Port, legPul_Pin);
+				HAL_GPIO_WritePin(legDir_GPIO_Port, legDir_Pin, legBackward);	//cấu hình chân legDir để lùi
+				HAL_GPIO_TogglePin(legPul_GPIO_Port, legPul_Pin);				//tạo xung chân legPul
 				trackingLeg++;
 	//			HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_0);
-				legElapsedPulses++;
+				legElapsedPulses++;												//đếm số xung
 				if (legElapsedPulses >= legReInitShootPulse)
 				{
-					legEn = 0;
-					legElapsedPulses = 0;
+					legEn = 0;													//kết thúc quá trình điều khiển
+					legElapsedPulses = 0;										//kết thúc quá trình điều khiển
 				}
 			}
 			if(legStatus == legEnd)
 			{
 				HAL_GPIO_WritePin(legDir_GPIO_Port, legDir_Pin, legBackward);	//quay ngược từ vị trí sút đến vị trí 0 (ngược chiều sút)
-				HAL_GPIO_TogglePin(legPul_GPIO_Port, legPul_Pin);
+				HAL_GPIO_TogglePin(legPul_GPIO_Port, legPul_Pin);				//tạo xung chân legPul
 				trackingLeg++;
 	//			HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_0);
-				legElapsedPulses++;
+				legElapsedPulses++;												//đếm số xung
 				if (legElapsedPulses >= legEndPulse)
 				{
-					legEn = 0;
-					legElapsedPulses = 0;
+					legEn = 0;													//kết thúc quá trình điều khiển
+					legElapsedPulses = 0;										//kết thúc quá trình điều khiển
 				}
 			}
 		}
-		if(rigtArmEn == 1)
-		{
-			if(rigtArmStatus == rigtArmInit)
-			{
-				HAL_GPIO_WritePin(rigtArmDir_GPIO_Port, rigtArmDir_Pin, rigtArm_CCW);
-				HAL_GPIO_TogglePin(rigtArmPul_GPIO_Port, rigtArmPul_Pin);
-				trackingRigtArm++;
-				rigtArmElapsedPulses++;
-				if (rigtArmElapsedPulses >= rigtArmInitPulse)
-				{
-					rigtArmEn = 0;
-					rigtArmElapsedPulses = 0;
-				}
-			}
-			if(rigtArmStatus == rigtArmSetBall)
-			{
-				HAL_GPIO_WritePin(rigtArmDir_GPIO_Port, rigtArmDir_Pin, rigtArm_CCW);
-				HAL_GPIO_TogglePin(rigtArmPul_GPIO_Port, rigtArmPul_Pin);
-				trackingRigtArm++;
-				rigtArmElapsedPulses++;
-				if (rigtArmElapsedPulses >= rigtArmSetBallPulse)
-				{
-					rigtArmEn = 0;
-					rigtArmElapsedPulses = 0;
-				}
-			}
-			if(rigtArmStatus == rigtArmReturn)
-			{
-				HAL_GPIO_WritePin(rigtArmDir_GPIO_Port, rigtArmDir_Pin, rigtArm_FCW);
-				HAL_GPIO_TogglePin(rigtArmPul_GPIO_Port, rigtArmPul_Pin);
-				trackingRigtArm++;
-				rigtArmElapsedPulses++;
-				if (rigtArmElapsedPulses >= rigtArmSetBallPulse)
-				{
-					rigtArmEn = 0;
-					rigtArmElapsedPulses = 0;
-				}
-			}
-		}
-		if(leftArmEn == 1)
-		{
-			if(leftArmStatus == leftArmInit)
-			{
-				HAL_GPIO_WritePin(leftArmDir_GPIO_Port, leftArmDir_Pin, leftArm_CCW);
-				HAL_GPIO_TogglePin(leftArmPul_GPIO_Port, leftArmPul_Pin);
-				trackingLeftArm++;
-				leftArmElapsedPulses++;
-				if (leftArmElapsedPulses >= leftArmInitPulse)
-				{
-					leftArmEn = 0;
-					leftArmElapsedPulses = 0;
-				}
-			}
-			if(leftArmStatus == leftArmSetBall)
-			{
-				HAL_GPIO_WritePin(leftArmDir_GPIO_Port, leftArmDir_Pin, leftArm_CCW);
-				HAL_GPIO_TogglePin(leftArmPul_GPIO_Port, leftArmPul_Pin);
-				trackingLeftArm++;
-				leftArmElapsedPulses++;
-				if (leftArmElapsedPulses >= leftArmSetBallPulse)
-				{
-					leftArmEn = 0;
-					leftArmElapsedPulses = 0;
-				}
-			}
-			if(leftArmStatus == leftArmReturn)
-			{
-				HAL_GPIO_WritePin(leftArmDir_GPIO_Port, leftArmDir_Pin, leftArm_FCW);
-				HAL_GPIO_TogglePin(leftArmPul_GPIO_Port, leftArmPul_Pin);
-				trackingLeftArm++;
-				leftArmElapsedPulses++;
-				if (leftArmElapsedPulses >= leftArmSetBallPulse)
-				{
-					leftArmEn = 0;
-					leftArmElapsedPulses = 0;
-				}
-			}
-		}
-	}
-	if(htim->Instance == rigtArm.Instance)
-	{
-		
-	}
-	if(htim->Instance == leftArm.Instance)
-	{
-
 	}
 }

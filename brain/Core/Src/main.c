@@ -60,6 +60,7 @@ DMA_HandleTypeDef hdma_usart3_rx;
 /* USER CODE BEGIN PV */
 int constantMoving_tracking;
 int tracking;
+uint32_t startTime;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -133,6 +134,7 @@ int main(void)
   compassReset();
   delayUs_Init();
   positionControl_Init();
+  brake();
 
   //Duongw was here
 
@@ -148,50 +150,49 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-//	  testPWM();
+	  HAL_GPIO_TogglePin(GPIOG, GPIO_PIN_0);
+	  HAL_GPIO_TogglePin(GPIOG, GPIO_PIN_2);
+	  HAL_GPIO_TogglePin(GPIOG, GPIO_PIN_3);
+	  HAL_Delay(500);
+	  tracking++;
 /////////////test shoot/////////////////////////////////////////////
-//	  legControl(legInitShoot);
-//	  rigtArmControl(rigtArmSetBall);
-//	  HAL_Delay(3000);
+////	  legControl(legInitShoot);
+////	  HAL_Delay(3000);
+////	  while(1);
 //	  legShoot();
-//	  HAL_Delay(500);
-//	  legControl(legInitShoot);
-//	  HAL_Delay(6000);
-//	  legShoot();
-//	  HAL_Delay(5000);
-//	  legControl(legEnd);
-//	  HAL_Delay(5000);
-//	  HAL_Delay(500);
+//	  HAL_Delay(1000);
+//	  legControl(legReInitShoot);
+//	  HAL_Delay(1000);
+////	  legControl(legEnd);
+//	  while(1);
 ///////////////////////////////////////////////////////////////////////
 
 //////////////////////test xoay la bàn////////////////////////////////
-//	  compassRequest();
-//	  compassGetData();
-	  uint16_t startTime = HAL_GetTick();
-	  while(HAL_GetTick()-startTime <10000)
-	  {
-		  HAL_GPIO_WritePin(GPIOB,GPIO_PIN_0,GPIO_PIN_SET);
-		  PIDyaw(900, compassData);
-		  controlMotor1(yawPID);
-		  controlMotor2(yawPID);
-		  controlMotor3(yawPID);
-		  controlMotor4(yawPID);
-		  spinalCordTxPacket[8] = compassData;
-		  tracking++;
-	  }
-	  startTime = HAL_GetTick();
-	  while(HAL_GetTick()-startTime <10000)
-	  {
-		  HAL_GPIO_WritePin(GPIOB,GPIO_PIN_0,GPIO_PIN_SET);
-		  PIDyaw(0, compassData);
-		  controlMotor1(yawPID);
-		  controlMotor2(yawPID);
-		  controlMotor3(yawPID);
-		  controlMotor4(yawPID);
-		  spinalCordTxPacket[8] = compassData;
-		  tracking++;
-	  }
-	  while(1);
+//	  startTime = HAL_GetTick();
+//	  while(HAL_GetTick()-startTime < 10000)
+//	  {
+//		  HAL_GPIO_WritePin(GPIOB,GPIO_PIN_0,GPIO_PIN_SET);
+//		  PIDyaw(-900, compassData);
+//		  controlMotor1(yawPID);
+//		  controlMotor2(yawPID);
+//		  controlMotor3(yawPID);
+//		  controlMotor4(yawPID);
+//		  spinalCordTrans();
+//		  tracking++;
+//	  }
+//	  startTime = HAL_GetTick();
+//	  while(HAL_GetTick()-startTime < 10000)
+//	  {
+//		  HAL_GPIO_WritePin(GPIOB,GPIO_PIN_0,GPIO_PIN_SET);
+//		  PIDyaw(900, compassData);
+//		  controlMotor1(yawPID);
+//		  controlMotor2(yawPID);
+//		  controlMotor3(yawPID);
+//		  controlMotor4(yawPID);
+//		  spinalCordTrans();
+//		  tracking++;
+//	  }
+//	  while(1);
 //////////////////////////////////////////////////////////////////////
 
 
@@ -813,9 +814,9 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOC_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
   __HAL_RCC_GPIOB_CLK_ENABLE();
+  __HAL_RCC_GPIOG_CLK_ENABLE();
   __HAL_RCC_GPIOE_CLK_ENABLE();
   __HAL_RCC_GPIOD_CLK_ENABLE();
-  __HAL_RCC_GPIOG_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOA, cylinder_SetTee_Pin|cylinder_RigtArmHoldBallTop_Pin|cylinder_HoldBall_Pin|cylinder_LeftArmHoldBall_Pin, GPIO_PIN_RESET);
@@ -825,14 +826,14 @@ static void MX_GPIO_Init(void)
                           |cylinder_RigtArmHoldBallBot_Pin|cylinder_LiftBall_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(GPIOG, GPIO_PIN_0|GPIO_PIN_2|GPIO_PIN_3|leftArmDir_Pin 
+                          |rigtArmEn_Pin|rigtArmPul_Pin|leftArmEn_Pin|rigtArmDir_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOE, legEn_Pin|leftArmPul_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOD, legDir_Pin|legPul_Pin, GPIO_PIN_RESET);
-
-  /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOG, leftArmDir_Pin|rigtArmEn_Pin|rigtArmPul_Pin|leftArmEn_Pin 
-                          |rigtArmDir_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pins : cylinder_SetTee_Pin cylinder_RigtArmHoldBallTop_Pin cylinder_HoldBall_Pin cylinder_LeftArmHoldBall_Pin */
   GPIO_InitStruct.Pin = cylinder_SetTee_Pin|cylinder_RigtArmHoldBallTop_Pin|cylinder_HoldBall_Pin|cylinder_LeftArmHoldBall_Pin;
@@ -849,6 +850,13 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+  /*Configure GPIO pins : PG0 PG2 PG3 */
+  GPIO_InitStruct.Pin = GPIO_PIN_0|GPIO_PIN_2|GPIO_PIN_3;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOG, &GPIO_InitStruct);
 
   /*Configure GPIO pin : legEn_Pin */
   GPIO_InitStruct.Pin = legEn_Pin;

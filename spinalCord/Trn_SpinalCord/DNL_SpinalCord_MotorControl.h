@@ -60,6 +60,16 @@ double PIDyaw(int _yawValue, int _yawSetpoint)
 // int motor4Dir;
 // int receiveCplt;
 
+uint8_t motor1Speed;
+uint8_t motor2Speed;
+uint8_t motor3Speed;
+uint8_t motor4Speed;
+uint8_t motor1Dir;
+uint8_t motor2Dir;
+uint8_t motor3Dir;
+uint8_t motor4Dir;
+
+
 void peripheralPWM_Init()
 {
   HAL_TIM_PWM_Start(&motor1, motor1_channel);

@@ -22,11 +22,11 @@
 
 int16_t yawError, yawPreError;
 double yawP, yawI, yawD;
-double yawKp = 0.4;
+double yawKp = 0.5;
 double yawKd = 0;
-double yawKi = 0;
+double yawKi = 0.0000000001;
 double yawPID;
-#define MAX_YAW_PID 70
+#define MAX_YAW_PID 120
 #define MIN_YAW_PID -MAX_YAW_PID
 
 int16_t roRError, roRPreError;
@@ -49,7 +49,7 @@ double roLPID;
 
 double pitError, pitPreError;
 double pitP, pitI, pitD;
-double pitKp = 1.0;
+double pitKp = 0.3;
 double pitKd;
 double pitKi;
 double pitPID;
@@ -84,9 +84,12 @@ void controlMotor1(int _speed)
 	// 	HAL_GPIO_WritePin(motor1Dir_Pin, motor1Dir_GPIO_Port, fcw);
 	// }
 	spinalCordTxPacket[motor1Speed] = abs(_speed);
-	(_speed>=0) ? 
-	(spinalCordTxPacket[motor1Dir] = ccw) : (spinalCordTxPacket[motor1Dir] = fcw);
-	trackingControlMotor1++;
+	if(_speed>=0)
+//	(spinalCordTxPacket[motor1Dir] = ccw) : (spinalCordTxPacket[motor1Dir] = fcw);
+		spinalCordTxPacket[motorDir] &= ~(1UL << 0);
+	else
+		spinalCordTxPacket[motorDir] |= (1UL << 0);
+//	trackingControlMotor1++;
 }
 void controlMotor2(int _speed)
 {
@@ -100,9 +103,11 @@ void controlMotor2(int _speed)
 	// 	HAL_GPIO_WritePin(motor2Dir_Pin, motor2Dir_GPIO_Port, fcw);
 	// }
 	spinalCordTxPacket[motor2Speed] = abs(_speed);
-	(_speed>=0) ? 
-	(spinalCordTxPacket[motor2Dir] = ccw) : (spinalCordTxPacket[motor2Dir] = fcw);
-	trackingControlMotor2++;
+	if(_speed>=0)
+		spinalCordTxPacket[motorDir] &= ~(1UL << 1);
+	else
+		spinalCordTxPacket[motorDir] |= (1UL << 1);
+//	trackingControlMotor2++;
 }
 void controlMotor3(int _speed)
 {
@@ -116,9 +121,11 @@ void controlMotor3(int _speed)
 	// 	HAL_GPIO_WritePin(motor3Dir_Pin, motor3Dir_GPIO_Port, fcw);
 	// }
 	spinalCordTxPacket[motor3Speed] = abs(_speed);
-	(_speed>=0) ? 
-	(spinalCordTxPacket[motor3Dir] = ccw) : (spinalCordTxPacket[motor3Dir] = fcw);
-	trackingControlMotor3++;
+	if(_speed>=0)
+		spinalCordTxPacket[motorDir] &= ~(1UL << 2);
+	else
+		spinalCordTxPacket[motorDir] |= (1UL << 2);
+//	trackingControlMotor3++;
 }
 void controlMotor4(int _speed)
 {
@@ -132,9 +139,11 @@ void controlMotor4(int _speed)
 	// 	HAL_GPIO_WritePin(motor3Dir_Pin, motor3Dir_GPIO_Port, fcw);
 	// }
 	spinalCordTxPacket[motor4Speed] = abs(_speed);
-	(_speed>=0) ? 
-	(spinalCordTxPacket[motor4Dir] = ccw) : (spinalCordTxPacket[motor4Dir] = fcw);
-	trackingControlMotor4++;
+	if(_speed>=0)
+		spinalCordTxPacket[motorDir] &= ~(1UL << 3);
+	else
+		spinalCordTxPacket[motorDir] |= (1UL << 3);
+//	trackingControlMotor4++;
 }
 
 double PIDyaw(int _yawValue, int _yawSetpoint)
@@ -288,6 +297,7 @@ void brake(void)
 	controlMotor2(-BRAKE_SPEED);
 	controlMotor3(BRAKE_SPEED);
 	controlMotor4(-BRAKE_SPEED);
+	spinalCordTrans();
 }
 
 void testPWM(void)

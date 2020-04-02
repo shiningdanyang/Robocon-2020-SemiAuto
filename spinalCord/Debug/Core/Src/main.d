@@ -1,5 +1,5 @@
-Core/Src/mainSpinalCord.o: ../Core/Src/mainSpinalCord.c \
- ../Core/Inc/main.h ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
+Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
+ ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
  ../Core/Inc/stm32f4xx_hal_conf.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
@@ -27,9 +27,9 @@ Core/Src/mainSpinalCord.o: ../Core/Src/mainSpinalCord.c \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- D:/STM32CubeIDE_Workspace/OFFICIAL\ SRC/Trn\ (Semi-Auto)/spinalCord/Trn_SpinalCord/DNL_SpinalCord_Peripheral_UART.h \
- D:/STM32CubeIDE_Workspace/OFFICIAL\ SRC/Trn\ (Semi-Auto)/spinalCord/Trn_SpinalCord/DNL_SpinalCord_MotorControl.h \
- D:/STM32CubeIDE_Workspace/OFFICIAL\ SRC/Trn\ (Semi-Auto)/spinalCord/Trn_SpinalCord/DNL_SpinalCord_Callback.h
+ D:/STM32CubeIDE_DefaultWorkspace/OFFICIAL_SRC/Robocon-2020-SemiAuto/spinalCord/Trn_SpinalCord/DNL_SpinalCord_Peripheral_UART.h \
+ D:/STM32CubeIDE_DefaultWorkspace/OFFICIAL_SRC/Robocon-2020-SemiAuto/spinalCord/Trn_SpinalCord/DNL_SpinalCord_MotorControl.h \
+ D:/STM32CubeIDE_DefaultWorkspace/OFFICIAL_SRC/Robocon-2020-SemiAuto/spinalCord/Trn_SpinalCord/DNL_SpinalCord_Callback.h
 
 ../Core/Inc/main.h:
 
@@ -89,8 +89,8 @@ Core/Src/mainSpinalCord.o: ../Core/Src/mainSpinalCord.c \
 
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h:
 
-D:/STM32CubeIDE_Workspace/OFFICIAL\ SRC/Trn\ (Semi-Auto)/spinalCord/Trn_SpinalCord/DNL_SpinalCord_Peripheral_UART.h:
+D:/STM32CubeIDE_DefaultWorkspace/OFFICIAL_SRC/Robocon-2020-SemiAuto/spinalCord/Trn_SpinalCord/DNL_SpinalCord_Peripheral_UART.h:
 
-D:/STM32CubeIDE_Workspace/OFFICIAL\ SRC/Trn\ (Semi-Auto)/spinalCord/Trn_SpinalCord/DNL_SpinalCord_MotorControl.h:
+D:/STM32CubeIDE_DefaultWorkspace/OFFICIAL_SRC/Robocon-2020-SemiAuto/spinalCord/Trn_SpinalCord/DNL_SpinalCord_MotorControl.h:
 
-D:/STM32CubeIDE_Workspace/OFFICIAL\ SRC/Trn\ (Semi-Auto)/spinalCord/Trn_SpinalCord/DNL_SpinalCord_Callback.h:
+D:/STM32CubeIDE_DefaultWorkspace/OFFICIAL_SRC/Robocon-2020-SemiAuto/spinalCord/Trn_SpinalCord/DNL_SpinalCord_Callback.h:

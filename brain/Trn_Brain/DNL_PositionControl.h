@@ -6,34 +6,28 @@
 #define rigtArm_FCW GPIO_PIN_SET
 #define leftArm_CCW GPIO_PIN_RESET
 #define leftArm_FCW GPIO_PIN_SET
-#define legForward GPIO_PIN_SET
-#define legBackward GPIO_PIN_RESET
+#define legForward GPIO_PIN_RESET
+#define legBackward GPIO_PIN_SET
 
 #define legInitShoot 	0
 #define legReInitShoot 	1
 #define legEnd 			2
-#define rigtArmInit 	0
-#define rigtArmSetBall 	1
-#define rigtArmReturn 	2
-#define leftArmInit 	0
-#define leftArmSetBall 	1
-#define leftArmReturn 	2
 
 #define legInitShootPulse 450
 #define legEndPulse 450
-#define legReInitShootPulse 600
-#define legShootPulse 600
-#define rigtArmInitPulse 300
-#define leftArmInitPulse 300
-#define rigtArmSetBallPulse 400
-#define leftArmSetBallPulse 400
-#define rigtArmReturnPulse 400
-#define leftArmReturnPulse 400
-#define LEG_SHOOT_DELAYUS 1000
+#define legReInitShootPulse 1400
+#define legShootPulse 700
+//#define rigtArmInitPulse 300
+//#define leftArmInitPulse 300
+//#define rigtArmSetBallPulse 400
+//#define leftArmSetBallPulse 400
+//#define rigtArmReturnPulse 400
+//#define leftArmReturnPulse 400
+#define LEG_SHOOT_DELAYUS 1
 int trackingLeg;
 int trackingLegShoot;
-int trackingLeftArm;
-int trackingRigtArm;
+//int trackingLeftArm;
+//int trackingRigtArm;
 
 int legEn;
 int rigtArmEn;
@@ -75,14 +69,14 @@ void legControl(int _legStatus)
 	legStatus = _legStatus;
 }
 
-void leftArmControl(int _leftArmStatus)
-{
-	leftArmEn = 1;
-	leftArmStatus = _leftArmStatus;
-}
-
-void rigtArmControl(int _rigtArmStatus)
-{
-	rigtArmEn = 1;
-	rigtArmStatus = _rigtArmStatus;
-}
+//void leftArmControl(int _leftArmStatus)
+//{
+//	leftArmEn = 1;
+//	leftArmStatus = _leftArmStatus;
+//}
+//
+//void rigtArmControl(int _rigtArmStatus)
+//{
+//	rigtArmEn = 1;
+//	rigtArmStatus = _rigtArmStatus;
+//}

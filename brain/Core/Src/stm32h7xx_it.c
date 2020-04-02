@@ -49,7 +49,7 @@ extern int16_t compassData;
 extern uint8_t PS2RxPacket[8];
 extern uint8_t PS2CheckbyteCount, PS2Data[6], PS2DataIndex;
 extern int16_t PS2Button, PS2JoyLeft, PS2JoyRigt;
-extern char* controlData;
+//extern char* controlData;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/

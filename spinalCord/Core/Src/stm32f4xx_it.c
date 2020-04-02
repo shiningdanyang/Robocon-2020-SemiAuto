@@ -42,7 +42,17 @@
 
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN PV */
-
+extern uint8_t brainRxPacket[9];
+extern uint8_t motor1Speed;
+extern uint8_t motor2Speed;
+extern uint8_t motor3Speed;
+extern uint8_t motor4Speed;
+extern uint8_t motor1Dir;
+extern uint8_t motor2Dir;
+extern uint8_t motor3Dir;
+extern uint8_t motor4Dir;
+extern uint8_t brainCheckbyteCount, brainData[8], brainDataIndex;
+//extern char* controlData;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -56,7 +66,7 @@
 /* USER CODE END 0 */
 
 /* External variables --------------------------------------------------------*/
-extern UART_HandleTypeDef huart1;
+extern DMA_HandleTypeDef hdma_usart1_rx;
 /* USER CODE BEGIN EV */
 
 /* USER CODE END EV */
@@ -198,17 +208,46 @@ void SysTick_Handler(void)
 /******************************************************************************/
 
 /**
-  * @brief This function handles USART1 global interrupt.
+  * @brief This function handles DMA2 stream2 global interrupt.
   */
-void USART1_IRQHandler(void)
+void DMA2_Stream2_IRQHandler(void)
 {
-  /* USER CODE BEGIN USART1_IRQn 0 */
+  /* USER CODE BEGIN DMA2_Stream2_IRQn 0 */
+	if(brainCheckbyteCount == 4 )
+	{
+	  brainData[brainDataIndex++] = brainRxPacket[0];
+		if(brainDataIndex > 5)
+		{
+			brainDataIndex = 0;
+			brainCheckbyteCount = 0;
+			motor1Speed = brainData[0];
+			motor2Speed = brainData[1];
+			motor3Speed = brainData[2];
+			motor4Speed = brainData[3];
+			motor1Dir = (brainData[4] >> 0) & 1U;
+			motor2Dir = (brainData[4] >> 1) & 1U;
+			motor3Dir = (brainData[4] >> 2) & 1U;
+			motor4Dir = (brainData[4] >> 3) & 1U;
+		}
+	}
+	if(brainRxPacket[0] == 0xAA)
+		brainCheckbyteCount++;
+	else
+		if(brainCheckbyteCount != 4)
+			brainCheckbyteCount = 0;
+//	motor1Speed = brainRxPacket[0];
+//	motor2Speed = brainRxPacket[1];
+//	motor3Speed = brainRxPacket[2];
+//	motor4Speed = brainRxPacket[3];
+//	motor1Dir = brainRxPacket[4];
+//	motor2Dir = brainRxPacket[5];
+//	motor3Dir = brainRxPacket[6];
+//	motor4Dir = brainRxPacket[7];
+  /* USER CODE END DMA2_Stream2_IRQn 0 */
+  HAL_DMA_IRQHandler(&hdma_usart1_rx);
+  /* USER CODE BEGIN DMA2_Stream2_IRQn 1 */
 
-  /* USER CODE END USART1_IRQn 0 */
-  HAL_UART_IRQHandler(&huart1);
-  /* USER CODE BEGIN USART1_IRQn 1 */
-
-  /* USER CODE END USART1_IRQn 1 */
+  /* USER CODE END DMA2_Stream2_IRQn 1 */
 }
 
 /* USER CODE BEGIN 1 */

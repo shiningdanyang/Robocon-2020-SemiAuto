@@ -37,14 +37,15 @@ uint8_t spinalCordTxPacket[9] = "mainBoard";
 uint8_t spinalCordRxPacket[9];
 uint8_t spinalCordTxCplt;
 uint8_t spinalCordRxCplt;
-#define motor1Speed 	0
-#define motor2Speed 	1
-#define motor3Speed 	2
-#define motor4Speed 	3
-#define motor1Dir	4
-#define motor2Dir	5
-#define motor3Dir	6
-#define motor4Dir	7
+#define motor1Speed 	4
+#define motor2Speed 	5
+#define motor3Speed 	6
+#define motor4Speed 	7
+#define motorDir		8
+#define motor1Dir	8
+#define motor2Dir	9
+#define motor3Dir	10
+#define motor4Dir	11
 // #define spinal
 void spinalCordTrans(void);
 void spinalCordRecei(void);
@@ -71,6 +72,11 @@ int trackingWait4SpinalCordTx;
 int trackingWait4SpinalCordRx;
 void peripheralUART_Init()
 {
+	spinalCordTxPacket[0] = 0xAA;
+	spinalCordTxPacket[1] = 0xAA;
+	spinalCordTxPacket[2] = 0xAA;
+	spinalCordTxPacket[3] = 0xAA;
+	spinalCordTxPacket[motorDir] = 0x00;
 	HAL_UART_Receive_IT(&spinalCord, spinalCordRxPacket, 1);
 	HAL_UART_Receive_DMA(&PS2, PS2RxPacket, 1);
 	HAL_UART_Receive_DMA(&compass, compassRxPacket, 2);
@@ -140,7 +146,7 @@ void spinalCordInit(void)
 
 void spinalCordTrans(void)
 {
-	HAL_UART_Transmit_IT(&spinalCord, (uint8_t*)spinalCordTxPacket, 8);
+	HAL_UART_Transmit_IT(&spinalCord, (uint8_t*)spinalCordTxPacket, 9);
 	wait4SpinalCordTx();
 }
 void spinalCordRecei(void)
