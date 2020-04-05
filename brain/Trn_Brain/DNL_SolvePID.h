@@ -70,79 +70,50 @@ int trackingControlMotor2;
 int trackingControlMotor3;
 int trackingControlMotor4;
 
-#define BRAKE_SPEED 1
+#define BRAKE_SPEED 100
 
 void controlMotor1(int _speed)
 {
-	// __HAL_TIM_Set_Compare(&motor1, motor1_channel, _speed);
-	// if(_speed >= 0)
-	// {
-	// 	HAL_GPIO_WritePin(motor1Dir_Pin, motor1Dir_GPIO_Port, ccw);
-	// }
-	// else
-	// {
-	// 	HAL_GPIO_WritePin(motor1Dir_Pin, motor1Dir_GPIO_Port, fcw);
-	// }
 	spinalCordTxPacket[motor1Speed] = abs(_speed);
 	if(_speed>=0)
-//	(spinalCordTxPacket[motor1Dir] = ccw) : (spinalCordTxPacket[motor1Dir] = fcw);
-		spinalCordTxPacket[motorDir] &= ~(1UL << 0);
+		(spinalCordTxPacket[motor1Dir] = ccw);
+//		spinalCordTxPacket[motorDir] &= ~(1UL << 0);
 	else
-		spinalCordTxPacket[motorDir] |= (1UL << 0);
+		(spinalCordTxPacket[motor1Dir] = fcw);
+//		spinalCordTxPacket[motorDir] |= (1UL << 0);
 //	trackingControlMotor1++;
 }
 void controlMotor2(int _speed)
 {
-	// __HAL_TIM_Set_Compare(&motor2, motor2_channel, _speed);
-	// if(_speed >= 0)
-	// {
-	// 	HAL_GPIO_WritePin(motor2Dir_Pin, motor2Dir_GPIO_Port, ccw);
-	// }
-	// else
-	// {
-	// 	HAL_GPIO_WritePin(motor2Dir_Pin, motor2Dir_GPIO_Port, fcw);
-	// }
 	spinalCordTxPacket[motor2Speed] = abs(_speed);
 	if(_speed>=0)
-		spinalCordTxPacket[motorDir] &= ~(1UL << 1);
+		(spinalCordTxPacket[motor2Dir] = ccw);
+//		spinalCordTxPacket[motorDir] &= ~(1UL << 1);
 	else
-		spinalCordTxPacket[motorDir] |= (1UL << 1);
+		(spinalCordTxPacket[motor2Dir] = fcw);
+//		spinalCordTxPacket[motorDir] |= (1UL << 1);
 //	trackingControlMotor2++;
 }
 void controlMotor3(int _speed)
 {
-	// __HAL_TIM_Set_Compare(&motor3Dir, motor3_channel, _speed);
-	// if(_speed >= 0)
-	// {
-	// 	HAL_GPIO_WritePin(motor3Dir_Pin, motor3Dir_GPIO_Port, ccw);
-	// }
-	// else
-	// {
-	// 	HAL_GPIO_WritePin(motor3Dir_Pin, motor3Dir_GPIO_Port, fcw);
-	// }
 	spinalCordTxPacket[motor3Speed] = abs(_speed);
 	if(_speed>=0)
-		spinalCordTxPacket[motorDir] &= ~(1UL << 2);
+		(spinalCordTxPacket[motor3Dir] = ccw);
+//		spinalCordTxPacket[motorDir] &= ~(1UL << 2);
 	else
-		spinalCordTxPacket[motorDir] |= (1UL << 2);
+		(spinalCordTxPacket[motor3Dir] = fcw);
+//		spinalCordTxPacket[motorDir] |= (1UL << 2);
 //	trackingControlMotor3++;
 }
 void controlMotor4(int _speed)
 {
-	// __HAL_TIM_Set_Compare(&motor4, motor4_channel, _speed);
-	// if(_speed >= 0)
-	// {
-	// 	HAL_GPIO_WritePin(motor3Dir_Pin, motor3Dir_GPIO_Port, ccw);
-	// }
-	// else
-	// {
-	// 	HAL_GPIO_WritePin(motor3Dir_Pin, motor3Dir_GPIO_Port, fcw);
-	// }
 	spinalCordTxPacket[motor4Speed] = abs(_speed);
 	if(_speed>=0)
-		spinalCordTxPacket[motorDir] &= ~(1UL << 3);
+		(spinalCordTxPacket[motor4Dir] = ccw);
+//		spinalCordTxPacket[motorDir] &= ~(1UL << 3);
 	else
-		spinalCordTxPacket[motorDir] |= (1UL << 3);
+		(spinalCordTxPacket[motor4Dir] = fcw);
+//		spinalCordTxPacket[motorDir] |= (1UL << 3);
 //	trackingControlMotor4++;
 }
 
@@ -302,12 +273,18 @@ void brake(void)
 
 void testPWM(void)
 {
-  for(int i = 0; i > -255; --i)
+  for(int i = -1; i > -255; --i)
   {
 	  controlMotor1(i);
 	  controlMotor2(i);
 	  controlMotor3(i);
 	  controlMotor4(i);
+//	  spinalCordTrans();
+//	  if(spinalCordTxPacket[8]!=0b1111)
+//		  while(1)
+//	  {
+//			  tracking++;
+//	  }
 	  HAL_Delay(20);
   }
   for(int i = -255; i < 0; ++i)
@@ -316,14 +293,26 @@ void testPWM(void)
 	  controlMotor2(i);
 	  controlMotor3(i);
 	  controlMotor4(i);
+//	  spinalCordTrans();
 	  HAL_Delay(20);
+//	  if(spinalCordTxPacket[8]!=0b1111)
+//		  while(1)
+//	  {
+//			  tracking++;
+//	  }
   }
-  for(int i = 0; i < 255; ++i)
+  for(int i = 1 ; i < 255; ++i)
   {
 	  controlMotor1(i);
 	  controlMotor2(i);
 	  controlMotor3(i);
 	  controlMotor4(i);
+//	  spinalCordTrans();
+//	  if(spinalCordTxPacket[8]!=0b0000)
+//		  while(1)
+//	  {
+//			  tracking++;
+//	  }
 	  HAL_Delay(20);
   }
   for(int i = 255; i > 0; --i)
@@ -332,6 +321,12 @@ void testPWM(void)
 	  controlMotor2(i);
 	  controlMotor3(i);
 	  controlMotor4(i);
+//	  spinalCordTrans();
+//	  if(spinalCordTxPacket[8]!=0b0000)
+//		  while(1)
+//	  {
+//			  tracking++;
+//	  }
 	  HAL_Delay(20);
   }
 }

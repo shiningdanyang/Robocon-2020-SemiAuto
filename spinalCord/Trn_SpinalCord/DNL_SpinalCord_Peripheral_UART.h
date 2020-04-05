@@ -23,9 +23,8 @@ char* controlData;
 void peripheralUART_Init(void)
 {
 //	HAL_UART_Receive_IT(&brain, brainRxPacket, 9);
-	HAL_UART_Receive_DMA(&brain, brainRxPacket, 1);
+//	HAL_UART_Receive_DMA(&brain, brainRxPacket, 1);
 }
-
 
 void brainRequest(void)
 {

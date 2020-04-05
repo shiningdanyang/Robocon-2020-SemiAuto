@@ -49,6 +49,13 @@ extern int16_t compassData;
 extern uint8_t PS2RxPacket[8];
 extern uint8_t PS2CheckbyteCount, PS2Data[6], PS2DataIndex;
 extern int16_t PS2Button, PS2JoyLeft, PS2JoyRigt;
+
+extern uint16_t pitchRawValue[3];
+extern int16_t leftRawDistance;
+extern int16_t rigtRawDistance;
+extern int16_t pitchRawDistance;
+extern double a_Linear;
+extern double b_Linear;
 //extern char* controlData;
 /* USER CODE END PV */
 
@@ -64,6 +71,7 @@ extern int16_t PS2Button, PS2JoyLeft, PS2JoyRigt;
 
 /* External variables --------------------------------------------------------*/
 extern DMA_HandleTypeDef hdma_adc1;
+extern DMA_HandleTypeDef hdma_adc2;
 extern DMA_HandleTypeDef hdma_adc3;
 extern TIM_HandleTypeDef htim7;
 extern TIM_HandleTypeDef htim12;
@@ -238,9 +246,11 @@ void DMA1_Stream0_IRQHandler(void)
 void DMA1_Stream1_IRQHandler(void)
 {
   /* USER CODE BEGIN DMA1_Stream1_IRQn 0 */
-
+//	leftRawDistance = a_Linear *pitchRawValue[0] + b_Linear;
+//	rigtRawDistance = a_Linear *pitchRawValue[1] + b_Linear;
+//	pitchRawDistance = a_Linear *pitchRawValue[2] + b_Linear;
   /* USER CODE END DMA1_Stream1_IRQn 0 */
-  HAL_DMA_IRQHandler(&hdma_adc3);
+  HAL_DMA_IRQHandler(&hdma_adc2);
   /* USER CODE BEGIN DMA1_Stream1_IRQn 1 */
 
   /* USER CODE END DMA1_Stream1_IRQn 1 */
@@ -252,12 +262,26 @@ void DMA1_Stream1_IRQHandler(void)
 void DMA1_Stream2_IRQHandler(void)
 {
   /* USER CODE BEGIN DMA1_Stream2_IRQn 0 */
-  compassData = (compassRxPacket[0]<<8)|compassRxPacket[1];
+
   /* USER CODE END DMA1_Stream2_IRQn 0 */
-  HAL_DMA_IRQHandler(&hdma_usart1_rx);
+  HAL_DMA_IRQHandler(&hdma_adc3);
   /* USER CODE BEGIN DMA1_Stream2_IRQn 1 */
 
   /* USER CODE END DMA1_Stream2_IRQn 1 */
+}
+
+/**
+  * @brief This function handles DMA1 stream3 global interrupt.
+  */
+void DMA1_Stream3_IRQHandler(void)
+{
+  /* USER CODE BEGIN DMA1_Stream3_IRQn 0 */
+	  compassData = (compassRxPacket[0]<<8)|compassRxPacket[1];
+  /* USER CODE END DMA1_Stream3_IRQn 0 */
+  HAL_DMA_IRQHandler(&hdma_usart1_rx);
+  /* USER CODE BEGIN DMA1_Stream3_IRQn 1 */
+
+  /* USER CODE END DMA1_Stream3_IRQn 1 */
 }
 
 /**

@@ -1,6 +1,7 @@
 //include sau DelayMicroseconds.h
 void peripheralUART_Init(void);
-
+void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart);
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart);
 #define compass huart1
 uint8_t compassTxPacket[9] = "compassTx";
 uint8_t compassRxPacket[9];
@@ -37,16 +38,20 @@ uint8_t spinalCordTxPacket[9] = "mainBoard";
 uint8_t spinalCordRxPacket[9];
 uint8_t spinalCordTxCplt;
 uint8_t spinalCordRxCplt;
-#define motor1Speed 	4
-#define motor2Speed 	5
-#define motor3Speed 	6
-#define motor4Speed 	7
-#define motorDir		8
-#define motor1Dir	8
-#define motor2Dir	9
-#define motor3Dir	10
-#define motor4Dir	11
-// #define spinal
+//#define motor1Speed 	4
+//#define motor2Speed 	5
+//#define motor3Speed 	6
+//#define motor4Speed 	7
+//#define motorDir		8
+#define motor1Speed 0
+#define motor2Speed 1
+#define motor3Speed 2
+#define motor4Speed 3
+#define motor1Dir 4
+#define motor2Dir 5
+#define motor3Dir 6
+#define motor4Dir 7
+
 void spinalCordTrans(void);
 void spinalCordRecei(void);
 void wait4SpinalCordTx(void);
@@ -72,16 +77,65 @@ int trackingWait4SpinalCordTx;
 int trackingWait4SpinalCordRx;
 void peripheralUART_Init()
 {
-	spinalCordTxPacket[0] = 0xAA;
-	spinalCordTxPacket[1] = 0xAA;
-	spinalCordTxPacket[2] = 0xAA;
-	spinalCordTxPacket[3] = 0xAA;
-	spinalCordTxPacket[motorDir] = 0x00;
+//	spinalCordTxPacket[0] = 0xAA;
+//	spinalCordTxPacket[1] = 0xAA;
+//	spinalCordTxPacket[2] = 0xAA;
+//	spinalCordTxPacket[3] = 0xAA;
+//	spinalCordTxPacket[motorDir] = 0x00;
 	HAL_UART_Receive_IT(&spinalCord, spinalCordRxPacket, 1);
+	spinalCordTxPacket[8] = 'z';
 	HAL_UART_Receive_DMA(&PS2, PS2RxPacket, 1);
 	HAL_UART_Receive_DMA(&compass, compassRxPacket, 2);
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
+void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
+{
+	if(huart->Instance == compass.Instance)
+	{
+		compassTxCplt = 1;
+	}
+	else if(huart->Instance == PS2.Instance)
+	{
+		PS2TxCplt = 1;
+	}
+	else if(huart->Instance == spinalCord.Instance)
+	{
+		spinalCordTxCplt = 1;
+	}
+	else if(huart->Instance == manualRobot.Instance)
+	{
+		manualRobotTxCplt = 1;
+	}
+}
+int trackingReceiSpinalCord;
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
+{
+	if(huart->Instance == compass.Instance)
+	{
+		compassRxCplt = 1;
+	}
+	else if(huart->Instance == PS2.Instance)
+	{
+		PS2RxCplt = 1;
+	}
+	else if(huart->Instance == spinalCord.Instance)
+	{
+		if(spinalCordRxPacket[0]=='t')
+		{
+//			trackingReceiSpinalCord++;
+//			HAL_UART_Transmit_IT(&spinalCord, spinalCordTxPacket, 9);
+			HAL_UART_Transmit(&spinalCord, spinalCordTxPacket, 9,100);
+			// tracking = 0;
+		}
+		spinalCordRxCplt = 1;
+		HAL_UART_Receive_IT(&spinalCord, spinalCordRxPacket, 1);
+	}
+	else if(huart->Instance == manualRobot.Instance)
+	{
+		manualRobotRxCplt = 1;
+	}
+}
 ////////////////////////////////////////////////////////////
 void compassDeInit()
 {
@@ -111,8 +165,6 @@ void compassGetData(void)
 {
 	HAL_UART_Receive_IT(&compass, compassRxPacket, 2);
 	wait4CompassRx();
-//	HAL_UART_Receive(&compass, compassRxPacket, 2, 50);
-
 	compassData = (compassRxPacket[0]<<8)|compassRxPacket[1];
 }
 

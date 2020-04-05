@@ -47,7 +47,6 @@ TIM_HandleTypeDef htim4;
 TIM_HandleTypeDef htim5;
 
 UART_HandleTypeDef huart1;
-DMA_HandleTypeDef hdma_usart1_rx;
 
 /* USER CODE BEGIN PV */
 float a;
@@ -59,7 +58,6 @@ int16_t compassData;
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
-static void MX_DMA_Init(void);
 static void MX_USART1_UART_Init(void);
 static void MX_TIM2_Init(void);
 static void MX_TIM3_Init(void);
@@ -106,7 +104,6 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
-  MX_DMA_Init();
   MX_USART1_UART_Init();
   MX_TIM2_Init();
   MX_TIM3_Init();
@@ -116,7 +113,7 @@ int main(void)
   peripheralPWM_Init();
   peripheralUART_Init();
 //  startPeripheralUART();
-  HAL_Delay(0);
+  HAL_Delay(4000);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -124,15 +121,18 @@ int main(void)
   while (1)
   {
 	  ////////////////////////////////////////////////////////////////
-//	  brainTxPacket[0]= 't';
-//	  brainRequest();
-//	  brainGetData();
-	  controlMotor1(motor1Speed, motor1Dir);
-	  controlMotor2(motor2Speed, motor2Dir);
-	  controlMotor3(motor3Speed, motor3Dir);
-	  controlMotor4(motor4Speed, motor4Dir);
+	  brainTxPacket[0]= 't';
+
+	  brainRequest();
+	  brainGetData();
+		  controlMotor1(brainRxPacket[0], brainRxPacket[4]);
+		  controlMotor2(brainRxPacket[1], brainRxPacket[5]);
+		  controlMotor3(brainRxPacket[2], brainRxPacket[6]);
+		  controlMotor4(brainRxPacket[3], brainRxPacket[7]);
+		  tracking++;
+
 	  tracking++;
-//	  HAL_Delay(0);
+//	  HAL_Delay(500);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -449,22 +449,6 @@ static void MX_USART1_UART_Init(void)
   /* USER CODE BEGIN USART1_Init 2 */
 
   /* USER CODE END USART1_Init 2 */
-
-}
-
-/** 
-  * Enable DMA controller clock
-  */
-static void MX_DMA_Init(void) 
-{
-
-  /* DMA controller clock enable */
-  __HAL_RCC_DMA2_CLK_ENABLE();
-
-  /* DMA interrupt init */
-  /* DMA2_Stream2_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(DMA2_Stream2_IRQn, 0, 0);
-  HAL_NVIC_EnableIRQ(DMA2_Stream2_IRQn);
 
 }
 

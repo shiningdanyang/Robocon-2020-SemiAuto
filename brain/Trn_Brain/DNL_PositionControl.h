@@ -69,6 +69,56 @@ void legControl(int _legStatus)
 	legStatus = _legStatus;
 }
 
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+{
+	if(htim->Instance == leg.Instance)
+	{
+		if(legEn == 1)
+		{
+			if(legStatus == legInitShoot)
+			{
+				HAL_GPIO_WritePin(legDir_GPIO_Port, legDir_Pin, legBackward);	//cấu hình legDir để lùi
+				HAL_GPIO_TogglePin(legPul_GPIO_Port, legPul_Pin);				//tạo xung chân legPul
+				trackingLeg++;
+	//			HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_0);
+				legElapsedPulses++;												//đếm số xung
+				if (legElapsedPulses >= legInitShootPulse)
+				{
+					legEn = 0;													//kết thúc quá trình điều khiển
+					legElapsedPulses = 0;										//kết thúc quá trình điều khiển
+				}
+			}
+			if(legStatus == legReInitShoot)
+			{
+				HAL_GPIO_WritePin(legDir_GPIO_Port, legDir_Pin, legBackward);	//cấu hình chân legDir để lùi
+				HAL_GPIO_TogglePin(legPul_GPIO_Port, legPul_Pin);				//tạo xung chân legPul
+				trackingLeg++;
+	//			HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_0);
+				legElapsedPulses++;												//đếm số xung
+				if (legElapsedPulses >= legReInitShootPulse)
+				{
+					legEn = 0;													//kết thúc quá trình điều khiển
+					legElapsedPulses = 0;										//kết thúc quá trình điều khiển
+				}
+			}
+			if(legStatus == legEnd)
+			{
+				HAL_GPIO_WritePin(legDir_GPIO_Port, legDir_Pin, legBackward);	//quay ngược từ vị trí sút đến vị trí 0 (ngược chiều sút)
+				HAL_GPIO_TogglePin(legPul_GPIO_Port, legPul_Pin);				//tạo xung chân legPul
+				trackingLeg++;
+	//			HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_0);
+				legElapsedPulses++;												//đếm số xung
+				if (legElapsedPulses >= legEndPulse)
+				{
+					legEn = 0;													//kết thúc quá trình điều khiển
+					legElapsedPulses = 0;										//kết thúc quá trình điều khiển
+				}
+			}
+		}
+	}
+}
+
+
 //void leftArmControl(int _leftArmStatus)
 //{
 //	leftArmEn = 1;
