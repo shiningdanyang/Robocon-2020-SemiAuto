@@ -34,13 +34,12 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_tim_ex.h \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart.h \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart_ex.h \
- D:/STM32CubeIDE_DefaultWorkspace/OFFICIAL_SRC/Robocon-2020-SemiAuto/brain/Trn_Brain/DNL_H7_DelayMicroseconds.h \
- D:/STM32CubeIDE_DefaultWorkspace/OFFICIAL_SRC/Robocon-2020-SemiAuto/brain/Trn_Brain/DNL_Peripheral_UART.h \
- D:/STM32CubeIDE_DefaultWorkspace/OFFICIAL_SRC/Robocon-2020-SemiAuto/brain/Trn_Brain/DNL_Peripheral_ADC.h \
- D:/STM32CubeIDE_DefaultWorkspace/OFFICIAL_SRC/Robocon-2020-SemiAuto/brain/Trn_Brain/DNL_SolvePID.h \
- D:/STM32CubeIDE_DefaultWorkspace/OFFICIAL_SRC/Robocon-2020-SemiAuto/brain/Trn_Brain/DNL_PositionControl.h \
- D:/STM32CubeIDE_DefaultWorkspace/OFFICIAL_SRC/Robocon-2020-SemiAuto/brain/Trn_Brain/DNL_Callback.h \
- D:/STM32CubeIDE_DefaultWorkspace/OFFICIAL_SRC/Robocon-2020-SemiAuto/brain/Trn_Brain/DNL_Loop.h
+ D:/STM32CubeIDE_DefaultWorkspace/OFFICIAL_SRC/Robocon-2020-SemiAuto/brain/Trn_Brain/DNL_SemiAuto_Brain_DelayUs.h \
+ D:/STM32CubeIDE_DefaultWorkspace/OFFICIAL_SRC/Robocon-2020-SemiAuto/brain/Trn_Brain/DNL_SemiAuto_Brain_UART.h \
+ D:/STM32CubeIDE_DefaultWorkspace/OFFICIAL_SRC/Robocon-2020-SemiAuto/brain/Trn_Brain/DNL_SemiAuto_Brain_ADC.h \
+ D:/STM32CubeIDE_DefaultWorkspace/OFFICIAL_SRC/Robocon-2020-SemiAuto/brain/Trn_Brain/DNL_SemiAuto_Brain_PID.h \
+ D:/STM32CubeIDE_DefaultWorkspace/OFFICIAL_SRC/Robocon-2020-SemiAuto/brain/Trn_Brain/DNL_SemiAuto_Brain_Leg.h \
+ D:/STM32CubeIDE_DefaultWorkspace/OFFICIAL_SRC/Robocon-2020-SemiAuto/brain/Trn_Brain/DNL_Callback.h
 
 ../Core/Inc/main.h:
 
@@ -114,16 +113,14 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
 
 ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart_ex.h:
 
-D:/STM32CubeIDE_DefaultWorkspace/OFFICIAL_SRC/Robocon-2020-SemiAuto/brain/Trn_Brain/DNL_H7_DelayMicroseconds.h:
+D:/STM32CubeIDE_DefaultWorkspace/OFFICIAL_SRC/Robocon-2020-SemiAuto/brain/Trn_Brain/DNL_SemiAuto_Brain_DelayUs.h:
 
-D:/STM32CubeIDE_DefaultWorkspace/OFFICIAL_SRC/Robocon-2020-SemiAuto/brain/Trn_Brain/DNL_Peripheral_UART.h:
+D:/STM32CubeIDE_DefaultWorkspace/OFFICIAL_SRC/Robocon-2020-SemiAuto/brain/Trn_Brain/DNL_SemiAuto_Brain_UART.h:
 
-D:/STM32CubeIDE_DefaultWorkspace/OFFICIAL_SRC/Robocon-2020-SemiAuto/brain/Trn_Brain/DNL_Peripheral_ADC.h:
+D:/STM32CubeIDE_DefaultWorkspace/OFFICIAL_SRC/Robocon-2020-SemiAuto/brain/Trn_Brain/DNL_SemiAuto_Brain_ADC.h:
 
-D:/STM32CubeIDE_DefaultWorkspace/OFFICIAL_SRC/Robocon-2020-SemiAuto/brain/Trn_Brain/DNL_SolvePID.h:
+D:/STM32CubeIDE_DefaultWorkspace/OFFICIAL_SRC/Robocon-2020-SemiAuto/brain/Trn_Brain/DNL_SemiAuto_Brain_PID.h:
 
-D:/STM32CubeIDE_DefaultWorkspace/OFFICIAL_SRC/Robocon-2020-SemiAuto/brain/Trn_Brain/DNL_PositionControl.h:
+D:/STM32CubeIDE_DefaultWorkspace/OFFICIAL_SRC/Robocon-2020-SemiAuto/brain/Trn_Brain/DNL_SemiAuto_Brain_Leg.h:
 
 D:/STM32CubeIDE_DefaultWorkspace/OFFICIAL_SRC/Robocon-2020-SemiAuto/brain/Trn_Brain/DNL_Callback.h:
-
-D:/STM32CubeIDE_DefaultWorkspace/OFFICIAL_SRC/Robocon-2020-SemiAuto/brain/Trn_Brain/DNL_Loop.h:

@@ -2,8 +2,6 @@
 #include "math.h"
 #define PI 3.14159265
 
-
-
 int16_t yawError, yawPreError;
 double yawP, yawI, yawD;
 double yawKp = 0.55, yawKd = 0.0, yawKi = 0.0;//0.7//0.6//0.6
@@ -28,8 +26,6 @@ double PIDyaw(int _yawValue, int _yawSetpoint)
 	yawPreError = yawError;
 	return yawPID;
 }
-
-
 
 #define deg2Rad(angleInDegrees) ((angleInDegrees) * M_PI / 180.0)
 #define rad2Deg(angleInRadians) ((angleInRadians) * 180.0 / M_PI)
@@ -68,7 +64,6 @@ uint8_t motor1Dir;
 uint8_t motor2Dir;
 uint8_t motor3Dir;
 uint8_t motor4Dir;
-
 
 void peripheralPWM_Init()
 {

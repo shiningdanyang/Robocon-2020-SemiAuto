@@ -60,7 +60,6 @@ DMA_HandleTypeDef hdma_usart1_rx;
 DMA_HandleTypeDef hdma_usart3_rx;
 
 /* USER CODE BEGIN PV */
-int constantMoving_tracking;
 int tracking;
 uint32_t startTime;
 /* USER CODE END PV */
@@ -85,13 +84,12 @@ static void MX_ADC2_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-#include "DNL_H7_DelayMicroseconds.h"
-#include "DNL_Peripheral_UART.h"
-#include "DNL_Peripheral_ADC.h"
-#include "DNL_SolvePID.h"
-#include "DNL_PositionControl.h"
+#include "DNL_SemiAuto_Brain_DelayUs.h"
+#include "DNL_SemiAuto_Brain_UART.h"
+#include "DNL_SemiAuto_Brain_ADC.h"
+#include "DNL_SemiAuto_Brain_PID.h"
+#include "DNL_SemiAuto_Brain_Leg.h"
 #include "DNL_Callback.h"
-#include "DNL_Loop.h"
 /* USER CODE END 0 */
 
 /**
@@ -149,8 +147,8 @@ int main(void)
   while (1)
   {
 //	  testPWM();
-	  readADC();
-	  tracking++;
+//	  readADC();
+//	  tracking++;
 //	  readADC();
 //	  HAL_GPIO_TogglePin(GPIOG, GPIO_PIN_0);
 //	  HAL_GPIO_TogglePin(GPIOG, GPIO_PIN_2);
@@ -159,12 +157,11 @@ int main(void)
 //	  tracking++;
 
 	  /////////////test shoot/////////////////////////////////////////////
-////	  legControl(legInitShoot);
-////	  HAL_Delay(3000);
-////	  while(1);
+//	  legControl(LEG_STATUS_RUNUP);
+//	  HAL_Delay(5000);
 //	  legShoot();
 //	  HAL_Delay(1000);
-//	  legControl(legReInitShoot);
+//	  legControl(LEG_STATUS_RUNUP2);
 //	  HAL_Delay(1000);
 ////	  legControl(legEnd);
 //	  while(1);

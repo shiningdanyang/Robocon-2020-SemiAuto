@@ -51,7 +51,8 @@ extern uint8_t motor1Dir;
 extern uint8_t motor2Dir;
 extern uint8_t motor3Dir;
 extern uint8_t motor4Dir;
-extern uint8_t brainCheckbyteCount, brainData[5], brainDataIndex;
+extern uint8_t brainCheckbyteCount, brainData[5], brainDataIndex, brainRxPacketDMA[1];
+extern void brainDMA_ProcessingData(void);
 //extern char* controlData;
 /* USER CODE END PV */
 
@@ -66,6 +67,7 @@ extern uint8_t brainCheckbyteCount, brainData[5], brainDataIndex;
 /* USER CODE END 0 */
 
 /* External variables --------------------------------------------------------*/
+extern DMA_HandleTypeDef hdma_usart1_rx;
 extern UART_HandleTypeDef huart1;
 /* USER CODE BEGIN EV */
 
@@ -219,6 +221,34 @@ void USART1_IRQHandler(void)
   /* USER CODE BEGIN USART1_IRQn 1 */
 
   /* USER CODE END USART1_IRQn 1 */
+}
+
+/**
+  * @brief This function handles DMA2 stream2 global interrupt.
+  */
+void DMA2_Stream2_IRQHandler(void)
+{
+  /* USER CODE BEGIN DMA2_Stream2_IRQn 0 */
+	brainDMA_ProcessingData();
+//	if(brainCheckbyteCount == 4 )
+//	{
+//	  brainData[brainDataIndex++] = brainRxPacketDMA[0];
+//		if(brainDataIndex > 5)
+//		{
+//			brainDataIndex = 0;
+//			brainCheckbyteCount = 0;
+//		}
+//	}
+//	if(brainRxPacketDMA[0] == 0xAA)
+//		brainCheckbyteCount++;
+//	else
+//		if(brainCheckbyteCount != 4)
+//			brainCheckbyteCount = 0;
+  /* USER CODE END DMA2_Stream2_IRQn 0 */
+  HAL_DMA_IRQHandler(&hdma_usart1_rx);
+  /* USER CODE BEGIN DMA2_Stream2_IRQn 1 */
+
+  /* USER CODE END DMA2_Stream2_IRQn 1 */
 }
 
 /* USER CODE BEGIN 1 */
