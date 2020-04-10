@@ -167,6 +167,19 @@ int main(void)
 //	  legControl(LEG_STATUS_RUNUP2);
 //	  HAL_Delay(1000);
 //	  legControl(legEnd);
+	  HAL_Delay(3000);
+
+//	  HAL_GPIO_WritePin(legEn_GPIO_Port, legEn_Pin, GPIO_PIN_RESET);	//enable legEn Pin
+//	  HAL_GPIO_WritePin(legDir_GPIO_Port, legDir_Pin, legBackward);
+//	  HAL_Delay(50);
+//	  for(int i = 0; i < LEG_PUL_SHOOT; ++i)
+//	  {
+//		  HAL_GPIO_WritePin(legPul_GPIO_Port, legPul_Pin, GPIO_PIN_SET);
+//		  delayUs(120);
+//		  HAL_GPIO_WritePin(legPul_GPIO_Port, legPul_Pin, GPIO_PIN_RESET);
+//		  delayUs(120);
+//		  trackingLegShoot++;
+//	  }
 	  while(1);
 ///////////////////////////////////////////////////////////////////////
 
