@@ -115,8 +115,7 @@ int main(void)
   /* USER CODE BEGIN 2 */
   peripheralPWM_Init();
   peripheralUART_Init();
-//  startPeripheralUART();
-  HAL_Delay(4000);
+  HAL_Delay(INIT_TIME);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -131,12 +130,11 @@ int main(void)
 //	  controlMotor3(brainRxPacket[2], brainRxPacket[6]);
 //	  controlMotor4(brainRxPacket[3], brainRxPacket[7]);
 
-//	  controlMotor1(brainRxPacket[0], brainData[4]);
-//	  controlMotor2(brainRxPacket[1], brainData[5]);
-//	  controlMotor3(brainRxPacket[2], brainData[6]);
-//	  controlMotor4(brainRxPacket[3], brainData[7]);
-	  tracking++;
-//	  HAL_Delay(500);
+//	  controlMotor1(brainData[0], brainData[4]);
+//	  controlMotor2(brainData[1], brainData[5]);
+//	  controlMotor3(brainData[2], brainData[6]);
+//	  controlMotor4(brainData[3], brainData[7]);
+//	  tracking++;
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

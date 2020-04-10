@@ -1,8 +1,16 @@
 //include sau DelayMicroseconds.h
+#define SPINAL_CORD_MODE_ONEWAY
+
+#ifdef SPINAL_CORD_MODE_ONEWAY
+#define INIT_TIME 4000
+#endif
+#ifndef SPINAL_CORD_MODE_ONEWAY
+#define INIT_TIME 2000
+#endif
+
 void peripheralUART_Init(void);
 void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart);
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart);
-#define SPINAL_CORD_MODE_ONEWAY
 ////////////////////////////////////////////////////////////////
 #define compass huart1
 uint8_t compassTxPacket[9] = "compassTx";
@@ -34,12 +42,11 @@ uint8_t PS2CheckbyteCount = 0, PS2Data[6], PS2DataIndex;
 int16_t PS2Button, PS2JoyLeft,PS2JoyRigt;
 char* controlData;
 ////////////////////////////////////////////////////////////////
-
 #define spinalCord huart6
 uint8_t spinalCordTxPacket[9] = "mainBoard";
 uint8_t spinalCordRxPacket[9];
-uint8_t spinalCordTxCplt;
-uint8_t spinalCordRxCplt;
+uint8_t spinalCordTxCplt_Flag;
+uint8_t spinalCordRxCplt_Flag;
 
 #ifdef SPINAL_CORD_MODE_ONEWAY
 #define motor1Speed 	4
@@ -65,17 +72,17 @@ void wait4SpinalCordRx(void);
 void spinalCordDeInit(void);
 void spinalCordInit(void);
 ////////////////////////////////////////////////////////////////
-#define manualRobot huart7
-uint8_t manualRobotTxPacket[8] = "manualRo";
-uint8_t manualRobotRxPacket[8];
-uint8_t manualRobotTxCplt;
-uint8_t manualRobotRxCplt;
-void manualRobotTrans(void);
-void manualRobotRecei(void);
-void wait4ManualRobotTx(void);
-void wait4ManualRobotRx(void);
-void manualRobotDeinit(void);
-void manualRobotInit(void);
+#define zmanual huart7
+uint8_t zmanualTxPacket[8] = "manualRo";
+uint8_t zmanualRxPacket[8];
+uint8_t zmanualTxCplt_Flag;
+uint8_t zmanualRxCplt_Flag;
+void zmanualTrans(void);
+void zmanualRecei(void);
+void wait4zmanualTx(void);
+void wait4zmanualRx(void);
+void zmanualDeinit(void);
+void zmanualInit(void);
 ////////////////////////////////////////////////////////////////
 #ifdef SPINAL_CORD_MODE_ONEWAY
 void peripheralUART_Init()
@@ -112,11 +119,11 @@ void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
 	}
 	else if(huart->Instance == spinalCord.Instance)
 	{
-		spinalCordTxCplt = 1;
+		spinalCordTxCplt_Flag = 1;
 	}
-	else if(huart->Instance == manualRobot.Instance)
+	else if(huart->Instance == zmanual.Instance)
 	{
-		manualRobotTxCplt = 1;
+		zmanualTxCplt_Flag = 1;
 	}
 }
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
@@ -135,12 +142,12 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 		{
 			HAL_UART_Transmit(&spinalCord, spinalCordTxPacket, 9,100);
 		}
-		spinalCordRxCplt = 1;
+		spinalCordRxCplt_Flag = 1;
 		HAL_UART_Receive_IT(&spinalCord, spinalCordRxPacket, 1);
 	}
-	else if(huart->Instance == manualRobot.Instance)
+	else if(huart->Instance == zmanual.Instance)
 	{
-		manualRobotRxCplt = 1;
+		zmanualRxCplt_Flag = 1;
 	}
 }
 ////////////////////////////////////////////////////////////
@@ -214,18 +221,18 @@ void spinalCordRecei(void)
 
 void wait4SpinalCordTx(void)
 {
-	while(spinalCordTxCplt == 0)
+	while(spinalCordTxCplt_Flag == 0)
 	{
 	}
-	spinalCordTxCplt = 0;
+	spinalCordTxCplt_Flag = 0;
 }
 
 void wait4SpinalCordRx(void)
 {
-	while(spinalCordRxCplt == 0)
+	while(spinalCordRxCplt_Flag == 0)
 	{
 	}
-	spinalCordRxCplt = 0;
+	spinalCordRxCplt_Flag = 0;
 }
 
 ////////////////////////////////////////////////////////////
@@ -269,39 +276,37 @@ void wait4PS2Rx(void)
 	PS2TxCplt_Flag = 0;
 }
 ////////////////////////////////////////////////////////////
-void manualRobotDeInit(void)
+void zmanualDeInit(void)
 {
-	HAL_UART_DeInit(&manualRobot);
+	HAL_UART_DeInit(&zmanual);
 }
 
-void manualRobotInit(void)
+void zmanualInit(void)
 {
-	HAL_UART_Init(&manualRobot);
+	HAL_UART_Init(&zmanual);
 }
 
-void manualRobotTrans()
+void zmanualTrans()
 {
-	HAL_UART_Transmit_IT(&manualRobot, manualRobotTxPacket, 8);
-	wait4ManualRobotTx();
+	HAL_UART_Transmit_IT(&zmanual, zmanualTxPacket, 8);
+	wait4zmanualTx();
 }
-void manualRobotRecei()
+void zmanualRecei()
 {
-	HAL_UART_Receive_IT(&manualRobot, manualRobotRxPacket, 1);
-	wait4ManualRobotRx();
+	HAL_UART_Receive_IT(&zmanual, zmanualRxPacket, 1);
+	wait4zmanualRx();
 }
-void wait4ManualRobotTx(void)
+void wait4zmanualTx(void)
 {
-	while(manualRobotTxCplt == 0)
+	while(zmanualTxCplt_Flag == 0)
 	{
 	}
-	manualRobotTxCplt = 0;
+	zmanualTxCplt_Flag = 0;
 }
-int manualRobotRxTracking;
-void wait4ManualRobotRx(void)
+void wait4zmanualRx(void)
 {
-	while(manualRobotRxCplt == 0)
+	while(zmanualRxCplt_Flag == 0)
 	{
-		manualRobotRxTracking++;
 	}
-	manualRobotRxCplt = 0;
+	zmanualRxCplt_Flag = 0;
 }

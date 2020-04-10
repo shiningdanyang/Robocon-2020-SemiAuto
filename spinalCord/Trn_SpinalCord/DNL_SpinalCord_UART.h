@@ -1,5 +1,13 @@
 //include sau DNL_Slave_MotorControl.h
 #define SPINAL_CORD_MODE_ONEWAY
+
+#ifdef SPINAL_CORD_MODE_ONEWAY
+#define INIT_TIME 2000
+#endif
+#ifndef SPINAL_CORD_MODE_ONEWAY
+#define INIT_TIME 4000
+#endif
+
 #define brain huart1
 uint8_t brainTxPacket[9]={'z', 'u', 'v', 'w', 'x', 'y', 'z', 'a'};
 uint8_t brainRxPacket[9];

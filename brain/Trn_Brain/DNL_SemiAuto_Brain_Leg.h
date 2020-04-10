@@ -7,11 +7,11 @@
 #define LEG_STATUS_RUNUP2 	1
 #define legEnd 			2
 
-#define LEG_PUL_INIT_SHOOT 450
-#define LEG_PUL_END 450
+#define LEG_PUL_RUNUP 200
 #define LEG_PUL_RUNUP2 1400
+#define LEG_PUL_END 450
 #define LEG_PUL_SHOOT 700
-#define LEG_DELAYUS_SHOOT 1
+#define LEG_DELAYUS_SHOOT 60
 
 int trackingLeg;
 int trackingLegShoot;
@@ -31,6 +31,7 @@ int leftArmElapsedPulses;
 void positionControl_Init(void)
 {
 	  HAL_TIM_Base_Start_IT(&leg);
+	  HAL_GPIO_WritePin(legEn_GPIO_Port, legEn_Pin, GPIO_PIN_RESET);
 }
 
 void legShoot()
@@ -66,7 +67,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 				HAL_GPIO_TogglePin(legPul_GPIO_Port, legPul_Pin);				//tạo xung chân legPul
 				trackingLeg++;
 				legElapsedPulses++;												//đếm số xung
-				if (legElapsedPulses >= LEG_PUL_INIT_SHOOT)
+				if (legElapsedPulses >= LEG_PUL_RUNUP)
 				{
 					legEn = 0;													//kết thúc quá trình điều khiển
 					legElapsedPulses = 0;										//kết thúc quá trình điều khiển
@@ -74,7 +75,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 			}
 			if(legStatus == LEG_STATUS_RUNUP2)
 			{
-				HAL_GPIO_WritePin(legDir_GPIO_Port, legDir_Pin, legBackward);	//cấu hình chân legDir để lùi
+				HAL_GPIO_WritePin(legDir_GPIO_Port, legDir_Pin, legForward);	//cấu hình chân legDir để tiến
 				HAL_GPIO_TogglePin(legPul_GPIO_Port, legPul_Pin);				//tạo xung chân legPul
 				trackingLeg++;
 				legElapsedPulses++;												//đếm số xung

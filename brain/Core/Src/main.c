@@ -49,8 +49,6 @@ DMA_HandleTypeDef hdma_adc2;
 DMA_HandleTypeDef hdma_adc3;
 
 TIM_HandleTypeDef htim7;
-TIM_HandleTypeDef htim12;
-TIM_HandleTypeDef htim15;
 
 UART_HandleTypeDef huart7;
 UART_HandleTypeDef huart1;
@@ -73,8 +71,6 @@ static void MX_ADC3_Init(void);
 static void MX_USART1_UART_Init(void);
 static void MX_USART3_UART_Init(void);
 static void MX_TIM7_Init(void);
-static void MX_TIM12_Init(void);
-static void MX_TIM15_Init(void);
 static void MX_UART7_Init(void);
 static void MX_USART6_UART_Init(void);
 static void MX_ADC2_Init(void);
@@ -126,8 +122,6 @@ int main(void)
   MX_USART1_UART_Init();
   MX_USART3_UART_Init();
   MX_TIM7_Init();
-  MX_TIM12_Init();
-  MX_TIM15_Init();
   MX_UART7_Init();
   MX_USART6_UART_Init();
   MX_ADC2_Init();
@@ -136,9 +130,10 @@ int main(void)
   peripheralADC_Init();
   delayUs_Init();
   positionControl_Init();
-  brake();
-  compassReset();
-  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_RESET);
+  tracking = 1000;
+//  brake();
+//  compassReset();
+//  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_RESET);
   HAL_Delay(2000);
   /* USER CODE END 2 */
 
@@ -147,6 +142,7 @@ int main(void)
   while (1)
   {
 //	  testPWM();
+//////////////////////////////////////////////////////////////////////
 //	  readADC();
 //	  tracking++;
 //	  readADC();
@@ -156,15 +152,22 @@ int main(void)
 ////	  HAL_Delay(500);
 //	  tracking++;
 
-	  /////////////test shoot/////////////////////////////////////////////
+/////////////test shoot/////////////////////////////////////////////
+//for(int i = 0; i< 200; ++i)
+//{
+//	HAL_GPIO_WritePin(legEn_GPIO_Port, legEn_Pin, GPIO_PIN_RESET);
+////	HAL_GPIO_TogglePin(legPul_GPIO_Port, legPul_Pin);
+////	delayUs(1);
+//}
 //	  legControl(LEG_STATUS_RUNUP);
 //	  HAL_Delay(5000);
-//	  legShoot();
+//	  while(1);
+	  legShoot();
 //	  HAL_Delay(1000);
 //	  legControl(LEG_STATUS_RUNUP2);
 //	  HAL_Delay(1000);
-////	  legControl(legEnd);
-//	  while(1);
+//	  legControl(legEnd);
+	  while(1);
 ///////////////////////////////////////////////////////////////////////
 
 //////////////////////test xoay la bàn////////////////////////////////
@@ -486,90 +489,6 @@ static void MX_TIM7_Init(void)
   /* USER CODE BEGIN TIM7_Init 2 */
 
   /* USER CODE END TIM7_Init 2 */
-
-}
-
-/**
-  * @brief TIM12 Initialization Function
-  * @param None
-  * @retval None
-  */
-static void MX_TIM12_Init(void)
-{
-
-  /* USER CODE BEGIN TIM12_Init 0 */
-
-  /* USER CODE END TIM12_Init 0 */
-
-  TIM_ClockConfigTypeDef sClockSourceConfig = {0};
-
-  /* USER CODE BEGIN TIM12_Init 1 */
-
-  /* USER CODE END TIM12_Init 1 */
-  htim12.Instance = TIM12;
-  htim12.Init.Prescaler = 2399;
-  htim12.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim12.Init.Period = 999;
-  htim12.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
-  htim12.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
-  if (HAL_TIM_Base_Init(&htim12) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
-  if (HAL_TIM_ConfigClockSource(&htim12, &sClockSourceConfig) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /* USER CODE BEGIN TIM12_Init 2 */
-
-  /* USER CODE END TIM12_Init 2 */
-
-}
-
-/**
-  * @brief TIM15 Initialization Function
-  * @param None
-  * @retval None
-  */
-static void MX_TIM15_Init(void)
-{
-
-  /* USER CODE BEGIN TIM15_Init 0 */
-
-  /* USER CODE END TIM15_Init 0 */
-
-  TIM_ClockConfigTypeDef sClockSourceConfig = {0};
-  TIM_MasterConfigTypeDef sMasterConfig = {0};
-
-  /* USER CODE BEGIN TIM15_Init 1 */
-
-  /* USER CODE END TIM15_Init 1 */
-  htim15.Instance = TIM15;
-  htim15.Init.Prescaler = 2399;
-  htim15.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim15.Init.Period = 999;
-  htim15.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
-  htim15.Init.RepetitionCounter = 0;
-  htim15.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
-  if (HAL_TIM_Base_Init(&htim15) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
-  if (HAL_TIM_ConfigClockSource(&htim15, &sClockSourceConfig) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
-  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
-  if (HAL_TIMEx_MasterConfigSynchronization(&htim15, &sMasterConfig) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /* USER CODE BEGIN TIM15_Init 2 */
-
-  /* USER CODE END TIM15_Init 2 */
 
 }
 
