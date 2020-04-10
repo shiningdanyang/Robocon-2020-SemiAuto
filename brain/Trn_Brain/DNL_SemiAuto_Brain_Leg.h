@@ -33,7 +33,7 @@ void positionControl_Init(void)
 	  HAL_TIM_Base_Start_IT(&leg);
 	  HAL_GPIO_WritePin(legEn_GPIO_Port, legEn_Pin, GPIO_PIN_RESET);
 }
-
+//
 void legShoot()
 {
 	  HAL_Delay(50);
