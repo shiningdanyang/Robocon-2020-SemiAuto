@@ -39,9 +39,9 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING
  17 .debug_line   00012344  00000000  00000000  0007e9e4  2**0
                   CONTENTS, READONLY, DEBUGGING
- 18 .debug_str    0017379a  00000000  00000000  00090d28  2**0
+ 18 .debug_str    0017379b  00000000  00000000  00090d28  2**0
                   CONTENTS, READONLY, DEBUGGING
- 19 .comment      0000007b  00000000  00000000  002044c2  2**0
+ 19 .comment      0000007b  00000000  00000000  002044c3  2**0
                   CONTENTS, READONLY
  20 .debug_frame  00005f08  00000000  00000000  00204540  2**2
                   CONTENTS, READONLY, DEBUGGING
@@ -769,7 +769,7 @@ void legShoot()
  800086c:	4810      	ldr	r0, [pc, #64]	; (80008b0 <legShoot+0x78>)
  800086e:	f005 f91f 	bl	8005ab0 <HAL_GPIO_WritePin>
 		  delayUs(LEG_DELAYUS_SHOOT);
- 8000872:	203c      	movs	r0, #60	; 0x3c
+ 8000872:	2064      	movs	r0, #100	; 0x64
  8000874:	f7ff fed0 	bl	8000618 <delayUs>
 		  HAL_GPIO_WritePin(legPul_GPIO_Port, legPul_Pin, GPIO_PIN_RESET);
  8000878:	2200      	movs	r2, #0
@@ -777,7 +777,7 @@ void legShoot()
  800087e:	480c      	ldr	r0, [pc, #48]	; (80008b0 <legShoot+0x78>)
  8000880:	f005 f916 	bl	8005ab0 <HAL_GPIO_WritePin>
 		  delayUs(LEG_DELAYUS_SHOOT);
- 8000884:	203c      	movs	r0, #60	; 0x3c
+ 8000884:	2064      	movs	r0, #100	; 0x64
  8000886:	f7ff fec7 	bl	8000618 <delayUs>
 		  trackingLegShoot++;
  800088a:	4b0a      	ldr	r3, [pc, #40]	; (80008b4 <legShoot+0x7c>)
