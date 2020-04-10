@@ -769,7 +769,7 @@ void legShoot()
  800086c:	4810      	ldr	r0, [pc, #64]	; (80008b0 <legShoot+0x78>)
  800086e:	f005 f91f 	bl	8005ab0 <HAL_GPIO_WritePin>
 		  delayUs(LEG_DELAYUS_SHOOT);
- 8000872:	2064      	movs	r0, #100	; 0x64
+ 8000872:	207d      	movs	r0, #125	; 0x7d
  8000874:	f7ff fed0 	bl	8000618 <delayUs>
 		  HAL_GPIO_WritePin(legPul_GPIO_Port, legPul_Pin, GPIO_PIN_RESET);
  8000878:	2200      	movs	r2, #0
@@ -777,7 +777,7 @@ void legShoot()
  800087e:	480c      	ldr	r0, [pc, #48]	; (80008b0 <legShoot+0x78>)
  8000880:	f005 f916 	bl	8005ab0 <HAL_GPIO_WritePin>
 		  delayUs(LEG_DELAYUS_SHOOT);
- 8000884:	2064      	movs	r0, #100	; 0x64
+ 8000884:	207d      	movs	r0, #125	; 0x7d
  8000886:	f7ff fec7 	bl	8000618 <delayUs>
 		  trackingLegShoot++;
  800088a:	4b0a      	ldr	r3, [pc, #40]	; (80008b4 <legShoot+0x7c>)
