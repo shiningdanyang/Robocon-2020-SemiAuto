@@ -46,6 +46,7 @@ TIM_HandleTypeDef htim3;
 TIM_HandleTypeDef htim4;
 TIM_HandleTypeDef htim5;
 
+UART_HandleTypeDef huart4;
 UART_HandleTypeDef huart1;
 DMA_HandleTypeDef hdma_usart1_rx;
 
@@ -65,6 +66,7 @@ static void MX_TIM2_Init(void);
 static void MX_TIM3_Init(void);
 static void MX_TIM4_Init(void);
 static void MX_TIM5_Init(void);
+static void MX_UART4_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -112,6 +114,7 @@ int main(void)
   MX_TIM3_Init();
   MX_TIM4_Init();
   MX_TIM5_Init();
+  MX_UART4_Init();
   /* USER CODE BEGIN 2 */
   peripheralPWM_Init();
   peripheralUART_Init();
@@ -129,11 +132,20 @@ int main(void)
 //	  controlMotor2(brainRxPacket[1], brainRxPacket[5]);
 //	  controlMotor3(brainRxPacket[2], brainRxPacket[6]);
 //	  controlMotor4(brainRxPacket[3], brainRxPacket[7]);
+	  controlMotor1(motor1Speed, motor1Dir);
+	  controlMotor2(motor2Speed, motor2Dir);
+	  controlMotor3(motor3Speed, motor3Dir);
+	  controlMotor4(motor4Speed, motor4Dir);
 
-//	  controlMotor1(brainData[0], brainData[4]);
-//	  controlMotor2(brainData[1], brainData[5]);
-//	  controlMotor3(brainData[2], brainData[6]);
-//	  controlMotor4(brainData[3], brainData[7]);
+//	  debugTxPacket[0] = motor1Speed;
+//	  debugTxPacket[1] = motor2Speed;
+//	  debugTxPacket[2] = motor3Speed;
+//	  debugTxPacket[3] = motor4Speed;
+//	  debugTxPacket[4] = motor1Dir;
+//	  debugTxPacket[5] = motor2Dir;
+//	  debugTxPacket[6] = motor3Dir;
+//	  debugTxPacket[7] = motor4Dir;
+//	  HAL_UART_Transmit(&huart4, debugTxPacket, 9, 50);
 //	  tracking++;
     /* USER CODE END WHILE */
 
@@ -422,6 +434,39 @@ static void MX_TIM5_Init(void)
 }
 
 /**
+  * @brief UART4 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_UART4_Init(void)
+{
+
+  /* USER CODE BEGIN UART4_Init 0 */
+
+  /* USER CODE END UART4_Init 0 */
+
+  /* USER CODE BEGIN UART4_Init 1 */
+
+  /* USER CODE END UART4_Init 1 */
+  huart4.Instance = UART4;
+  huart4.Init.BaudRate = 115200;
+  huart4.Init.WordLength = UART_WORDLENGTH_8B;
+  huart4.Init.StopBits = UART_STOPBITS_1;
+  huart4.Init.Parity = UART_PARITY_NONE;
+  huart4.Init.Mode = UART_MODE_TX_RX;
+  huart4.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+  huart4.Init.OverSampling = UART_OVERSAMPLING_16;
+  if (HAL_UART_Init(&huart4) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN UART4_Init 2 */
+
+  /* USER CODE END UART4_Init 2 */
+
+}
+
+/**
   * @brief USART1 Initialization Function
   * @param None
   * @retval None
@@ -482,6 +527,7 @@ static void MX_GPIO_Init(void)
   /* GPIO Ports Clock Enable */
   __HAL_RCC_GPIOA_CLK_ENABLE();
   __HAL_RCC_GPIOD_CLK_ENABLE();
+  __HAL_RCC_GPIOC_CLK_ENABLE();
   __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */

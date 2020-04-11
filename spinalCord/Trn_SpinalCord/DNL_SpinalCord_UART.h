@@ -25,14 +25,17 @@ void brainRequest(void);
 void brainGetData(void);
 void wait4BrainTx(void);
 void wait4BrainRx(void);
-
 uint8_t brainCheckbyteCount = 0, brainData[5], brainDataIndex;
 char* controlData;
+
+#define debug huart4
+uint8_t debugTxPacket[9];
 
 #ifdef SPINAL_CORD_MODE_ONEWAY
 void peripheralUART_Init(void)
 {
 	HAL_UART_Receive_DMA(&brain, brainRxPacket, 1);
+	debugTxPacket[8] = '\n';
 }
 #endif
 #ifndef SPINAL_CORD_MODE_ONEWAY

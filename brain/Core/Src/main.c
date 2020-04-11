@@ -131,9 +131,9 @@ int main(void)
   delayUs_Init();
   positionControl_Init();
   tracking = 1000;
-//  brake();
-//  compassReset();
-//  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_RESET);
+  brake();
+  compassReset();
+  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_RESET);
   HAL_Delay(2000);
   /* USER CODE END 2 */
 
@@ -141,10 +141,10 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-//	  testPWM();
+	  testPWM();
 //////////////////////////////////////////////////////////////////////
 //	  readADC();
-//	  tracking++;
+	  tracking++;
 //	  readADC();
 //	  HAL_GPIO_TogglePin(GPIOG, GPIO_PIN_0);
 //	  HAL_GPIO_TogglePin(GPIOG, GPIO_PIN_2);
@@ -162,12 +162,12 @@ int main(void)
 //	  legControl(LEG_STATUS_RUNUP);
 //	  HAL_Delay(5000);
 //	  while(1);
-	  legShoot();
+//	  legShoot();
 //	  HAL_Delay(1000);
 //	  legControl(LEG_STATUS_RUNUP2);
 //	  HAL_Delay(1000);
 //	  legControl(legEnd);
-	  HAL_Delay(3000);
+//	  HAL_Delay(3000);
 
 //	  HAL_GPIO_WritePin(legEn_GPIO_Port, legEn_Pin, GPIO_PIN_RESET);	//enable legEn Pin
 //	  HAL_GPIO_WritePin(legDir_GPIO_Port, legDir_Pin, legBackward);
@@ -180,7 +180,7 @@ int main(void)
 //		  delayUs(120);
 //		  trackingLegShoot++;
 //	  }
-	  while(1);
+//	  while(1);
 ///////////////////////////////////////////////////////////////////////
 
 //////////////////////test xoay la bàn////////////////////////////////

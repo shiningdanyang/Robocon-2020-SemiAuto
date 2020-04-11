@@ -53,6 +53,7 @@ extern uint8_t motor3Dir;
 extern uint8_t motor4Dir;
 extern uint8_t brainCheckbyteCount, brainData[5], brainDataIndex, brainRxPacketDMA[1];
 extern void brainDMA_ProcessingData(void);
+extern uint8_t debugTxPacket[9];
 //extern char* controlData;
 /* USER CODE END PV */
 
@@ -68,6 +69,7 @@ extern void brainDMA_ProcessingData(void);
 
 /* External variables --------------------------------------------------------*/
 extern DMA_HandleTypeDef hdma_usart1_rx;
+extern UART_HandleTypeDef huart4;
 extern UART_HandleTypeDef huart1;
 /* USER CODE BEGIN EV */
 
@@ -224,26 +226,56 @@ void USART1_IRQHandler(void)
 }
 
 /**
+  * @brief This function handles UART4 global interrupt.
+  */
+void UART4_IRQHandler(void)
+{
+  /* USER CODE BEGIN UART4_IRQn 0 */
+
+  /* USER CODE END UART4_IRQn 0 */
+  HAL_UART_IRQHandler(&huart4);
+  /* USER CODE BEGIN UART4_IRQn 1 */
+
+  /* USER CODE END UART4_IRQn 1 */
+}
+
+/**
   * @brief This function handles DMA2 stream2 global interrupt.
   */
 void DMA2_Stream2_IRQHandler(void)
 {
   /* USER CODE BEGIN DMA2_Stream2_IRQn 0 */
-	brainDMA_ProcessingData();
-//	if(brainCheckbyteCount == 4 )
-//	{
-//	  brainData[brainDataIndex++] = brainRxPacketDMA[0];
-//		if(brainDataIndex > 5)
-//		{
-//			brainDataIndex = 0;
-//			brainCheckbyteCount = 0;
-//		}
-//	}
-//	if(brainRxPacketDMA[0] == 0xAA)
-//		brainCheckbyteCount++;
-//	else
-//		if(brainCheckbyteCount != 4)
-//			brainCheckbyteCount = 0;
+	if(brainCheckbyteCount == 4 )
+	{
+	  brainData[brainDataIndex++] = brainRxPacket[0];
+		if(brainDataIndex > 5)
+		{
+			brainDataIndex = 0;
+			brainCheckbyteCount = 0;
+			motor1Speed = brainData[0];
+			motor2Speed = brainData[1];
+			motor3Speed = brainData[2];
+			motor4Speed = brainData[3];
+			motor1Dir = (brainData[4]>>0) & 1U;
+			motor2Dir = (brainData[4]>>1) & 1U;
+			motor3Dir = (brainData[4]>>2) & 1U;
+			motor4Dir = (brainData[4]>>3) & 1U;
+			debugTxPacket[0] = 65;
+		    debugTxPacket[1] = 65;
+		    debugTxPacket[2] = 65;
+		    debugTxPacket[3] = 65;
+		    debugTxPacket[4] = motor1Dir+65;
+		    debugTxPacket[5] = motor2Dir+65;
+		    debugTxPacket[6] = motor3Dir+65;
+		    debugTxPacket[7] = motor4Dir+65;
+		    HAL_UART_Transmit(&huart4, debugTxPacket, 9, 50);
+		}
+	}
+	if(brainRxPacket[0] == 0xAA)
+		brainCheckbyteCount++;
+	else
+		if(brainCheckbyteCount != 4)
+			brainCheckbyteCount = 0;
   /* USER CODE END DMA2_Stream2_IRQn 0 */
   HAL_DMA_IRQHandler(&hdma_usart1_rx);
   /* USER CODE BEGIN DMA2_Stream2_IRQn 1 */
