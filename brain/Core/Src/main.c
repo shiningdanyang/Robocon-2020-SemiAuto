@@ -156,7 +156,7 @@ int main(void)
 //	  HAL_GPIO_TogglePin(GPIOG, GPIO_PIN_3);
 ////	  HAL_Delay(500);
 //	  tracking++;
-
+//
 /////////////test shoot/////////////////////////////////////////////
 //for(int i = 0; i< 200; ++i)
 //{
