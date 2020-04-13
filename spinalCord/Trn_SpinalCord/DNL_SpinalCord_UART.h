@@ -9,8 +9,8 @@
 #endif
 
 #define brain huart1
-uint8_t brainTxPacket[9]={'z', 'u', 'v', 'w', 'x', 'y', 'z', 'a'};
-uint8_t brainRxPacket[9];
+uint8_t brainTxPacket[13]={'z', 'u', 'v', 'w', 'x', 'y', 'z', 'a'};
+uint8_t brainRxPacket[13];
 uint8_t brainTxCplt;
 uint8_t brainRxCplt;
 //#define motor1Speed 0
@@ -25,17 +25,18 @@ void brainRequest(void);
 void brainGetData(void);
 void wait4BrainTx(void);
 void wait4BrainRx(void);
-uint8_t brainCheckbyteCount = 0, brainData[5], brainDataIndex;
+uint8_t brainCheckbyteCount = 0, brainData[9], brainDataIndex;
 char* controlData;
 
 #define debug huart4
-uint8_t debugTxPacket[9];
+uint8_t debugTxPacket[10];
 
 #ifdef SPINAL_CORD_MODE_ONEWAY
 void peripheralUART_Init(void)
 {
-	HAL_UART_Receive_DMA(&brain, brainRxPacket, 1);
-	debugTxPacket[8] = '\n';
+//	HAL_UART_Receive_DMA(&brain, brainRxPacket, 13);
+	HAL_UART_Receive_DMA(&brain, brainRxPacket, 9);
+	debugTxPacket[9] = '\n';
 }
 #endif
 #ifndef SPINAL_CORD_MODE_ONEWAY

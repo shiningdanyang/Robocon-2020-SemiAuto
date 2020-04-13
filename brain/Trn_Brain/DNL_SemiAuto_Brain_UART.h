@@ -43,8 +43,8 @@ int16_t PS2Button, PS2JoyLeft,PS2JoyRigt;
 char* controlData;
 ////////////////////////////////////////////////////////////////
 #define spinalCord huart6
-uint8_t spinalCordTxPacket[9] = "mainBoard";
-uint8_t spinalCordRxPacket[9];
+uint8_t spinalCordTxPacket[13] = "mainBoard";
+uint8_t spinalCordRxPacket[13];
 uint8_t spinalCordTxCplt_Flag;
 uint8_t spinalCordRxCplt_Flag;
 
@@ -54,6 +54,10 @@ uint8_t spinalCordRxCplt_Flag;
 #define motor3Speed 	6
 #define motor4Speed 	7
 #define motorDir		8
+#define motor1Dir		9
+#define motor2Dir		10
+#define motor3Dir		11
+#define motor4Dir		12
 #endif
 #ifndef SPINAL_CORD_MODE_ONEWAY
 #define motor1Speed 0

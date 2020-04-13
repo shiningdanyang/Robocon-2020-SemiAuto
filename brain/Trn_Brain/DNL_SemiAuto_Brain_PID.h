@@ -61,32 +61,40 @@ void controlMotor1(int _speed)
 	spinalCordTxPacket[motor1Speed] = abs(_speed);
 	if(_speed>=0)
 		spinalCordTxPacket[motorDir] &= ~(1UL << 0);
+//		spinalCordTxPacket[motor1Dir] = 0;
 	else
 		spinalCordTxPacket[motorDir] |= (1UL << 0);
+//		spinalCordTxPacket[motor1Dir] = 1;
 }
 void controlMotor2(int _speed)
 {
 	spinalCordTxPacket[motor2Speed] = abs(_speed);
 	if(_speed>=0)
 		spinalCordTxPacket[motorDir] &= ~(1UL << 1);
+//		spinalCordTxPacket[motor2Dir] = 0;
 	else
 		spinalCordTxPacket[motorDir] |= (1UL << 1);
+//		spinalCordTxPacket[motor2Dir] = 1;
 }
 void controlMotor3(int _speed)
 {
 	spinalCordTxPacket[motor3Speed] = abs(_speed);
 	if(_speed>=0)
 		spinalCordTxPacket[motorDir] &= ~(1UL << 2);
+//		spinalCordTxPacket[motor3Dir] = 0;
 	else
 		spinalCordTxPacket[motorDir] |= (1UL << 2);
+//		spinalCordTxPacket[motor3Dir] = 1;
 }
 void controlMotor4(int _speed)
 {
 	spinalCordTxPacket[motor4Speed] = abs(_speed);
 	if(_speed>=0)
 		spinalCordTxPacket[motorDir] &= ~(1UL << 3);
+//		spinalCordTxPacket[motor4Dir] = 0;
 	else
 		spinalCordTxPacket[motorDir] |= (1UL << 3);
+//		spinalCordTxPacket[motor4Dir] = 1;
 }
 void testPWM(void)
 {
@@ -96,7 +104,13 @@ void testPWM(void)
 	  controlMotor2(i);
 	  controlMotor3(i);
 	  controlMotor4(i);
+	  PS2TxPacket[0]=spinalCordTxPacket[motor1Dir]+65;
+	  PS2TxPacket[1]=spinalCordTxPacket[motor2Dir]+65;
+	  PS2TxPacket[2]=spinalCordTxPacket[motor3Dir]+65;
+	  PS2TxPacket[3]=spinalCordTxPacket[motor4Dir]+65;
+	  PS2TxPacket[4]= '\n';
 	  spinalCordTrans();
+	  HAL_UART_Transmit(&PS2, PS2TxPacket, 5, 50);
 	  HAL_Delay(20);
   }
   for(int i = -255; i < 0; ++i)
@@ -105,7 +119,13 @@ void testPWM(void)
 	  controlMotor2(i);
 	  controlMotor3(i);
 	  controlMotor4(i);
+	  PS2TxPacket[0]=spinalCordTxPacket[motor1Dir]+65;
+	  PS2TxPacket[1]=spinalCordTxPacket[motor2Dir]+65;
+	  PS2TxPacket[2]=spinalCordTxPacket[motor3Dir]+65;
+	  PS2TxPacket[3]=spinalCordTxPacket[motor4Dir]+65;
+	  PS2TxPacket[4]= '\n';
 	  spinalCordTrans();
+	  HAL_UART_Transmit(&PS2, PS2TxPacket, 5, 50);
 	  HAL_Delay(20);
   }
   for(int i = 1 ; i < 255; ++i)
@@ -114,7 +134,13 @@ void testPWM(void)
 	  controlMotor2(i);
 	  controlMotor3(i);
 	  controlMotor4(i);
+	  PS2TxPacket[0]=spinalCordTxPacket[motor1Dir]+65;
+	  PS2TxPacket[1]=spinalCordTxPacket[motor2Dir]+65;
+	  PS2TxPacket[2]=spinalCordTxPacket[motor3Dir]+65;
+	  PS2TxPacket[3]=spinalCordTxPacket[motor4Dir]+65;
+	  PS2TxPacket[4]= '\n';
 	  spinalCordTrans();
+	  HAL_UART_Transmit(&PS2, PS2TxPacket, 5, 50);
 	  HAL_Delay(20);
   }
   for(int i = 255; i > 0; --i)
@@ -123,7 +149,13 @@ void testPWM(void)
 	  controlMotor2(i);
 	  controlMotor3(i);
 	  controlMotor4(i);
+	  PS2TxPacket[0]=spinalCordTxPacket[motor1Dir]+65;
+	  PS2TxPacket[1]=spinalCordTxPacket[motor2Dir]+65;
+	  PS2TxPacket[2]=spinalCordTxPacket[motor3Dir]+65;
+	  PS2TxPacket[3]=spinalCordTxPacket[motor4Dir]+65;
+	  PS2TxPacket[4]= '\n';
 	  spinalCordTrans();
+	  HAL_UART_Transmit(&PS2, PS2TxPacket, 5, 50);
 	  HAL_Delay(20);
   }
 }

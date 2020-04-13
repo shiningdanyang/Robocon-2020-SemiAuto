@@ -85,6 +85,7 @@ static void MX_ADC2_Init(void);
 #include "DNL_SemiAuto_Brain_ADC.h"
 #include "DNL_SemiAuto_Brain_PID.h"
 #include "DNL_SemiAuto_Brain_Leg.h"
+#include "DNL_SemiAuto_Brain_LCD.h"
 #include "DNL_Callback.h"
 /* USER CODE END 0 */
 
@@ -102,7 +103,7 @@ int main(void)
 
   /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
   HAL_Init();
-//
+
   /* USER CODE BEGIN Init */
 
   /* USER CODE END Init */
@@ -126,15 +127,19 @@ int main(void)
   MX_USART6_UART_Init();
   MX_ADC2_Init();
   /* USER CODE BEGIN 2 */
+
+  delayUs_Init();
   peripheralUART_Init();
   peripheralADC_Init();
-  delayUs_Init();
   positionControl_Init();
+  ST7920_Init();
+
   tracking = 1000;
   brake();
   compassReset();
   HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_RESET);
   HAL_Delay(2000);
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -665,7 +670,7 @@ static void MX_USART6_UART_Init(void)
 
   /* USER CODE END USART6_Init 1 */
   huart6.Instance = USART6;
-  huart6.Init.BaudRate = 115200;
+  huart6.Init.BaudRate = 9600;
   huart6.Init.WordLength = UART_WORDLENGTH_8B;
   huart6.Init.StopBits = UART_STOPBITS_1;
   huart6.Init.Parity = UART_PARITY_NONE;

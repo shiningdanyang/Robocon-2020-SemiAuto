@@ -1,9 +1,9 @@
 DNL_SpinalCord_UART.h:35:6:peripheralUART_Init	8	static
-DNL_SpinalCord_UART.h:48:6:brainRequest	8	static
-DNL_SpinalCord_UART.h:54:6:brainGetData	8	static
-DNL_SpinalCord_UART.h:61:6:wait4BrainTx	4	static
-DNL_SpinalCord_UART.h:66:6:wait4BrainRx	4	static
-DNL_SpinalCord_UART.h:74:6:brainDMA_ProcessingData	4	static
+DNL_SpinalCord_UART.h:49:6:brainRequest	8	static
+DNL_SpinalCord_UART.h:55:6:brainGetData	8	static
+DNL_SpinalCord_UART.h:62:6:wait4BrainTx	4	static
+DNL_SpinalCord_UART.h:67:6:wait4BrainRx	4	static
+DNL_SpinalCord_UART.h:75:6:brainDMA_ProcessingData	4	static
 DNL_SpinalCord_Motor.h:11:8:PIDyaw	32	static
 DNL_SpinalCord_Motor.h:68:6:peripheralPWM_Init	8	static
 DNL_SpinalCord_Motor.h:76:6:controlMotor1	16	static
