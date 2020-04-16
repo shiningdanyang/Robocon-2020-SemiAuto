@@ -213,9 +213,56 @@ int main(void)
 //		  spinalCordTrans();
 //		  tracking++;
 //	  }
+//	  startTime = HAL_GetTick();
+//	  while(HAL_GetTick()-startTime < 10000)
+//	  {
+//		  HAL_GPIO_WritePin(GPIOB,GPIO_PIN_0,GPIO_PIN_SET);
+//		  PIDyaw(-900, compassData);
+//		  controlMotor1(yawPID);
+//		  controlMotor2(yawPID);
+//		  controlMotor3(yawPID);
+//		  controlMotor4(yawPID);
+//		  spinalCordTrans();
+//		  tracking++;
+//	  }
+//	  startTime = HAL_GetTick();
+//	  while(HAL_GetTick()-startTime < 10000)
+//	  {
+//		  HAL_GPIO_WritePin(GPIOB,GPIO_PIN_0,GPIO_PIN_SET);
+//		  PIDyaw(900, compassData);
+//		  controlMotor1(yawPID);
+//		  controlMotor2(yawPID);
+//		  controlMotor3(yawPID);
+//		  controlMotor4(yawPID);
+//		  spinalCordTrans();
+//		  tracking++;
+//	  }
+//	  startTime = HAL_GetTick();
+//	  while(HAL_GetTick()-startTime < 10000)
+//	  {
+//		  HAL_GPIO_WritePin(GPIOB,GPIO_PIN_0,GPIO_PIN_SET);
+//		  PIDyaw(-900, compassData);
+//		  controlMotor1(yawPID);
+//		  controlMotor2(yawPID);
+//		  controlMotor3(yawPID);
+//		  controlMotor4(yawPID);
+//		  spinalCordTrans();
+//		  tracking++;
+//	  }
+//	  startTime = HAL_GetTick();
+//	  while(HAL_GetTick()-startTime < 10000)
+//	  {
+//		  HAL_GPIO_WritePin(GPIOB,GPIO_PIN_0,GPIO_PIN_SET);
+//		  PIDyaw(900, compassData);
+//		  controlMotor1(yawPID);
+//		  controlMotor2(yawPID);
+//		  controlMotor3(yawPID);
+//		  controlMotor4(yawPID);
+//		  spinalCordTrans();
+//		  tracking++;
+//	  }
 //	  while(1);
 //////////////////////////////////////////////////////////////////////
-
 
 /////////////////PID left////////////////////////////////
 //	  readADC();
@@ -225,6 +272,13 @@ int main(void)
 //	  PIDyaw(0, 0);
 //	  roL_pit_yaw_mixSpeed();
 ////////////////////////////////////////////////////
+
+/////////////////PID left////////////////////////////////
+//	  readADC();
+//	  PIDpit(0, 0);
+//	  PIDroL(0,200);
+//	  PIDyaw(compassData, 0);
+//	  roL_pit_yaw_mixSpeed();
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

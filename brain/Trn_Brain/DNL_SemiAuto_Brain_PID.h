@@ -8,8 +8,9 @@
 #define CCW 0
 #define FCW 1
 
-#define BRAKE_SPEED 100
+#define BRAKE_SPEED 1
 
+//#define MAX_YAW_PID 120
 #define MAX_YAW_PID 120
 #define MIN_YAW_PID -MAX_YAW_PID
 int16_t yawError, yawPreError;
@@ -53,7 +54,11 @@ void controlMotor4(int _speed);
 double PIDyaw(int _yawValue, int _yawSetpoint);
 double PIDroR(int _roRValue, int _roRSetpoint);
 double PIDroL(int _roLValue, int _roLSetpoint);
-
+double PIDpit(int _pitValue, int _pitSetpoint);
+void testPWM(void);
+void roL_pit_yaw_mixSpeed(void);
+void roR_pit_yaw_mixSpeed(void);
+void brake(void);
 
 #ifdef SPINAL_CORD_MODE_ONEWAY
 void controlMotor1(int _speed)
@@ -251,7 +256,7 @@ double PIDyaw(int _yawValue, int _yawSetpoint)
 
 double PIDroR(int _roRValue, int _roRSetpoint)
 {
-	roRError = _roRSetpoint - _roRValue;
+	roRError = -_roRSetpoint + _roRValue;
 	roRP = roRError;
 	roRD = roRError - roRPreError;
 	roRI = roRError + roRI;
@@ -289,7 +294,7 @@ double PIDroL(int _roLValue, int _roLSetpoint)
 
 double PIDpit(int _pitValue, int _pitSetpoint)
 {
-	pitError = _pitSetpoint - _pitValue;
+	pitError = -_pitSetpoint + _pitValue;
 	pitP = pitError;
 	pitD = pitError - pitPreError;
 	pitI = pitError + pitI;
@@ -320,11 +325,17 @@ void testPIDyawMoving(int _yawValue, int _yawSetpoint)
 void roL_pit_yaw_mixSpeed(void)
 {
 	double _roL_pit_speed = sqrt(roLPID*roLPID + pitPID*pitPID);
-	double _roL_pit_dir = atan2(pitPID, roLPID);
-	double _motor1Speed = yawPID + -(_roL_pit_speed *sin(_roL_pit_dir + M_PI/4) + 0);
-	double _motor2Speed = yawPID + -(_roL_pit_speed *cos(_roL_pit_dir + M_PI/4) - 0);
-	double _motor3Speed = yawPID +   _roL_pit_speed *sin(_roL_pit_dir + M_PI/4) + 0;
-	double _motor4Speed = yawPID +   _roL_pit_speed *cos(_roL_pit_dir + M_PI/4) - 0;
+	double _roL_pit_dir = atan2(roLPID, pitPID);
+//	double _motor1Speed = yawPID + -(_roL_pit_speed *sin(_roL_pit_dir + M_PI/4) + 0);
+//	double _motor2Speed = yawPID + -(_roL_pit_speed *cos(_roL_pit_dir + M_PI/4) - 0);
+//	double _motor3Speed = yawPID +   _roL_pit_speed *sin(_roL_pit_dir + M_PI/4) + 0;
+//	double _motor4Speed = yawPID +   _roL_pit_speed *cos(_roL_pit_dir + M_PI/4) - 0;
+
+	double _motor1Speed = yawPID + (_roL_pit_speed *cos(3*M_PI/4 - _roL_pit_dir) + 0);
+	double _motor2Speed = yawPID + (_roL_pit_speed *cos(3*M_PI/4 + _roL_pit_dir) - 0);
+	double _motor3Speed = yawPID +  _roL_pit_speed *cos(  M_PI/4 + _roL_pit_dir) + 0;
+	double _motor4Speed = yawPID +  _roL_pit_speed *cos(  M_PI/4 - _roL_pit_dir) - 0;
+
 	controlMotor1(_motor1Speed);
 	controlMotor2(_motor2Speed);
 	controlMotor3(_motor3Speed);
@@ -335,11 +346,17 @@ void roL_pit_yaw_mixSpeed(void)
 void roR_pit_yaw_mixSpeed(void)
 {
 	double _roR_pit_speed = sqrt(roRPID*roRPID + pitPID*pitPID);
-	double _roR_pit_dir = atan2(pitPID, roRPID);
-	double _motor1Speed = yawPID + -(_roR_pit_speed *sin(_roR_pit_dir + M_PI/4) + 0);
-	double _motor2Speed = yawPID + -(_roR_pit_speed *cos(_roR_pit_dir + M_PI/4) - 0);
-	double _motor3Speed = yawPID +   _roR_pit_speed *sin(_roR_pit_dir + M_PI/4) + 0;
-	double _motor4Speed = yawPID +   _roR_pit_speed *cos(_roR_pit_dir + M_PI/4) - 0;
+	double _roR_pit_dir = atan2(-roRPID, pitPID);
+//	double _motor1Speed = yawPID + -(_roR_pit_speed *sin(_roR_pit_dir + M_PI/4) + 0);
+//	double _motor2Speed = yawPID + -(_roR_pit_speed *cos(_roR_pit_dir + M_PI/4) - 0);
+//	double _motor3Speed = yawPID +   _roR_pit_speed *sin(_roR_pit_dir + M_PI/4) + 0;
+//	double _motor4Speed = yawPID +   _roR_pit_speed *cos(_roR_pit_dir + M_PI/4) - 0;
+
+	double _motor1Speed = yawPID + (_roR_pit_speed *cos(3*M_PI/4 - _roR_pit_dir) + 0);
+	double _motor2Speed = yawPID + (_roR_pit_speed *cos(3*M_PI/4 + _roR_pit_dir) - 0);
+	double _motor3Speed = yawPID +  _roR_pit_speed *cos(  M_PI/4 + _roR_pit_dir) + 0;
+	double _motor4Speed = yawPID +  _roR_pit_speed *cos(  M_PI/4 - _roR_pit_dir) - 0;
+
 	controlMotor1(_motor1Speed);
 	controlMotor1(_motor2Speed);
 	controlMotor1(_motor3Speed);

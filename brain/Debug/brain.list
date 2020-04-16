@@ -27,23 +27,23 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   ALLOC
  11 .ARM.attributes 0000002e  00000000  00000000  00020034  2**0
                   CONTENTS, READONLY
- 12 .debug_info   00020f9f  00000000  00000000  00020062  2**0
+ 12 .debug_info   00020fa7  00000000  00000000  00020062  2**0
                   CONTENTS, READONLY, DEBUGGING
- 13 .debug_abbrev 00002f82  00000000  00000000  00041001  2**0
+ 13 .debug_abbrev 00002f82  00000000  00000000  00041009  2**0
                   CONTENTS, READONLY, DEBUGGING
- 14 .debug_aranges 00001690  00000000  00000000  00043f88  2**3
+ 14 .debug_aranges 00001690  00000000  00000000  00043f90  2**3
                   CONTENTS, READONLY, DEBUGGING
- 15 .debug_ranges 00001590  00000000  00000000  00045618  2**3
+ 15 .debug_ranges 00001590  00000000  00000000  00045620  2**3
                   CONTENTS, READONLY, DEBUGGING
- 16 .debug_macro  00038678  00000000  00000000  00046ba8  2**0
+ 16 .debug_macro  00038678  00000000  00000000  00046bb0  2**0
                   CONTENTS, READONLY, DEBUGGING
- 17 .debug_line   00012753  00000000  00000000  0007f220  2**0
+ 17 .debug_line   00012754  00000000  00000000  0007f228  2**0
                   CONTENTS, READONLY, DEBUGGING
- 18 .debug_str    00173a1f  00000000  00000000  00091973  2**0
+ 18 .debug_str    00173a1d  00000000  00000000  0009197c  2**0
                   CONTENTS, READONLY, DEBUGGING
- 19 .comment      0000007b  00000000  00000000  00205392  2**0
+ 19 .comment      0000007b  00000000  00000000  00205399  2**0
                   CONTENTS, READONLY
- 20 .debug_frame  00006178  00000000  00000000  00205410  2**2
+ 20 .debug_frame  00006158  00000000  00000000  00205414  2**2
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -821,8 +821,8 @@ void peripheralADC_Init(void)
 	...
 
 080008ac <controlMotor1>:
-double PIDroL(int _roLValue, int _roLSetpoint);
-
+void roR_pit_yaw_mixSpeed(void);
+void brake(void);
 
 #ifdef SPINAL_CORD_MODE_ONEWAY
 void controlMotor1(int _speed)
@@ -1313,16 +1313,16 @@ void brake(void)
  8000bd4:	b580      	push	{r7, lr}
  8000bd6:	af00      	add	r7, sp, #0
 	controlMotor1(BRAKE_SPEED);
- 8000bd8:	2064      	movs	r0, #100	; 0x64
+ 8000bd8:	2001      	movs	r0, #1
  8000bda:	f7ff fe67 	bl	80008ac <controlMotor1>
 	controlMotor2(-BRAKE_SPEED);
- 8000bde:	f06f 0063 	mvn.w	r0, #99	; 0x63
+ 8000bde:	f04f 30ff 	mov.w	r0, #4294967295
  8000be2:	f7ff fe89 	bl	80008f8 <controlMotor2>
 	controlMotor3(BRAKE_SPEED);
- 8000be6:	2064      	movs	r0, #100	; 0x64
+ 8000be6:	2001      	movs	r0, #1
  8000be8:	f7ff feac 	bl	8000944 <controlMotor3>
 	controlMotor4(-BRAKE_SPEED);
- 8000bec:	f06f 0063 	mvn.w	r0, #99	; 0x63
+ 8000bec:	f04f 30ff 	mov.w	r0, #4294967295
  8000bf0:	f7ff fece 	bl	8000990 <controlMotor4>
 	spinalCordTrans();
  8000bf4:	f7ff fe30 	bl	8000858 <spinalCordTrans>
