@@ -1,27 +1,19 @@
-/*
- * ST7920_SERIAL.c
- *
- *  Created on: 07-Jun-2019
- *      Author: poe
- */
-
-
-/* setup below is as follows
- * A5 ---------> SCLK (EN)
- * A6 ---------> CS (RS)
- * A7 ---------> SID (RW)
- * B0 ---------> RST (RST)
+/* wiring
+ * A5 ---------> SCLK (EN)	//B0
+ * A6 ---------> CS (RS)	//G0
+ * A7 ---------> SID (RW)	//G2
+ * B0 ---------> RST (RST)	//G3
  *
  */
 
-#define SCLK_PIN GPIO_PIN_5
-#define SCLK_PORT GPIOA
-#define CS_PIN GPIO_PIN_6
-#define CS_PORT GPIOA
-#define SID_PIN GPIO_PIN_7
-#define SID_PORT GPIOA
-#define RST_PIN GPIO_PIN_0
-#define RST_PORT GPIOB
+#define SCLK_PIN GPIO_PIN_0
+#define SCLK_PORT GPIOB
+#define CS_PIN GPIO_PIN_0	//RS
+#define CS_PORT GPIOG
+#define SID_PIN GPIO_PIN_2
+#define SID_PORT GPIOG
+#define RST_PIN GPIO_PIN_3
+#define RST_PORT GPIOG
 
 uint8_t image[(128 * 64)/8];
 
@@ -61,7 +53,7 @@ void SendByteSPI(uint8_t byte)
 				HAL_GPIO_WritePin(SID_PORT, SID_PIN, GPIO_PIN_SET);  // SID=1  OR MOSI
 			}
 
-		else HAL_GPIO_WritePin(SID_PORT, SID_PIN, GPIO_PIN_RESET);  // SID=0
+		else HAL_GPIO_WritePin(SID_PORT, SID_PIN, GPIO_PIN_RESET);  	// SID=0
 
 		HAL_GPIO_WritePin(SCLK_PORT, SCLK_PIN, GPIO_PIN_RESET);  // SCLK =0  OR SCK
 
@@ -74,9 +66,9 @@ void ST7920_SendCmd (uint8_t cmd)
 {
 	HAL_GPIO_WritePin(CS_PORT, CS_PIN, GPIO_PIN_SET);  // PUll the CS high
 
-	SendByteSPI(0xf8+(0<<1));  // send the SYNC + RS(0)
-	SendByteSPI(cmd&0xf0);  // send the higher nibble first
-	SendByteSPI((cmd<<4)&0xf0);  // send the lower nibble
+	SendByteSPI(0xf8+(0<<1));  		// send the SYNC + RS(0)
+	SendByteSPI(cmd&0xf0);  		// send the higher nibble first
+	SendByteSPI((cmd<<4)&0xf0);  	// send the lower nibble
 	delayUs(50);
 
 	HAL_GPIO_WritePin(CS_PORT, CS_PIN, GPIO_PIN_RESET);  // PUll the CS LOW

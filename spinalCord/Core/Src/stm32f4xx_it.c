@@ -51,7 +51,7 @@ extern uint8_t motor1Dir;
 extern uint8_t motor2Dir;
 extern uint8_t motor3Dir;
 extern uint8_t motor4Dir;
-extern uint8_t brainCheckbyteCount, brainData[8], brainDataIndex, brainRxPacketDMA[1];
+//extern uint8_t brainCheckbyteCount, brainData[8], brainDataIndex, brainRxPacketDMA[1];
 extern uint8_t debugTxPacket[9];
 //extern char* controlData;
 /* USER CODE END PV */
