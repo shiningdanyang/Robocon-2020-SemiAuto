@@ -5,9 +5,10 @@
 #define rigt 0
 
 #define pitch hadc3
-#define rollLeft hadc1
-#define rollRigt hadc2
-
+//#define rollLeft hadc1
+//#define rollRigt hadc2
+#define rollLeft hadc3
+#define rollRigt hadc3
 uint16_t leftRawADC;
 uint16_t rigtRawADC;
 uint16_t pitchRawADC;
@@ -16,7 +17,7 @@ uint16_t rigtRawDistance;
 uint16_t pitchRawDistance;
 double a_Linear = 0.09007;
 double b_Linear = 10.04528;
-
+uint16_t adc3Value[3];
 void peripheralADC_Init(void);
 void readADC(void);
 void filterADC(void);
@@ -34,7 +35,7 @@ uint16_t _pitchFinalFilter;
 #ifndef ADC_CONTINOUS_MODE
 void peripheralADC_Init(void)
 {
-
+	HAL_ADC_Start_DMA(&hadc3, (uint32_t*)adc3Value, 3);
 }
 #endif
 #ifdef ADC_CONTINOUS_MODE
