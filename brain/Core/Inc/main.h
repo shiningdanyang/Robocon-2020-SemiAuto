@@ -64,12 +64,12 @@ void Error_Handler(void);
 #define manualRobot_TX_GPIO_Port GPIOF
 #define RollRigt_Pin GPIO_PIN_0
 #define RollRigt_GPIO_Port GPIOC
+#define RollLeft_Pin GPIO_PIN_1
+#define RollLeft_GPIO_Port GPIOC
 #define Pitch_Pin GPIO_PIN_3
 #define Pitch_GPIO_Port GPIOC
 #define cylinder_SetTee_Pin GPIO_PIN_2
 #define cylinder_SetTee_GPIO_Port GPIOA
-#define RollLeft_Pin GPIO_PIN_3
-#define RollLeft_GPIO_Port GPIOA
 #define cylinder_RigtArmTrans_Pin GPIO_PIN_1
 #define cylinder_RigtArmTrans_GPIO_Port GPIOB
 #define cylinder_PassBall_Pin GPIO_PIN_2

@@ -50,6 +50,9 @@ void readADC(void)
 	HAL_ADC_Start(&rollLeft);
 	HAL_ADC_Start(&rollRigt);
 	HAL_ADC_Start(&pitch);
+	HAL_ADC_PollForConversion(&rollLeft, 1);
+	HAL_ADC_PollForConversion(&rollRigt, 1);
+	HAL_ADC_PollForConversion(&pitch, 1);
 	leftRawADC = HAL_ADC_GetValue(&rollLeft);
 	rigtRawADC = HAL_ADC_GetValue(&rollRigt);
 	pitchRawADC = HAL_ADC_GetValue(&pitch);
