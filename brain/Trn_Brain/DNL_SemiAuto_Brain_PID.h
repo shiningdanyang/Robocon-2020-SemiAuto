@@ -47,6 +47,11 @@ double pitKd;
 double pitKi;
 double pitPID;
 
+double motor1Speed_;
+double motor2Speed_;
+double motor3Speed_;
+double motor4Speed_;
+
 void controlMotor1(int _speed);
 void controlMotor2(int _speed);
 void controlMotor3(int _speed);
@@ -331,16 +336,26 @@ void roL_pit_yaw_mixSpeed(void)
 //	double _motor3Speed = yawPID +   _roL_pit_speed *sin(_roL_pit_dir + M_PI/4) + 0;
 //	double _motor4Speed = yawPID +   _roL_pit_speed *cos(_roL_pit_dir + M_PI/4) - 0;
 
-	double _motor1Speed = yawPID + (_roL_pit_speed *cos(3*M_PI/4 - _roL_pit_dir) + 0);
-	double _motor2Speed = yawPID + (_roL_pit_speed *cos(3*M_PI/4 + _roL_pit_dir) - 0);
-	double _motor3Speed = yawPID +  _roL_pit_speed *cos(  M_PI/4 + _roL_pit_dir) + 0;
-	double _motor4Speed = yawPID +  _roL_pit_speed *cos(  M_PI/4 - _roL_pit_dir) - 0;
+	double _motor1Speed = yawPID + (_roL_pit_speed *cos(3.0*M_PI/4.0 - _roL_pit_dir) + 0.0);
+	double _motor2Speed = yawPID + (_roL_pit_speed *cos(3.0*M_PI/4.0 + _roL_pit_dir) - 0.0);
+	double _motor3Speed = yawPID +  _roL_pit_speed *cos(    M_PI/4.0 + _roL_pit_dir) + 0.0;
+	double _motor4Speed = yawPID +  _roL_pit_speed *cos(    M_PI/4.0 - _roL_pit_dir) - 0.0;
+	a = 1.0 - _motor1Speed;
+	b = 1.0 - _motor3Speed;
+	absSpeed = _roL_pit_speed;
+	dir = _roL_pit_dir;
+	cos_ = cos(3*M_PI/4 - _roL_pit_dir);
+	motor1_debug = absSpeed*cos_;
+	motor1Speed_ = _motor1Speed;
+	motor2Speed_ = _motor2Speed;
+	motor3Speed_ = _motor3Speed;
+	motor4Speed_ = _motor4Speed;
 
 	controlMotor1(_motor1Speed);
 	controlMotor2(_motor2Speed);
 	controlMotor3(_motor3Speed);
 	controlMotor4(_motor4Speed);
-//	spinalCordTrans();
+	spinalCordTrans();
 }
 
 void roR_pit_yaw_mixSpeed(void)
@@ -361,7 +376,7 @@ void roR_pit_yaw_mixSpeed(void)
 	controlMotor1(_motor2Speed);
 	controlMotor1(_motor3Speed);
 	controlMotor1(_motor4Speed);
-//	spinalCordTrans();
+	spinalCordTrans();
 }
 
 int constantMoving(int _speed, double _dir_deg)

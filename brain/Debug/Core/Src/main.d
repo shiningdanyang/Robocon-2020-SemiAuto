@@ -34,6 +34,7 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_tim_ex.h \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart.h \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart_ex.h \
+ D:/STM32CubeIDE_DefaultWorkspace/OFFICIAL_SRC/Robocon-2020-SemiAuto/brain/Trn_Brain/DNL_SemiAuto_Brain_DebugVariable.h \
  D:/STM32CubeIDE_DefaultWorkspace/OFFICIAL_SRC/Robocon-2020-SemiAuto/brain/Trn_Brain/DNL_SemiAuto_Brain_DelayUs.h \
  D:/STM32CubeIDE_DefaultWorkspace/OFFICIAL_SRC/Robocon-2020-SemiAuto/brain/Trn_Brain/DNL_SemiAuto_Brain_UART.h \
  D:/STM32CubeIDE_DefaultWorkspace/OFFICIAL_SRC/Robocon-2020-SemiAuto/brain/Trn_Brain/DNL_SemiAuto_Brain_ADC.h \
@@ -113,6 +114,8 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
 ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart.h:
 
 ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart_ex.h:
+
+D:/STM32CubeIDE_DefaultWorkspace/OFFICIAL_SRC/Robocon-2020-SemiAuto/brain/Trn_Brain/DNL_SemiAuto_Brain_DebugVariable.h:
 
 D:/STM32CubeIDE_DefaultWorkspace/OFFICIAL_SRC/Robocon-2020-SemiAuto/brain/Trn_Brain/DNL_SemiAuto_Brain_DelayUs.h:
 

@@ -74,6 +74,7 @@ static void MX_USART6_UART_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+#include "DNL_SemiAuto_Brain_DebugVariable.h"
 #include "DNL_SemiAuto_Brain_DelayUs.h"
 #include "DNL_SemiAuto_Brain_UART.h"
 #include "DNL_SemiAuto_Brain_ADC.h"
@@ -138,12 +139,31 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-//	  HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_10);
-//	  HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_4);
-//	  delayUs(2000000);
+//	  uint32_t startTime = HAL_GetTick();
+//	  while(HAL_GetTick()-startTime<2000)//xoay ngược 2s
+//	  {
+//		  controlMotor1(250);
+//		  controlMotor2(250);
+//		  controlMotor3(250);
+//		  controlMotor4(250);
+//		  spinalCordTrans();
+//	  }
+//	  startTime = HAL_GetTick();
+//	  while(HAL_GetTick()-startTime<5000)
+//	  {
+//		  controlMotor1(-250);
+//		  controlMotor2(-250);
+//		  controlMotor3(-250);
+//		  controlMotor4(-250);
+//		  spinalCordTrans();
+//	  }
+
+
+
 	  PIDyaw(compassData, 0);
-	  PIDroL(0,50);
-	  PIDpit(0,100);
+	  PIDroL(0,100);
+	  PIDpit(0,50);
+	  roL_pit_yaw_mixSpeed();
 //	  testPWM();
 //////////////////////////////////////////////////////////////////////
 //	  readADC();

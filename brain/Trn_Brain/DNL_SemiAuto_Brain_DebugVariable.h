@@ -1,0 +1,10 @@
+double motor1Speed_;
+double motor2Speed_;
+double motor3Speed_;
+double motor4Speed_;
+double dir;
+double absSpeed;
+double cos_;
+double motor1_debug;
+double a;
+double b;
