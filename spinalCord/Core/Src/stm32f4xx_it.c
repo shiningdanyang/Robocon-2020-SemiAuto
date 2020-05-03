@@ -284,10 +284,10 @@ void DMA2_Stream2_IRQHandler(void)
 		motor2Speed = brainRxPacket[5];
 		motor3Speed = brainRxPacket[6];
 		motor4Speed = brainRxPacket[7];
-		motor1Dir = (brainRxPacket[8]>>0) & 1U;
-		motor2Dir = (brainRxPacket[8]>>1) & 1U;
-		motor3Dir = (brainRxPacket[8]>>2) & 1U;
-		motor4Dir = (brainRxPacket[8]>>3) & 1U;
+		motor1Dir = ((brainRxPacket[8]>>0) & 1U);
+		motor2Dir = ((brainRxPacket[8]>>1) & 1U);
+		motor3Dir = ((brainRxPacket[8]>>2) & 1U);
+		motor4Dir = ((brainRxPacket[8]>>3) & 1U);
 		debugTxPacket[0] = motor1Dir+65;
 		debugTxPacket[1] = motor2Dir+65;
 		debugTxPacket[2] = motor3Dir+65;
@@ -295,7 +295,7 @@ void DMA2_Stream2_IRQHandler(void)
 		debugTxPacket[4] = '\n';
 		HAL_UART_Transmit(&huart4, debugTxPacket, 5, 50);
 
-	/* USER CODE END DMA2_Stream2_IRQn 0 */
+  /* USER CODE END DMA2_Stream2_IRQn 0 */
   HAL_DMA_IRQHandler(&hdma_usart1_rx);
   /* USER CODE BEGIN DMA2_Stream2_IRQn 1 */
 

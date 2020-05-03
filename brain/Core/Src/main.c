@@ -79,6 +79,7 @@ static void MX_USART6_UART_Init(void);
 #include "DNL_SemiAuto_Brain_UART.h"
 #include "DNL_SemiAuto_Brain_ADC.h"
 #include "DNL_SemiAuto_Brain_PID.h"
+#include "DNL_SemiAuto_Brain_Position.h"
 #include "DNL_SemiAuto_Brain_Leg.h"
 #include "DNL_SemiAuto_Brain_LCD.h"
 #include "DNL_Callback.h"
@@ -132,13 +133,19 @@ int main(void)
   compassReset();
   HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_RESET);
   HAL_Delay(4000);
-
+//  while(1);
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+//	  testPWM();
+//	  controlMotor1(-250);
+//	  controlMotor2(-250);
+//	  controlMotor3(-250);
+//	  controlMotor4(-250);
+//	  spinalCordTrans();
 //	  uint32_t startTime = HAL_GetTick();
 //	  while(HAL_GetTick()-startTime<2000)//xoay ngược 2s
 //	  {
@@ -158,13 +165,26 @@ int main(void)
 //		  spinalCordTrans();
 //	  }
 
+//	  PIDyaw(compassData, 0);
+//	  PIDroR(100, 0);
+//	  PIDpit(0, 50);
+//	  roR_pit_yaw_mixSpeed();
 
+//	  PIDyaw(compassData, 0);
+//	  PIDroL(0,100);
+//	  PIDpit(0,50);
+//	  roL_pit_yaw_mixSpeed();
 
-	  PIDyaw(compassData, 0);
-	  PIDroL(0,100);
-	  PIDpit(0,50);
-	  roL_pit_yaw_mixSpeed();
-//	  testPWM();
+	  uint32_t startTime = HAL_GetTick();
+	  while(HAL_GetTick() - startTime <3000)
+	  {
+		  roR_Pit_Yaw_GoTo(0, 0, 900);
+	  }
+	  startTime = HAL_GetTick();
+	  while(HAL_GetTick() - startTime <3000)
+	  {
+		  roR_Pit_Yaw_GoTo(0, 0, -900);
+	  }
 //////////////////////////////////////////////////////////////////////
 //	  readADC();
 //	  tracking++;

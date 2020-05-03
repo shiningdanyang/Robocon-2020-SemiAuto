@@ -39,8 +39,8 @@ double PIDyaw(int _yawValue, int _yawSetpoint)
 #define motor3_channel TIM_CHANNEL_1
 #define motor4_channel TIM_CHANNEL_1
 
-#define FCW GPIO_PIN_SET
-#define CCW GPIO_PIN_RESET
+#define FCW GPIO_PIN_RESET
+#define CCW GPIO_PIN_SET
 
 #define _FCW 0
 #define _CCW 1
@@ -60,10 +60,10 @@ uint8_t motor1Speed;
 uint8_t motor2Speed;
 uint8_t motor3Speed;
 uint8_t motor4Speed;
-uint8_t motor1Dir;
-uint8_t motor2Dir;
-uint8_t motor3Dir;
-uint8_t motor4Dir;
+int8_t motor1Dir;
+int8_t motor2Dir;
+int8_t motor3Dir;
+int8_t motor4Dir;
 
 void peripheralPWM_Init()
 {

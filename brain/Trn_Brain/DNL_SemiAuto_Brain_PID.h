@@ -8,7 +8,7 @@
 #define CCW 0
 #define FCW 1
 
-#define BRAKE_SPEED 1
+#define BRAKE_SPEED 3
 
 //#define MAX_YAW_PID 120
 #define MAX_YAW_PID 120
@@ -24,7 +24,7 @@ double yawPID;
 #define MIN_ROR_PID -MAX_ROR_PID
 int16_t roRError, roRPreError;
 double roRP, roRI, roRD;
-double roRKp=5;
+double roRKp = 5;
 double roRKd;
 double roRKi;
 double roRPID;
@@ -242,7 +242,7 @@ void testPWM(void)
 
 double PIDyaw(int _yawValue, int _yawSetpoint)
 {
-	yawError = -_yawSetpoint + _yawValue;
+	yawError = _yawSetpoint - _yawValue;
 	yawP = yawError;
 	yawD = yawError - yawPreError;
 	yawI = yawError + yawI;
@@ -367,15 +367,26 @@ void roR_pit_yaw_mixSpeed(void)
 //	double _motor3Speed = yawPID +   _roR_pit_speed *sin(_roR_pit_dir + M_PI/4) + 0;
 //	double _motor4Speed = yawPID +   _roR_pit_speed *cos(_roR_pit_dir + M_PI/4) - 0;
 
-	double _motor1Speed = yawPID + (_roR_pit_speed *cos(3*M_PI/4 - _roR_pit_dir) + 0);
-	double _motor2Speed = yawPID + (_roR_pit_speed *cos(3*M_PI/4 + _roR_pit_dir) - 0);
-	double _motor3Speed = yawPID +  _roR_pit_speed *cos(  M_PI/4 + _roR_pit_dir) + 0;
-	double _motor4Speed = yawPID +  _roR_pit_speed *cos(  M_PI/4 - _roR_pit_dir) - 0;
+	double _motor1Speed = yawPID + (_roR_pit_speed *cos(3.0*M_PI/4.0 - _roR_pit_dir) + 0.0);
+	double _motor2Speed = yawPID + (_roR_pit_speed *cos(3.0*M_PI/4.0 + _roR_pit_dir) - 0.0);
+	double _motor3Speed = yawPID +  _roR_pit_speed *cos(    M_PI/4.0 + _roR_pit_dir) + 0.0;
+	double _motor4Speed = yawPID +  _roR_pit_speed *cos(    M_PI/4.0 - _roR_pit_dir) - 0.0;
+
+	a = 1.0 - _motor1Speed;
+	b = 1.0 - _motor3Speed;
+	absSpeed = _roR_pit_speed;
+	dir = _roR_pit_dir;
+	cos_ = cos(3*M_PI/4 - _roR_pit_dir);
+	motor1_debug = absSpeed*cos_;
+	motor1Speed_ = _motor1Speed;
+	motor2Speed_ = _motor2Speed;
+	motor3Speed_ = _motor3Speed;
+	motor4Speed_ = _motor4Speed;
 
 	controlMotor1(_motor1Speed);
-	controlMotor1(_motor2Speed);
-	controlMotor1(_motor3Speed);
-	controlMotor1(_motor4Speed);
+	controlMotor2(_motor2Speed);
+	controlMotor3(_motor3Speed);
+	controlMotor4(_motor4Speed);
 	spinalCordTrans();
 }
 
