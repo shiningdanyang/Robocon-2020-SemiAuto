@@ -50,12 +50,44 @@ extern uint8_t PS2RxPacket[8];
 extern uint8_t PS2CheckbyteCount, PS2Data[6], PS2DataIndex;
 extern int16_t PS2Button, PS2JoyLeft, PS2JoyRigt;
 
+extern uint16_t adc3Value[3];
 extern uint16_t pitchRawValue[3];
+extern uint16_t pitchRawADC;
+extern uint16_t leftRawADC;
+extern uint16_t rigtRawADC;
 extern int16_t leftRawDistance;
 extern int16_t rigtRawDistance;
 extern int16_t pitchRawDistance;
-extern double a_Linear;
-extern double b_Linear;
+extern uint16_t leftDistance;
+extern uint16_t rigtDistance;
+extern uint16_t pitchDistance;
+extern double aPitch_Linear;
+extern double bPitch_Linear;
+extern double aLeft_Linear;
+extern double bLeft_Linear;
+extern double aRigt_Linear;
+extern double bRigt_Linear;
+
+extern double kalmanGain_Pitch;
+extern double x_Pitch[2];
+extern double P_Pitch;         //covariance estimation (err_estimate)
+extern double R_Pitch;         //covariance of the observation noise (err_measure)
+extern double Q_Pitch;    //process variance
+extern double kalmanFilter_Pitch(double mea);
+
+extern double kalmanGain_Left;
+extern double x_Left[2];
+extern double P_Left;         //covariance estimation (err_estimate)
+extern double R_Left;         //covariance of the observation noise (err_measure)
+extern double Q_Left;    //process variance
+extern double kalmanFilter_Left(double mea);
+
+extern double kalmanGain_Rigt;
+extern double x_Rigt[2];
+extern double P_Rigt;         //covariance estimation (err_estimate)
+extern double R_Rigt;         //covariance of the observation noise (err_measure)
+extern double Q_Rigt;    //process variance
+extern double kalmanFilter_Rigt(double mea);
 //extern char* controlData;
 /* USER CODE END PV */
 

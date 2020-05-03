@@ -94,6 +94,45 @@ void controlMotor4(int _speed, int _dir)
 	__HAL_TIM_SetCompare(&motor4, TIM_CHANNEL_1, _speed);
 }
 
+void testPWM()
+{
+	for(i = 0; i > -250; --i)
+	{
+		controlMotor1(abs(i), CCW);
+		controlMotor2(abs(i), CCW);
+		controlMotor3(abs(i), CCW);
+		controlMotor4(abs(i), CCW);
+		HAL_Delay(20);
+		tracking++;
+	}
+	for(i = -250; i < 0; ++i)
+	{
+		controlMotor1(abs(i), CCW);
+		controlMotor2(abs(i), CCW);
+		controlMotor3(abs(i), CCW);
+		controlMotor4(abs(i), CCW);
+		HAL_Delay(20);
+		tracking++;
+	}
+	for(i = 0; i < 250; ++i)
+	{
+		controlMotor1(abs(i), FCW);
+		controlMotor2(abs(i), FCW);
+		controlMotor3(abs(i), FCW);
+		controlMotor4(abs(i), FCW);
+		HAL_Delay(20);
+		tracking++;
+	}
+	for(i = 250; i > 0; --i)
+	{
+		controlMotor1(abs(i), FCW);
+		controlMotor2(abs(i), FCW);
+		controlMotor3(abs(i), FCW);
+		controlMotor4(abs(i), FCW);
+		HAL_Delay(20);
+		tracking++;
+	}
+}
 //void findOrientation(int _speed, float _dir)
 //{
 //	motor1Speed = -(_speed *sin(_dir + 0.7854) + 0);

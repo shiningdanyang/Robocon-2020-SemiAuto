@@ -24,12 +24,12 @@ double yawPID;
 #define MIN_ROR_PID -MAX_ROR_PID
 int16_t roRError, roRPreError;
 double roRP, roRI, roRD;
-double roRKp;
+double roRKp=5;
 double roRKd;
 double roRKi;
 double roRPID;
 
-#define MAX_ROL_PID 50
+#define MAX_ROL_PID 100
 #define MIN_ROL_PID -MAX_ROL_PID
 int16_t roLError, roLPreError;
 double roLP, roLI, roLD;
@@ -42,7 +42,7 @@ double roLPID;
 #define MIN_PIT_PID -MAX_PIT_PID
 double pitError, pitPreError;
 double pitP, pitI, pitD;
-double pitKp = 0.3;
+double pitKp = 5;
 double pitKd;
 double pitKi;
 double pitPID;

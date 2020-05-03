@@ -130,7 +130,7 @@ int main(void)
   brake();
   compassReset();
   HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_RESET);
-  HAL_Delay(2000);
+  HAL_Delay(4000);
 
   /* USER CODE END 2 */
 
@@ -138,10 +138,16 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+//	  HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_10);
+//	  HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_4);
+//	  delayUs(2000000);
+	  PIDyaw(compassData, 0);
+	  PIDroL(0,50);
+	  PIDpit(0,100);
 //	  testPWM();
 //////////////////////////////////////////////////////////////////////
 //	  readADC();
-	  tracking++;
+//	  tracking++;
 //	  readADC();
 //	  HAL_GPIO_TogglePin(GPIOG, GPIO_PIN_0);
 //	  HAL_GPIO_TogglePin(GPIOG, GPIO_PIN_2);
@@ -689,6 +695,9 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(GPIOA, cylinder_SetTee_Pin|cylinder_RigtArmHoldBallTop_Pin|cylinder_HoldBall_Pin|cylinder_LeftArmHoldBall_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_4, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0|cylinder_RigtArmTrans_Pin|cylinder_PassBall_Pin|cylinder_LeftArmTrans_Pin 
                           |cylinder_RigtArmHoldBallBot_Pin|cylinder_LiftBall_Pin, GPIO_PIN_RESET);
 
@@ -700,7 +709,7 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(GPIOE, legEn_Pin|leftArmPul_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOD, legDir_Pin|legPul_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOD, GPIO_PIN_8|GPIO_PIN_10|legDir_Pin|legPul_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pins : cylinder_SetTee_Pin cylinder_RigtArmHoldBallTop_Pin cylinder_HoldBall_Pin cylinder_LeftArmHoldBall_Pin */
   GPIO_InitStruct.Pin = cylinder_SetTee_Pin|cylinder_RigtArmHoldBallTop_Pin|cylinder_HoldBall_Pin|cylinder_LeftArmHoldBall_Pin;
@@ -708,6 +717,13 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : PC4 */
+  GPIO_InitStruct.Pin = GPIO_PIN_4;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
   /*Configure GPIO pins : PB0 cylinder_RigtArmTrans_Pin cylinder_PassBall_Pin cylinder_LeftArmTrans_Pin 
                            cylinder_RigtArmHoldBallBot_Pin cylinder_LiftBall_Pin */
@@ -732,12 +748,12 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(legEn_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : legDir_Pin */
-  GPIO_InitStruct.Pin = legDir_Pin;
+  /*Configure GPIO pins : PD8 PD10 legDir_Pin */
+  GPIO_InitStruct.Pin = GPIO_PIN_8|GPIO_PIN_10|legDir_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(legDir_GPIO_Port, &GPIO_InitStruct);
+  HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
 
   /*Configure GPIO pin : legPul_Pin */
   GPIO_InitStruct.Pin = legPul_Pin;
