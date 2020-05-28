@@ -30,14 +30,14 @@ double PIDyaw(int _yawValue, int _yawSetpoint)
 #define deg2Rad(angleInDegrees) ((angleInDegrees) * M_PI / 180.0)
 #define rad2Deg(angleInRadians) ((angleInRadians) * 180.0 / M_PI)
 
-#define motor1 htim2
-#define motor2 htim3
-#define motor3 htim4
-#define motor4 htim5
+#define motor1 htim8
+#define motor2 htim8
+#define motor3 htim1
+#define motor4 htim1
 #define motor1_channel TIM_CHANNEL_1
-#define motor2_channel TIM_CHANNEL_1
-#define motor3_channel TIM_CHANNEL_1
-#define motor4_channel TIM_CHANNEL_1
+#define motor2_channel TIM_CHANNEL_2
+#define motor3_channel TIM_CHANNEL_3
+#define motor4_channel TIM_CHANNEL_4
 
 #define FCW GPIO_PIN_RESET
 #define CCW GPIO_PIN_SET
@@ -67,31 +67,35 @@ int8_t motor4Dir;
 
 void peripheralPWM_Init()
 {
+//  HAL_TIM_PWM_Start(&motor1, motor1_channel);
+//  HAL_TIM_PWM_Start(&motor2, motor2_channel);
+//  HAL_TIM_PWM_Start(&motor3, motor3_channel);
+//  HAL_TIM_PWM_Start(&motor4, motor4_channel);
   HAL_TIM_PWM_Start(&motor1, motor1_channel);
   HAL_TIM_PWM_Start(&motor2, motor2_channel);
   HAL_TIM_PWM_Start(&motor3, motor3_channel);
-  HAL_TIM_PWM_Start(&motor4, motor4_channel);	
+  HAL_TIM_PWM_Start(&motor4, motor4_channel);
 }
 
 void controlMotor1(int _speed, int _dir)
 {
 	HAL_GPIO_WritePin(motor1Dir_GPIO_Port, motor1Dir_Pin, _dir);
-	__HAL_TIM_SetCompare(&motor1, TIM_CHANNEL_1, _speed);
+	__HAL_TIM_SetCompare(&motor1, motor1_channel, _speed);
 }
 void controlMotor2(int _speed, int _dir)
 {
 	HAL_GPIO_WritePin(motor2Dir_GPIO_Port, motor2Dir_Pin, _dir);
-	__HAL_TIM_SetCompare(&motor2, TIM_CHANNEL_1, _speed);
+	__HAL_TIM_SetCompare(&motor2, motor2_channel, _speed);
 }
 void controlMotor3(int _speed, int _dir)
 {
 	HAL_GPIO_WritePin(motor3Dir_GPIO_Port, motor3Dir_Pin, _dir);
-	__HAL_TIM_SetCompare(&motor3, TIM_CHANNEL_1, _speed);
+	__HAL_TIM_SetCompare(&motor3, motor3_channel, _speed);
 }
 void controlMotor4(int _speed, int _dir)
 {
 	HAL_GPIO_WritePin(motor4Dir_GPIO_Port, motor4Dir_Pin, _dir);
-	__HAL_TIM_SetCompare(&motor4, TIM_CHANNEL_1, _speed);
+	__HAL_TIM_SetCompare(&motor4, motor4_channel, _speed);
 }
 
 void testPWM()

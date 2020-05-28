@@ -98,7 +98,7 @@ int main(void)
   /* MCU Configuration--------------------------------------------------------*/
 
   /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
-  HAL_Init();
+	HAL_Init();
 
   /* USER CODE BEGIN Init */
 
@@ -132,7 +132,7 @@ int main(void)
   brake();
   compassReset();
   HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_RESET);
-  HAL_Delay(4000);
+  HAL_Delay(INIT_TIME);
 //  while(1);
   /* USER CODE END 2 */
 
@@ -140,6 +140,37 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+//	  testPWM();
+	  PIDyaw(compassData, 0);
+	  PIDpit(adc3Value[0], 300);
+	  PIDroL(adc3Value[1], 1000);
+	  roL_pit_yaw_mixSpeed();
+
+//	  leftDistance = 300;
+//	  uint32_t startTime = HAL_GetTick();
+//	  while(HAL_GetTick()-startTime < 5000)
+//	  {
+//		  roL_Pit_Yaw_GoTo(300, 300, 0);
+//	  }
+//	  leftDistance = 0;
+//	  while(1)
+//	  {
+//		  roL_Pit_Yaw_GoTo(300, 300, 0);
+//	  }
+
+//test vị trí
+//	  uint32_t startTime = HAL_GetTick();
+//	  while(HAL_GetTick()- startTime < 5000)
+//	  {
+//		  roL_Pit_Yaw_GoTo(pos1[0], pos1[1], 0);
+//	  }
+//	  startTime = HAL_GetTick();
+//	  while(HAL_GetTick()- startTime < 5000)
+//	  {
+//		  roL_Pit_Yaw_GoTo(pos2[0], pos2[1], 0);
+//	  }
+//	  while(1);
+///////////////////////////////////
 //	  testPWM();
 //	  controlMotor1(-250);
 //	  controlMotor2(-250);
@@ -175,16 +206,17 @@ int main(void)
 //	  PIDpit(0,50);
 //	  roL_pit_yaw_mixSpeed();
 
-	  uint32_t startTime = HAL_GetTick();
-	  while(HAL_GetTick() - startTime <3000)
-	  {
-		  roR_Pit_Yaw_GoTo(0, 0, 900);
-	  }
-	  startTime = HAL_GetTick();
-	  while(HAL_GetTick() - startTime <3000)
-	  {
-		  roR_Pit_Yaw_GoTo(0, 0, -900);
-	  }
+//	  uint32_t startTime = HAL_GetTick();
+//	  while(HAL_GetTick() - startTime <3000)
+//	  {
+//		  roR_Pit_Yaw_GoTo(0, 0, 900);
+//	  }
+//	  startTime = HAL_GetTick();
+//	  while(HAL_GetTick() - startTime <3000)
+//	  {
+//		  roR_Pit_Yaw_GoTo(0, 0, -900);
+//	  }
+
 //////////////////////////////////////////////////////////////////////
 //	  readADC();
 //	  tracking++;
@@ -211,7 +243,7 @@ int main(void)
 //	  HAL_Delay(1000);
 //	  legControl(legEnd);
 //	  HAL_Delay(3000);
-
+//
 //	  HAL_GPIO_WritePin(legEn_GPIO_Port, legEn_Pin, GPIO_PIN_RESET);	//enable legEn Pin
 //	  HAL_GPIO_WritePin(legDir_GPIO_Port, legDir_Pin, legBackward);
 //	  HAL_Delay(50);
@@ -231,7 +263,7 @@ int main(void)
 //	  while(HAL_GetTick()-startTime < 10000)
 //	  {
 //		  HAL_GPIO_WritePin(GPIOB,GPIO_PIN_0,GPIO_PIN_SET);
-//		  PIDyaw(-900, compassData);
+//		  PIDyaw(compassData, 0);
 //		  controlMotor1(yawPID);
 //		  controlMotor2(yawPID);
 //		  controlMotor3(yawPID);

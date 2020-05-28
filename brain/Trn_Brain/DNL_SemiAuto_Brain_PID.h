@@ -29,20 +29,20 @@ double roRKd;
 double roRKi;
 double roRPID;
 
-#define MAX_ROL_PID 100
+#define MAX_ROL_PID 255
 #define MIN_ROL_PID -MAX_ROL_PID
 int16_t roLError, roLPreError;
 double roLP, roLI, roLD;
-double roLKp = 5;
+double roLKp = 0.8;
 double roLKd;
 double roLKi;
 double roLPID;
 
-#define MAX_PIT_PID 100
+#define MAX_PIT_PID 255
 #define MIN_PIT_PID -MAX_PIT_PID
 double pitError, pitPreError;
 double pitP, pitI, pitD;
-double pitKp = 5;
+double pitKp = 0.8;
 double pitKd;
 double pitKi;
 double pitPID;
@@ -66,8 +66,18 @@ void roR_pit_yaw_mixSpeed(void);
 void brake(void);
 
 #ifdef SPINAL_CORD_MODE_ONEWAY
+
+
+
 void controlMotor1(int _speed)
 {
+	if(_speed>250)
+		_speed = 250;
+	else if(_speed<-250)
+		_speed = -250;
+	else if((_speed<3)&&(_speed>-3))
+		_speed = 3;
+
 	spinalCordTxPacket[motor1Speed] = abs(_speed);
 	if(_speed>=0)
 		spinalCordTxPacket[motorDir] &= ~(1UL << 0);
@@ -78,6 +88,13 @@ void controlMotor1(int _speed)
 }
 void controlMotor2(int _speed)
 {
+	if(_speed>250)
+		_speed = 250;
+	else if(_speed<-250)
+		_speed = -250;
+	else if((_speed<3)&&(_speed>-3))
+		_speed = 3;
+
 	spinalCordTxPacket[motor2Speed] = abs(_speed);
 	if(_speed>=0)
 		spinalCordTxPacket[motorDir] &= ~(1UL << 1);
@@ -88,6 +105,13 @@ void controlMotor2(int _speed)
 }
 void controlMotor3(int _speed)
 {
+	if(_speed>250)
+		_speed = 250;
+	else if(_speed<-250)
+		_speed = -250;
+	else if((_speed<3)&&(_speed>-3))
+		_speed = 3;
+
 	spinalCordTxPacket[motor3Speed] = abs(_speed);
 	if(_speed>=0)
 		spinalCordTxPacket[motorDir] &= ~(1UL << 2);
@@ -98,6 +122,13 @@ void controlMotor3(int _speed)
 }
 void controlMotor4(int _speed)
 {
+	if(_speed>250)
+		_speed = 250;
+	else if(_speed<-250)
+		_speed = -250;
+	else if((_speed<3)&&(_speed>-3))
+		_speed = 3;
+
 	spinalCordTxPacket[motor4Speed] = abs(_speed);
 	if(_speed>=0)
 		spinalCordTxPacket[motorDir] &= ~(1UL << 3);
@@ -242,7 +273,7 @@ void testPWM(void)
 
 double PIDyaw(int _yawValue, int _yawSetpoint)
 {
-	yawError = _yawSetpoint - _yawValue;
+	yawError = -_yawSetpoint + _yawValue;
 	yawP = yawError;
 	yawD = yawError - yawPreError;
 	yawI = yawError + yawI;
@@ -280,7 +311,7 @@ double PIDroR(int _roRValue, int _roRSetpoint)
 
 double PIDroL(int _roLValue, int _roLSetpoint)
 {
-	roLError = -_roLSetpoint + _roLValue;
+	roLError = _roLSetpoint - _roLValue;
 	roLP = roLError;
 	roLD = roLError - roLPreError;
 	roLI = roLError + roLI;
@@ -299,7 +330,7 @@ double PIDroL(int _roLValue, int _roLSetpoint)
 
 double PIDpit(int _pitValue, int _pitSetpoint)
 {
-	pitError = -_pitSetpoint + _pitValue;
+	pitError = _pitSetpoint - _pitValue;
 	pitP = pitError;
 	pitD = pitError - pitPreError;
 	pitI = pitError + pitI;
@@ -331,15 +362,13 @@ void roL_pit_yaw_mixSpeed(void)
 {
 	double _roL_pit_speed = sqrt(roLPID*roLPID + pitPID*pitPID);
 	double _roL_pit_dir = atan2(roLPID, pitPID);
-//	double _motor1Speed = yawPID + -(_roL_pit_speed *sin(_roL_pit_dir + M_PI/4) + 0);
-//	double _motor2Speed = yawPID + -(_roL_pit_speed *cos(_roL_pit_dir + M_PI/4) - 0);
-//	double _motor3Speed = yawPID +   _roL_pit_speed *sin(_roL_pit_dir + M_PI/4) + 0;
-//	double _motor4Speed = yawPID +   _roL_pit_speed *cos(_roL_pit_dir + M_PI/4) - 0;
 
 	double _motor1Speed = yawPID + (_roL_pit_speed *cos(3.0*M_PI/4.0 - _roL_pit_dir) + 0.0);
 	double _motor2Speed = yawPID + (_roL_pit_speed *cos(3.0*M_PI/4.0 + _roL_pit_dir) - 0.0);
 	double _motor3Speed = yawPID +  _roL_pit_speed *cos(    M_PI/4.0 + _roL_pit_dir) + 0.0;
 	double _motor4Speed = yawPID +  _roL_pit_speed *cos(    M_PI/4.0 - _roL_pit_dir) - 0.0;
+
+
 	a = 1.0 - _motor1Speed;
 	b = 1.0 - _motor3Speed;
 	absSpeed = _roL_pit_speed;

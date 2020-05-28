@@ -60,22 +60,14 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-#define motor4PWM_Pin GPIO_PIN_0
-#define motor4PWM_GPIO_Port GPIOA
-#define motor4Dir_Pin GPIO_PIN_1
-#define motor4Dir_GPIO_Port GPIOA
-#define motor3PWM_Pin GPIO_PIN_12
-#define motor3PWM_GPIO_Port GPIOD
-#define motor3Dir_Pin GPIO_PIN_13
+#define motor1Dir_Pin GPIO_PIN_0
+#define motor1Dir_GPIO_Port GPIOD
+#define motor2Dir_Pin GPIO_PIN_1
+#define motor2Dir_GPIO_Port GPIOD
+#define motor3Dir_Pin GPIO_PIN_3
 #define motor3Dir_GPIO_Port GPIOD
-#define motor1PWM_Pin GPIO_PIN_15
-#define motor1PWM_GPIO_Port GPIOA
-#define motor1Dir_Pin GPIO_PIN_3
-#define motor1Dir_GPIO_Port GPIOB
-#define motor2PWM_Pin GPIO_PIN_4
-#define motor2PWM_GPIO_Port GPIOB
-#define motor2Dir_Pin GPIO_PIN_5
-#define motor2Dir_GPIO_Port GPIOB
+#define motor4Dir_Pin GPIO_PIN_4
+#define motor4Dir_GPIO_Port GPIOD
 /* USER CODE BEGIN Private defines */
 
 /* USER CODE END Private defines */
