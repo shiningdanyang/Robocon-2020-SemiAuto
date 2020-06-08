@@ -42,6 +42,7 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
  D:/STM32CubeIDE_DefaultWorkspace/OFFICIAL_SRC/Robocon-2020-SemiAuto/brain/Trn_Brain/DNL_SemiAuto_Brain_Position.h \
  D:/STM32CubeIDE_DefaultWorkspace/OFFICIAL_SRC/Robocon-2020-SemiAuto/brain/Trn_Brain/DNL_SemiAuto_Brain_Leg.h \
  D:/STM32CubeIDE_DefaultWorkspace/OFFICIAL_SRC/Robocon-2020-SemiAuto/brain/Trn_Brain/DNL_SemiAuto_Brain_LCD.h \
+ D:/STM32CubeIDE_DefaultWorkspace/OFFICIAL_SRC/Robocon-2020-SemiAuto/brain/Trn_Brain/DNL_SemiAuto_Brain_FLASH.h \
  D:/STM32CubeIDE_DefaultWorkspace/OFFICIAL_SRC/Robocon-2020-SemiAuto/brain/Trn_Brain/DNL_Callback.h
 
 ../Core/Inc/main.h:
@@ -131,5 +132,7 @@ D:/STM32CubeIDE_DefaultWorkspace/OFFICIAL_SRC/Robocon-2020-SemiAuto/brain/Trn_Br
 D:/STM32CubeIDE_DefaultWorkspace/OFFICIAL_SRC/Robocon-2020-SemiAuto/brain/Trn_Brain/DNL_SemiAuto_Brain_Leg.h:
 
 D:/STM32CubeIDE_DefaultWorkspace/OFFICIAL_SRC/Robocon-2020-SemiAuto/brain/Trn_Brain/DNL_SemiAuto_Brain_LCD.h:
+
+D:/STM32CubeIDE_DefaultWorkspace/OFFICIAL_SRC/Robocon-2020-SemiAuto/brain/Trn_Brain/DNL_SemiAuto_Brain_FLASH.h:
 
 D:/STM32CubeIDE_DefaultWorkspace/OFFICIAL_SRC/Robocon-2020-SemiAuto/brain/Trn_Brain/DNL_Callback.h:

@@ -55,39 +55,72 @@ extern uint16_t pitchRawValue[3];
 extern uint16_t pitchRawADC;
 extern uint16_t leftRawADC;
 extern uint16_t rigtRawADC;
-extern int16_t leftRawDistance;
-extern int16_t rigtRawDistance;
-extern int16_t pitchRawDistance;
-extern uint16_t leftDistance;
-extern uint16_t rigtDistance;
-extern uint16_t pitchDistance;
-extern double aPitch_Linear;
-extern double bPitch_Linear;
-extern double aLeft_Linear;
-extern double bLeft_Linear;
-extern double aRigt_Linear;
-extern double bRigt_Linear;
+extern double leftRawDistance;
+extern double rigtRawDistance;
+extern double pitchRawDistance;
+extern double leftDistance;
+extern double rigtDistance;
+extern double pitchDistance;
+//extern double aPitch_Linear;
+//extern double bPitch_Linear;
+//extern double aLeft_Linear;
+//extern double bLeft_Linear;
+//extern double aRigt_Linear;
+//extern double bRigt_Linear;
+#define aPitch_Linear 	1
+#define bPitch_Linear 	0
+#define aLeft_Linear 	0.7140957447
+#define bLeft_Linear 	145.2393617
+#define aRigt_Linear 	0.7168784029
+#define bRigt_Linear 	141.1651543
 
-extern double kalmanGain_Pitch;
-extern double x_Pitch[2];
-extern double P_Pitch;         //covariance estimation (err_estimate)
-extern double R_Pitch;         //covariance of the observation noise (err_measure)
-extern double Q_Pitch;    //process variance
-extern double kalmanFilter_Pitch(double mea);
+#define k 1
 
-extern double kalmanGain_Left;
-extern double x_Left[2];
-extern double P_Left;         //covariance estimation (err_estimate)
-extern double R_Left;         //covariance of the observation noise (err_measure)
-extern double Q_Left;    //process variance
-extern double kalmanFilter_Left(double mea);
+double kalmanGain_Pitch;
+double x_Pitch[2];
+double P_Pitch = 2;         //covariance estimation (err_estimate)
+double R_Pitch = 2;         //covariance of the observation noise (err_measure)
+double Q_Pitch = 0.0009;    //process variance
 
-extern double kalmanGain_Rigt;
-extern double x_Rigt[2];
-extern double P_Rigt;         //covariance estimation (err_estimate)
-extern double R_Rigt;         //covariance of the observation noise (err_measure)
-extern double Q_Rigt;    //process variance
-extern double kalmanFilter_Rigt(double mea);
+double kalmanGain_Left;
+double x_Left[2];
+double P_Left = 2;         //covariance estimation (err_estimate)
+double R_Left = 2;         //covariance of the observation noise (err_measure)
+double Q_Left = 0.0009;    //process variance
+
+double kalmanGain_Rigt;
+double x_Rigt[2];
+double P_Rigt = 2;         //covariance estimation (err_estimate)
+double R_Rigt = 2;         //covariance of the observation noise (err_measure)
+double Q_Rigt = 0.0009;    //process variance
+
+double kalmanFilter_Pitch(double mea)
+{
+  kalmanGain_Pitch = P_Pitch /(P_Pitch + R_Pitch);
+  x_Pitch[k] = x_Pitch[k-1] + kalmanGain_Pitch *(mea - x_Pitch[k-1]);
+  P_Pitch =  (1.0 - kalmanGain_Pitch) *P_Pitch + fabs(x_Pitch[k-1]-x_Pitch[k]) *Q_Pitch;
+  x_Pitch[k-1] = x_Pitch[k];
+  return x_Pitch[k];
+}
+
+double kalmanFilter_Left(double mea)
+{
+  kalmanGain_Left = P_Left /(P_Left + R_Left);
+  x_Left[k] = x_Left[k-1] + kalmanGain_Left *(mea - x_Left[k-1]);
+  P_Left =  (1.0 - kalmanGain_Left) *P_Left + fabs(x_Left[k-1]-x_Left[k]) *Q_Left;
+  x_Left[k-1] = x_Left[k];
+  return x_Left[k];
+}
+
+double kalmanFilter_Rigt(double mea)
+{
+  kalmanGain_Rigt = P_Rigt /(P_Rigt + R_Rigt);
+  x_Rigt[k] = x_Rigt[k-1] + kalmanGain_Rigt *(mea - x_Rigt[k-1]);
+  P_Rigt =  (1.0 - kalmanGain_Rigt) *P_Rigt + fabs(x_Rigt[k-1]-x_Rigt[k]) *Q_Rigt;
+  x_Rigt[k-1] = x_Rigt[k];
+  return x_Rigt[k];
+}
+
 //extern char* controlData;
 /* USER CODE END PV */
 
@@ -260,6 +293,13 @@ void SysTick_Handler(void)
 void DMA1_Stream2_IRQHandler(void)
 {
   /* USER CODE BEGIN DMA1_Stream2_IRQn 0 */
+
+	rigtRawDistance = aRigt_Linear*adc3Value[0] + bRigt_Linear;
+	pitchRawDistance = aPitch_Linear*adc3Value[1] + bPitch_Linear;
+	leftRawDistance = aLeft_Linear*adc3Value[2] + bLeft_Linear;
+	rigtDistance = kalmanFilter_Rigt(rigtRawDistance);
+	pitchDistance = kalmanFilter_Pitch(pitchRawDistance);
+	leftDistance = kalmanFilter_Left(leftRawDistance);
 
   /* USER CODE END DMA1_Stream2_IRQn 0 */
   HAL_DMA_IRQHandler(&hdma_adc3);

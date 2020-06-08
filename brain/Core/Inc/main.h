@@ -32,7 +32,28 @@ extern "C" {
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#define FLASH_BASE_ADDR      (uint32_t)(FLASH_BASE)
+#define FLASH_END_ADDR       (uint32_t)(0x081FFFFF)
 
+/* Base address of the Flash sectors Bank 1 */
+#define ADDR_FLASH_SECTOR_0_BANK1     ((uint32_t)0x08000000) /* Base @ of Sector 0, 128 Kbytes */
+#define ADDR_FLASH_SECTOR_1_BANK1     ((uint32_t)0x08020000) /* Base @ of Sector 1, 128 Kbytes */
+#define ADDR_FLASH_SECTOR_2_BANK1     ((uint32_t)0x08040000) /* Base @ of Sector 2, 128 Kbytes */
+#define ADDR_FLASH_SECTOR_3_BANK1     ((uint32_t)0x08060000) /* Base @ of Sector 3, 128 Kbytes */
+#define ADDR_FLASH_SECTOR_4_BANK1     ((uint32_t)0x08080000) /* Base @ of Sector 4, 128 Kbytes */
+#define ADDR_FLASH_SECTOR_5_BANK1     ((uint32_t)0x080A0000) /* Base @ of Sector 5, 128 Kbytes */
+#define ADDR_FLASH_SECTOR_6_BANK1     ((uint32_t)0x080C0000) /* Base @ of Sector 6, 128 Kbytes */
+#define ADDR_FLASH_SECTOR_7_BANK1     ((uint32_t)0x080E0000) /* Base @ of Sector 7, 128 Kbytes */
+
+/* Base address of the Flash sectors Bank 2 */
+#define ADDR_FLASH_SECTOR_0_BANK2     ((uint32_t)0x08100000) /* Base @ of Sector 0, 128 Kbytes */
+#define ADDR_FLASH_SECTOR_1_BANK2     ((uint32_t)0x08120000) /* Base @ of Sector 1, 128 Kbytes */
+#define ADDR_FLASH_SECTOR_2_BANK2     ((uint32_t)0x08140000) /* Base @ of Sector 2, 128 Kbytes */
+#define ADDR_FLASH_SECTOR_3_BANK2     ((uint32_t)0x08160000) /* Base @ of Sector 3, 128 Kbytes */
+#define ADDR_FLASH_SECTOR_4_BANK2     ((uint32_t)0x08180000) /* Base @ of Sector 4, 128 Kbytes */
+#define ADDR_FLASH_SECTOR_5_BANK2     ((uint32_t)0x081A0000) /* Base @ of Sector 5, 128 Kbytes */
+#define ADDR_FLASH_SECTOR_6_BANK2     ((uint32_t)0x081C0000) /* Base @ of Sector 6, 128 Kbytes */
+#define ADDR_FLASH_SECTOR_7_BANK2     ((uint32_t)0x081E0000) /* Base @ of Sector 7, 128 Kbytes */
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
@@ -68,20 +89,12 @@ void Error_Handler(void);
 #define RollLeft_GPIO_Port GPIOC
 #define Pitch_Pin GPIO_PIN_3
 #define Pitch_GPIO_Port GPIOC
-#define cylinder_SetTee_Pin GPIO_PIN_2
-#define cylinder_SetTee_GPIO_Port GPIOA
-#define cylinder_RigtArmTrans_Pin GPIO_PIN_1
-#define cylinder_RigtArmTrans_GPIO_Port GPIOB
-#define cylinder_PassBall_Pin GPIO_PIN_2
-#define cylinder_PassBall_GPIO_Port GPIOB
 #define legEn_Pin GPIO_PIN_7
 #define legEn_GPIO_Port GPIOE
 #define PS2_TX_Pin GPIO_PIN_10
 #define PS2_TX_GPIO_Port GPIOB
 #define PS2_RX_Pin GPIO_PIN_11
 #define PS2_RX_GPIO_Port GPIOB
-#define cylinder_LeftArmTrans_Pin GPIO_PIN_13
-#define cylinder_LeftArmTrans_GPIO_Port GPIOB
 #define compass_TX_Pin GPIO_PIN_14
 #define compass_TX_GPIO_Port GPIOB
 #define compass_RX_Pin GPIO_PIN_15
@@ -94,12 +107,6 @@ void Error_Handler(void);
 #define mainBoard_TX_GPIO_Port GPIOC
 #define mainBoard_RX_Pin GPIO_PIN_7
 #define mainBoard_RX_GPIO_Port GPIOC
-#define cylinder_RigtArmHoldBallTop_Pin GPIO_PIN_8
-#define cylinder_RigtArmHoldBallTop_GPIO_Port GPIOA
-#define cylinder_HoldBall_Pin GPIO_PIN_9
-#define cylinder_HoldBall_GPIO_Port GPIOA
-#define cylinder_LeftArmHoldBall_Pin GPIO_PIN_10
-#define cylinder_LeftArmHoldBall_GPIO_Port GPIOA
 #define leftArmDir_Pin GPIO_PIN_9
 #define leftArmDir_GPIO_Port GPIOG
 #define rigtArmEn_Pin GPIO_PIN_10
@@ -110,10 +117,6 @@ void Error_Handler(void);
 #define leftArmEn_GPIO_Port GPIOG
 #define rigtArmDir_Pin GPIO_PIN_13
 #define rigtArmDir_GPIO_Port GPIOG
-#define cylinder_RigtArmHoldBallBot_Pin GPIO_PIN_5
-#define cylinder_RigtArmHoldBallBot_GPIO_Port GPIOB
-#define cylinder_LiftBall_Pin GPIO_PIN_6
-#define cylinder_LiftBall_GPIO_Port GPIOB
 #define leftArmPul_Pin GPIO_PIN_1
 #define leftArmPul_GPIO_Port GPIOE
 /* USER CODE BEGIN Private defines */

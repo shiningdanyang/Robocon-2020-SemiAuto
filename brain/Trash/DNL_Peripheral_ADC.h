@@ -8,14 +8,15 @@
 #define rollLeft hadc1
 #define rollRigt hadc2
 
+
+
 uint16_t leftRawADC;
 uint16_t rigtRawADC;
 uint16_t pitchRawADC;
 uint16_t leftRawDistance;
 uint16_t rigtRawDistance;
 uint16_t pitchRawDistance;
-double a_Linear = 0.09007;
-double b_Linear = 10.04528;
+
 
 void peripheralADC_Init(void);
 void readADC(void);
@@ -82,3 +83,5 @@ void filterADC(void)
 		_pitchFilterWindow[i] = _pitchFilterWindow[i-1];
 	}
 }
+
+

@@ -1,8 +1,12 @@
 //include sau UART.h
 //#define ADC_CONTINOUS_CONV
 
+#define pitc 2
 #define left 1
 #define rigt 0
+#define _pitc 0
+#define _left 1
+#define _rigt 2
 #define k 1
 #define pitch hadc3
 //#define rollLeft hadc1
@@ -12,12 +16,12 @@
 uint16_t leftRawADC;
 uint16_t rigtRawADC;
 uint16_t pitchRawADC;
-uint16_t leftRawDistance;
-uint16_t rigtRawDistance;
-uint16_t pitchRawDistance;
-uint16_t leftDistance;
-uint16_t rigtDistance;
-uint16_t pitchDistance;
+double leftRawDistance;
+double rigtRawDistance;
+double pitchRawDistance;
+double leftDistance;
+double rigtDistance;
+double pitchDistance;
 double aPitch_Linear = 0.09007;
 double bPitch_Linear = 10.04528;
 double aLeft_Linear;
@@ -31,19 +35,19 @@ void filterADC(void);
 
 double kalmanGain_Pitch;
 double x_Pitch[2];
-double P_Pitch=2;         //covariance estimation (err_estimate)
-double R_Pitch=2;         //covariance of the observation noise (err_measure)
-double Q_Pitch = 0.0009;    //process variance
-double kalmanGain_Rigt;
-double x_Rigt[2];
-double P_Rigt=2;         //covariance estimation (err_estimate)
-double R_Rigt=2;         //covariance of the observation noise (err_measure)
-double Q_Rigt = 0.0009;    //process variance
-double kalmanGain_Left;
-double x_Left[2];
-double P_Left=2;         //covariance estimation (err_estimate)
-double R_Left=2;         //covariance of the observation noise (err_measure)
-double Q_Left = 0.0009;    //process variance
+//double P_Pitch=2;         //covariance estimation (err_estimate)
+//double R_Pitch=2;         //covariance of the observation noise (err_measure)
+//double Q_Pitch = 0.0009;    //process variance
+//double kalmanGain_Rigt;
+//double x_Rigt[2];
+//double P_Rigt=2;         //covariance estimation (err_estimate)
+//double R_Rigt=2;         //covariance of the observation noise (err_measure)
+//double Q_Rigt = 0.0009;    //process variance
+//double kalmanGain_Left;
+//double x_Left[2];
+//double P_Left=2;         //covariance estimation (err_estimate)
+//double R_Left=2;         //covariance of the observation noise (err_measure)
+//double Q_Left = 0.0009;    //process variance
 double kalmanFilter_Pitch(double mea);
 double kalmanFilter_Left(double mea);
 double kalmanFilter_Rigt(double mea);
@@ -112,29 +116,29 @@ void filterADC(void)
 	}
 }
 
-double kalmanFilter_Pitch(double mea)
-{
-  kalmanGain_Pitch = P_Pitch /(P_Pitch + R_Pitch);
-  x_Pitch[k] = x_Pitch[k-1] + kalmanGain_Pitch *(mea - x_Pitch[k-1]);
-  P_Pitch =  (1.0 - kalmanGain_Pitch) *P_Pitch + fabs(x_Pitch[k-1]-x_Pitch[k]) *Q_Pitch;
-  x_Pitch[k-1] = x_Pitch[k];
-  return x_Pitch[k];
-}
-
-double kalmanFilter_Left(double mea)
-{
-  kalmanGain_Left = P_Left /(P_Left + R_Left);
-  x_Left[k] = x_Left[k-1] + kalmanGain_Left *(mea - x_Left[k-1]);
-  P_Left =  (1.0 - kalmanGain_Left) *P_Left + fabs(x_Left[k-1]-x_Left[k]) *Q_Left;
-  x_Left[k-1] = x_Left[k];
-  return x_Left[k];
-}
-
-double kalmanFilter_Rigt(double mea)
-{
-  kalmanGain_Rigt = P_Rigt /(P_Rigt + R_Rigt);
-  x_Rigt[k] = x_Rigt[k-1] + kalmanGain_Rigt *(mea - x_Rigt[k-1]);
-  P_Rigt =  (1.0 - kalmanGain_Rigt) *P_Rigt + fabs(x_Rigt[k-1]-x_Rigt[k]) *Q_Rigt;
-  x_Rigt[k-1] = x_Rigt[k];
-  return x_Rigt[k];
-}
+//double kalmanFilter_Pitch(double mea)
+//{
+//  kalmanGain_Pitch = P_Pitch /(P_Pitch + R_Pitch);
+//  x_Pitch[k] = x_Pitch[k-1] + kalmanGain_Pitch *(mea - x_Pitch[k-1]);
+//  P_Pitch =  (1.0 - kalmanGain_Pitch) *P_Pitch + fabs(x_Pitch[k-1]-x_Pitch[k]) *Q_Pitch;
+//  x_Pitch[k-1] = x_Pitch[k];
+//  return x_Pitch[k];
+//}
+//
+//double kalmanFilter_Left(double mea)
+//{
+//  kalmanGain_Left = P_Left /(P_Left + R_Left);
+//  x_Left[k] = x_Left[k-1] + kalmanGain_Left *(mea - x_Left[k-1]);
+//  P_Left =  (1.0 - kalmanGain_Left) *P_Left + fabs(x_Left[k-1]-x_Left[k]) *Q_Left;
+//  x_Left[k-1] = x_Left[k];
+//  return x_Left[k];
+//}
+//
+//double kalmanFilter_Rigt(double mea)
+//{
+//  kalmanGain_Rigt = P_Rigt /(P_Rigt + R_Rigt);
+//  x_Rigt[k] = x_Rigt[k-1] + kalmanGain_Rigt *(mea - x_Rigt[k-1]);
+//  P_Rigt =  (1.0 - kalmanGain_Rigt) *P_Rigt + fabs(x_Rigt[k-1]-x_Rigt[k]) *Q_Rigt;
+//  x_Rigt[k-1] = x_Rigt[k];
+//  return x_Rigt[k];
+//}

@@ -1,3 +1,5 @@
+int tracking;
+uint32_t startTime;
 double motor1Speed_;
 double motor2Speed_;
 double motor3Speed_;

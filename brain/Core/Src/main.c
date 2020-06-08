@@ -54,8 +54,6 @@ DMA_HandleTypeDef hdma_usart1_rx;
 DMA_HandleTypeDef hdma_usart3_rx;
 
 /* USER CODE BEGIN PV */
-int tracking;
-uint32_t startTime;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -82,6 +80,7 @@ static void MX_USART6_UART_Init(void);
 #include "DNL_SemiAuto_Brain_Position.h"
 #include "DNL_SemiAuto_Brain_Leg.h"
 #include "DNL_SemiAuto_Brain_LCD.h"
+#include "DNL_SemiAuto_Brain_FLASH.h"
 #include "DNL_Callback.h"
 /* USER CODE END 0 */
 
@@ -98,7 +97,7 @@ int main(void)
   /* MCU Configuration--------------------------------------------------------*/
 
   /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
-	HAL_Init();
+  HAL_Init();
 
   /* USER CODE BEGIN Init */
 
@@ -133,89 +132,47 @@ int main(void)
   compassReset();
   HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_RESET);
   HAL_Delay(INIT_TIME);
-//  while(1);
+
+
+//  writeFLASH();
+  readFLASH();
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+//	  brake();
+//	  HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_6);
+//	  HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_9);
+//	  HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_8);
+//	  HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_5);
+//	  HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_10);
+//	  HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_2);
+//	  HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_2);
+//	  HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_1);
+//	  HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_13);
+//	  HAL_GPIO_TogglePin(GPIOG, GPIO_PIN_13);
+//	  HAL_GPIO_TogglePin(GPIOG, GPIO_PIN_11);
+//	  HAL_Delay(2000);
+	  tracking++;
 //	  testPWM();
-	  PIDyaw(compassData, 0);
-	  PIDpit(adc3Value[0], 300);
-	  PIDroL(adc3Value[1], 1000);
-	  roL_pit_yaw_mixSpeed();
 
-//	  leftDistance = 300;
-//	  uint32_t startTime = HAL_GetTick();
-//	  while(HAL_GetTick()-startTime < 5000)
+//	  for(int i = 0; i<4000;i++)
 //	  {
-//		  roL_Pit_Yaw_GoTo(300, 300, 0);
-//	  }
-//	  leftDistance = 0;
-//	  while(1)
-//	  {
-//		  roL_Pit_Yaw_GoTo(300, 300, 0);
-//	  }
-
-//test vị trí
-//	  uint32_t startTime = HAL_GetTick();
-//	  while(HAL_GetTick()- startTime < 5000)
-//	  {
-//		  roL_Pit_Yaw_GoTo(pos1[0], pos1[1], 0);
-//	  }
-//	  startTime = HAL_GetTick();
-//	  while(HAL_GetTick()- startTime < 5000)
-//	  {
-//		  roL_Pit_Yaw_GoTo(pos2[0], pos2[1], 0);
+//		  HAL_GPIO_TogglePin(legPul_GPIO_Port, legPul_Pin);
+//		  HAL_GPIO_WritePin(legDir_GPIO_Port, legDir_Pin,1);
+//		  delayUs(200);
 //	  }
 //	  while(1);
-///////////////////////////////////
-//	  testPWM();
-//	  controlMotor1(-250);
-//	  controlMotor2(-250);
-//	  controlMotor3(-250);
-//	  controlMotor4(-250);
-//	  spinalCordTrans();
-//	  uint32_t startTime = HAL_GetTick();
-//	  while(HAL_GetTick()-startTime<2000)//xoay ngược 2s
-//	  {
-//		  controlMotor1(250);
-//		  controlMotor2(250);
-//		  controlMotor3(250);
-//		  controlMotor4(250);
-//		  spinalCordTrans();
-//	  }
-//	  startTime = HAL_GetTick();
-//	  while(HAL_GetTick()-startTime<5000)
-//	  {
-//		  controlMotor1(-250);
-//		  controlMotor2(-250);
-//		  controlMotor3(-250);
-//		  controlMotor4(-250);
-//		  spinalCordTrans();
-//	  }
 
-//	  PIDyaw(compassData, 0);
-//	  PIDroR(100, 0);
-//	  PIDpit(0, 50);
-//	  roR_pit_yaw_mixSpeed();
 
+//	  //test di chuyển roL pit yaw/////////////////////////////////////
 //	  PIDyaw(compassData, 0);
-//	  PIDroL(0,100);
-//	  PIDpit(0,50);
+//	  PIDpit(adc3Value[0], 300);
+//	  PIDroL(adc3Value[1], 1000);
 //	  roL_pit_yaw_mixSpeed();
-
-//	  uint32_t startTime = HAL_GetTick();
-//	  while(HAL_GetTick() - startTime <3000)
-//	  {
-//		  roR_Pit_Yaw_GoTo(0, 0, 900);
-//	  }
-//	  startTime = HAL_GetTick();
-//	  while(HAL_GetTick() - startTime <3000)
-//	  {
-//		  roR_Pit_Yaw_GoTo(0, 0, -900);
-//	  }
+//	  /////////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////////////
 //	  readADC();
@@ -228,12 +185,12 @@ int main(void)
 //	  tracking++;
 //
 /////////////test shoot/////////////////////////////////////////////
-//for(int i = 0; i< 200; ++i)
-//{
-//	HAL_GPIO_WritePin(legEn_GPIO_Port, legEn_Pin, GPIO_PIN_RESET);
-////	HAL_GPIO_TogglePin(legPul_GPIO_Port, legPul_Pin);
-////	delayUs(1);
-//}
+//	for(int i = 0; i< 2600; ++i)
+//	{
+//		HAL_GPIO_WritePin(legEn_GPIO_Port, legEn_Pin, GPIO_PIN_RESET);
+//		HAL_GPIO_TogglePin(legPul_GPIO_Port, legPul_Pin);
+//		delayUs(50);
+//	}
 //	  legControl(LEG_STATUS_RUNUP);
 //	  HAL_Delay(5000);
 //	  while(1);
@@ -764,14 +721,14 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOD_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, cylinder_SetTee_Pin|cylinder_RigtArmHoldBallTop_Pin|cylinder_HoldBall_Pin|cylinder_LeftArmHoldBall_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_2|GPIO_PIN_8|GPIO_PIN_9|GPIO_PIN_10, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOC, GPIO_PIN_4, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0|cylinder_RigtArmTrans_Pin|cylinder_PassBall_Pin|cylinder_LeftArmTrans_Pin 
-                          |cylinder_RigtArmHoldBallBot_Pin|cylinder_LiftBall_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0|GPIO_PIN_1|GPIO_PIN_2|GPIO_PIN_13 
+                          |GPIO_PIN_5|GPIO_PIN_6, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOG, GPIO_PIN_0|GPIO_PIN_2|GPIO_PIN_3|leftArmDir_Pin 
@@ -783,8 +740,8 @@ static void MX_GPIO_Init(void)
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOD, GPIO_PIN_8|GPIO_PIN_10|legDir_Pin|legPul_Pin, GPIO_PIN_RESET);
 
-  /*Configure GPIO pins : cylinder_SetTee_Pin cylinder_RigtArmHoldBallTop_Pin cylinder_HoldBall_Pin cylinder_LeftArmHoldBall_Pin */
-  GPIO_InitStruct.Pin = cylinder_SetTee_Pin|cylinder_RigtArmHoldBallTop_Pin|cylinder_HoldBall_Pin|cylinder_LeftArmHoldBall_Pin;
+  /*Configure GPIO pins : PA2 PA8 PA9 PA10 */
+  GPIO_InitStruct.Pin = GPIO_PIN_2|GPIO_PIN_8|GPIO_PIN_9|GPIO_PIN_10;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
@@ -797,10 +754,10 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : PB0 cylinder_RigtArmTrans_Pin cylinder_PassBall_Pin cylinder_LeftArmTrans_Pin 
-                           cylinder_RigtArmHoldBallBot_Pin cylinder_LiftBall_Pin */
-  GPIO_InitStruct.Pin = GPIO_PIN_0|cylinder_RigtArmTrans_Pin|cylinder_PassBall_Pin|cylinder_LeftArmTrans_Pin 
-                          |cylinder_RigtArmHoldBallBot_Pin|cylinder_LiftBall_Pin;
+  /*Configure GPIO pins : PB0 PB1 PB2 PB13 
+                           PB5 PB6 */
+  GPIO_InitStruct.Pin = GPIO_PIN_0|GPIO_PIN_1|GPIO_PIN_2|GPIO_PIN_13 
+                          |GPIO_PIN_5|GPIO_PIN_6;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
