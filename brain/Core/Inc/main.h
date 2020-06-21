@@ -79,6 +79,8 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+#define flashButton_Pin GPIO_PIN_13
+#define flashButton_GPIO_Port GPIOC
 #define manualRobot_RX_Pin GPIO_PIN_6
 #define manualRobot_RX_GPIO_Port GPIOF
 #define manualRobot_TX_Pin GPIO_PIN_7
@@ -89,8 +91,12 @@ void Error_Handler(void);
 #define RollLeft_GPIO_Port GPIOC
 #define Pitch_Pin GPIO_PIN_3
 #define Pitch_GPIO_Port GPIOC
+#define passArm_Pin GPIO_PIN_2
+#define passArm_GPIO_Port GPIOA
 #define legEn_Pin GPIO_PIN_7
 #define legEn_GPIO_Port GPIOE
+#define flashSwitch_Pin GPIO_PIN_8
+#define flashSwitch_GPIO_Port GPIOE
 #define PS2_TX_Pin GPIO_PIN_10
 #define PS2_TX_GPIO_Port GPIOB
 #define PS2_RX_Pin GPIO_PIN_11
@@ -107,6 +113,8 @@ void Error_Handler(void);
 #define mainBoard_TX_GPIO_Port GPIOC
 #define mainBoard_RX_Pin GPIO_PIN_7
 #define mainBoard_RX_GPIO_Port GPIOC
+#define passHand_Pin GPIO_PIN_10
+#define passHand_GPIO_Port GPIOA
 #define leftArmDir_Pin GPIO_PIN_9
 #define leftArmDir_GPIO_Port GPIOG
 #define rigtArmEn_Pin GPIO_PIN_10

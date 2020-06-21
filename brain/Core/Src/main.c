@@ -33,6 +33,7 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
+
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -50,6 +51,7 @@ UART_HandleTypeDef huart7;
 UART_HandleTypeDef huart1;
 UART_HandleTypeDef huart3;
 UART_HandleTypeDef huart6;
+DMA_HandleTypeDef hdma_uart7_rx;
 DMA_HandleTypeDef hdma_usart1_rx;
 DMA_HandleTypeDef hdma_usart3_rx;
 
@@ -75,12 +77,15 @@ static void MX_USART6_UART_Init(void);
 #include "DNL_SemiAuto_Brain_DebugVariable.h"
 #include "DNL_SemiAuto_Brain_DelayUs.h"
 #include "DNL_SemiAuto_Brain_UART.h"
+#include "DNL_SemiAuto_Brain_LCD.h"
 #include "DNL_SemiAuto_Brain_ADC.h"
 #include "DNL_SemiAuto_Brain_PID.h"
 #include "DNL_SemiAuto_Brain_Position.h"
 #include "DNL_SemiAuto_Brain_Leg.h"
-#include "DNL_SemiAuto_Brain_LCD.h"
 #include "DNL_SemiAuto_Brain_FLASH.h"
+#include "DNL_SemiAuto_Brain_Cylinder.h"
+#include "DNL_SemiAuto_Brain_Sequence.h"
+
 #include "DNL_Callback.h"
 /* USER CODE END 0 */
 
@@ -127,63 +132,253 @@ int main(void)
   positionControl_Init();
   ST7920_Init();
 
-  tracking = 1000;
+
   brake();
   compassReset();
   HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOE, GPIO_PIN_1, GPIO_PIN_SET);
+  passArm(PASSARM_UP);
+  passHand(PASSHAND_OPEN);
+  if(HAL_GPIO_ReadPin(flashSwitch_GPIO_Port, flashSwitch_Pin) == 0)	//nếu như gạt phải khởi động
+  {
+	  ST7920_SendString(0,0, "SAMPLE:");
+	  getSample();
+	  while(HAL_GPIO_ReadPin(flashSwitch_GPIO_Port, flashSwitch_Pin) == 0)	//ch�? gạt phải
+	  {
+		  ST7920_SendString(0,0, "PLEASE SWITCH");
+		  HAL_Delay(1000);
+		  ST7920_Clear();
+		  HAL_Delay(1000);
+	  }
+	  while(1)
+	  {
+		  tracking++;
+		  ST7920_SendString(0,0, "PLEASE RESET");
+		  HAL_GPIO_TogglePin(GPIOE, GPIO_PIN_1);
+		  HAL_Delay(500);
+		  ST7920_Clear();
+		  HAL_Delay(500);
+	  }
+  }
+  else	// nếu như gạt trái
+  {
+	  ST7920_SendString(0,0, "FREE MODE");
+	  tracking = 148;
+	  readFLASH();
+	  tracking = 150;
+  }
+//  HAL_GPIO_WritePin(GPIOE, GPIO_PIN_1, GPIO_PIN_RESET);
   HAL_Delay(INIT_TIME);
-
-
-//  writeFLASH();
-  readFLASH();
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-//	  brake();
-//	  HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_6);
-//	  HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_9);
-//	  HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_8);
-//	  HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_5);
-//	  HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_10);
-//	  HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_2);
-//	  HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_2);
-//	  HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_1);
-//	  HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_13);
-//	  HAL_GPIO_TogglePin(GPIOG, GPIO_PIN_13);
-//	  HAL_GPIO_TogglePin(GPIOG, GPIO_PIN_11);
-//	  HAL_Delay(2000);
-	  tracking++;
-//	  testPWM();
-
-//	  for(int i = 0; i<4000;i++)
-//	  {
-//		  HAL_GPIO_TogglePin(legPul_GPIO_Port, legPul_Pin);
-//		  HAL_GPIO_WritePin(legDir_GPIO_Port, legDir_Pin,1);
-//		  delayUs(200);
-//	  }
-//	  while(1);
-
-
-//	  //test di chuyển roL pit yaw/////////////////////////////////////
-//	  PIDyaw(compassData, 0);
-//	  PIDpit(adc3Value[0], 300);
-//	  PIDroL(adc3Value[1], 1000);
-//	  roL_pit_yaw_mixSpeed();
-//	  /////////////////////////////////////////////////////////////////
-
-//////////////////////////////////////////////////////////////////////
-//	  readADC();
-//	  tracking++;
-//	  readADC();
-//	  HAL_GPIO_TogglePin(GPIOG, GPIO_PIN_0);
-//	  HAL_GPIO_TogglePin(GPIOG, GPIO_PIN_2);
-//	  HAL_GPIO_TogglePin(GPIOG, GPIO_PIN_3);
-////	  HAL_Delay(500);
-//	  tracking++;
-//
+	  wait4SelectMode();
+	  if(startMode == TO_SHOOT)
+	  {
+	  }
+	  else if(startMode == BALL1)
+	  {
+		  goToBallRigt(ball1);
+//		  startTime = HAL_GetTick();
+//		  while(btn_Sel!=0)	//di chuyển tới vị trí BALL1
+//		  {
+//			  roR_Pit_Yaw_GoTo(ball1[_Rigt], ball1[_PitcWait], 0);
+//		  }
+//		  while(btn_X == 1)	//ch�? nhấn nút X -> tinh chỉnh
+//		  {
+//			  PIDyaw(compassData, 0);
+//			  leftVer = !btn_leftUp - !btn_leftDown;
+//			  leftHor = -!btn_leftLeft + !btn_leftRigt;
+//			  _dir = atan2(leftHor, -leftVer);
+//			  _controlSpeed = sqrt(leftVer*leftVer + leftHor*leftHor);
+//			  _motor1Speed = yawPID*factorYawPID + (factorSpeed*_controlSpeed *cos(3*M_PI/4 - _dir) + 0);
+//			  _motor2Speed = yawPID*factorYawPID + (factorSpeed*_controlSpeed *cos(3*M_PI/4 + _dir) - 0);
+//			  _motor3Speed = yawPID*factorYawPID +  factorSpeed*_controlSpeed *cos(  M_PI/4 + _dir) + 0;
+//			  _motor4Speed = yawPID*factorYawPID +  factorSpeed*_controlSpeed *cos(  M_PI/4 - _dir) - 0;
+//			  controlMotor1(_motor1Speed);
+//			  controlMotor2(_motor2Speed);
+//			  controlMotor3(_motor3Speed);
+//			  controlMotor4(_motor4Speed);
+//			  spinalCordTrans();
+//		  }
+//		  ball1[_Rigt] = rigtDistance;
+//		  startTime = HAL_GetTick();
+//		  while(HAL_GetTick()-startTime<750)	//di chuyển vào vị trí lấy ball1
+//		  {
+//			  roR_Pit_Yaw_GoTo(ball1[_Rigt], ball1[_Pitc], 0);
+//		  }
+//		  brake();
+//		  HAL_Delay(500);
+//		  passHand(PASSHAND_CLOSE);	//gắp bóng
+//		  HAL_Delay(500);
+//		  startTime = HAL_GetTick();
+//		  while(HAL_GetTick()-startTime<20)	//di chuyển ra vị trí chuẩn bị chuyển
+//		  {
+//			  roR_Pit_Yaw_GoTo(ball1[_Rigt], ball1[_PitcWait], 0);
+//		  }
+//		  while(zmanualRxPacket[0] != 'D'&&btn_D!=0)	//chờ manual nhấn nút
+//		  {
+//			  roR_Pit_Yaw_GoTo(ball1[_Rigt], ball1[_PitcWait], 0);
+//		  }
+//		  brake();
+//		  passArm(PASSARM_UP);
+//		  HAL_Delay(1000);
+//		  passArm(PASSARM_DOWN);
+//		  passHand(PASSHAND_OPEN);
+//		  startMode = 0;
+	  }
+	  else if(startMode == BALL2)
+	  {
+		  goToBallRigt(ball2);
+//		  startTime = HAL_GetTick();
+//		  while(btn_Sel!=0)	//di chuyển tới vị trí BALL2
+//		  {
+//			  roR_Pit_Yaw_GoTo(ball2[_Rigt], ball2[_PitcWait], 0);
+//		  }
+//		  while(btn_X == 1)	//chờ nhấn nút X -> tinh chỉnh
+//		  {
+//			  PIDyaw(compassData, 0);
+//			  leftVer = !btn_leftUp - !btn_leftDown;
+//			  leftHor = -!btn_leftLeft + !btn_leftRigt;
+//			  _dir = atan2(leftHor, -leftVer);
+//			  _controlSpeed = sqrt(leftVer*leftVer + leftHor*leftHor);
+//			  _motor1Speed = yawPID*factorYawPID + (factorSpeed*_controlSpeed *cos(3*M_PI/4 - _dir) + 0);
+//			  _motor2Speed = yawPID*factorYawPID + (factorSpeed*_controlSpeed *cos(3*M_PI/4 + _dir) - 0);
+//			  _motor3Speed = yawPID*factorYawPID +  factorSpeed*_controlSpeed *cos(  M_PI/4 + _dir) + 0;
+//			  _motor4Speed = yawPID*factorYawPID +  factorSpeed*_controlSpeed *cos(  M_PI/4 - _dir) - 0;
+//			  controlMotor1(_motor1Speed);
+//			  controlMotor2(_motor2Speed);
+//			  controlMotor3(_motor3Speed);
+//			  controlMotor4(_motor4Speed);
+//			  spinalCordTrans();
+//		  }
+//		  ball2[_Rigt] = rigtDistance;
+//		  startTime = HAL_GetTick();
+//		  while(HAL_GetTick()-startTime<3000)	//di chuyển vào vị trí lấy ball2
+//		  {
+//			  roR_Pit_Yaw_GoTo(ball2[_Rigt], ball2[_Pitc], 0);
+//		  }
+//		  passHand(PASSHAND_CLOSE);	//gắp bóng
+//		  startTime = HAL_GetTick();
+//		  while(HAL_GetTick()-startTime<1000)	//di chuyển ra vị trí chuẩn bị chuyển
+//		  {
+//			  roR_Pit_Yaw_GoTo(ball2[_Rigt], ball2[_PitcWait], 0);
+//		  }
+//		  while((zmanualRxPacket[0] != 'D')&&btn_D!=0)	//chờ manual nhấn nút
+//		  {
+//			  roR_Pit_Yaw_GoTo(ball2[_Rigt], ball2[_PitcWait], 0);
+//		  }
+//		  brake();
+//		  passArm(PASSARM_UP);
+//		  HAL_Delay(1000);
+//		  passArm(PASSARM_DOWN);
+//		  passHand(PASSHAND_OPEN);
+//		  startMode = 0;
+	  }
+	  else if(startMode == BALL3)
+	  {
+		  goToBallRigt(ball3);
+//		  startTime = HAL_GetTick();
+//		  while(btn_Sel!=0)	//di chuyển tới vị trí BALL3
+//		  {
+//			  roR_Pit_Yaw_GoTo(ball3[_Rigt], ball3[_PitcWait], 0);
+//		  }
+//		  while(btn_X == 1)	//chờ nhấn nút X -> tinh chỉnh
+//		  {
+//			  PIDyaw(compassData, 0);
+//			  leftVer = !btn_leftUp - !btn_leftDown;
+//			  leftHor = -!btn_leftLeft + !btn_leftRigt;
+//			  _dir = atan2(leftHor, -leftVer);
+//			  _controlSpeed = sqrt(leftVer*leftVer + leftHor*leftHor);
+//			  _motor1Speed = yawPID*factorYawPID + (factorSpeed*_controlSpeed *cos(3*M_PI/4 - _dir) + 0);
+//			  _motor2Speed = yawPID*factorYawPID + (factorSpeed*_controlSpeed *cos(3*M_PI/4 + _dir) - 0);
+//			  _motor3Speed = yawPID*factorYawPID +  factorSpeed*_controlSpeed *cos(  M_PI/4 + _dir) + 0;
+//			  _motor4Speed = yawPID*factorYawPID +  factorSpeed*_controlSpeed *cos(  M_PI/4 - _dir) - 0;
+//			  controlMotor1(_motor1Speed);
+//			  controlMotor2(_motor2Speed);
+//			  controlMotor3(_motor3Speed);
+//			  controlMotor4(_motor4Speed);
+//			  spinalCordTrans();
+//		  }
+//		  ball3[_Rigt] = rigtDistance;
+//		  startTime = HAL_GetTick();
+//		  while(HAL_GetTick()-startTime<3000)	//di chuyển vào vị trí lấy ball1
+//		  {
+//			  roR_Pit_Yaw_GoTo(ball3[_Rigt], ball3[_Pitc], 0);
+//		  }
+//		  passHand(PASSHAND_CLOSE);	//gắp bóng
+//		  startTime = HAL_GetTick();
+//		  while(HAL_GetTick()-startTime<1000)	//di chuyển ra vị trí chuẩn bị chuyển
+//		  {
+//			  roR_Pit_Yaw_GoTo(ball3[_Rigt], ball3[_PitcWait], 0);
+//		  }
+//		  while((zmanualRxPacket[0] != 'D')&&btn_D!=0)	//chờ manual nhấn nút
+//		  {
+//			  roR_Pit_Yaw_GoTo(ball3[_Rigt], ball3[_PitcWait], 0);
+//		  }
+//		  brake();
+//		  passArm(PASSARM_UP);
+//		  HAL_Delay(1000);
+//		  passArm(PASSARM_DOWN);
+//		  passHand(PASSHAND_OPEN);
+//		  startMode = 0;
+	  }
+	  else if(startMode == BALL4)
+	  {
+		  goToBallRigt(ball4);
+//		  startTime = HAL_GetTick();
+//		  while(btn_Sel!=0)	//di chuyển tới vị trí BALL4
+//		  {
+//			  roR_Pit_Yaw_GoTo(ball4[_Rigt], ball4[_PitcWait], 0);
+//		  }
+//		  while(btn_X == 1)	//chờ nhấn nút X -> tinh chỉnh
+//		  {
+//			  PIDyaw(compassData, 0);
+//			  leftVer = !btn_leftUp - !btn_leftDown;
+//			  leftHor = -!btn_leftLeft + !btn_leftRigt;
+//			  _dir = atan2(leftHor, -leftVer);
+//			  _controlSpeed = sqrt(leftVer*leftVer + leftHor*leftHor);
+//			  _motor1Speed = yawPID*factorYawPID + (factorSpeed*_controlSpeed *cos(3*M_PI/4 - _dir) + 0);
+//			  _motor2Speed = yawPID*factorYawPID + (factorSpeed*_controlSpeed *cos(3*M_PI/4 + _dir) - 0);
+//			  _motor3Speed = yawPID*factorYawPID +  factorSpeed*_controlSpeed *cos(  M_PI/4 + _dir) + 0;
+//			  _motor4Speed = yawPID*factorYawPID +  factorSpeed*_controlSpeed *cos(  M_PI/4 - _dir) - 0;
+//			  controlMotor1(_motor1Speed);
+//			  controlMotor2(_motor2Speed);
+//			  controlMotor3(_motor3Speed);
+//			  controlMotor4(_motor4Speed);
+//			  spinalCordTrans();
+//		  }
+//		  ball4[_Rigt] = rigtDistance;
+//		  startTime = HAL_GetTick();
+//		  while(HAL_GetTick()-startTime<3000)	//di chuyển vào vị trí lấy ball1
+//		  {
+//			  roR_Pit_Yaw_GoTo(ball4[_Rigt], ball4[_Pitc], 0);
+//		  }
+//		  passHand(PASSHAND_CLOSE);	//gắp bóng
+//		  startTime = HAL_GetTick();
+//		  while(HAL_GetTick()-startTime<1000)	//di chuyển ra vị trí chuẩn bị chuyển
+//		  {
+//			  roR_Pit_Yaw_GoTo(ball4[_Rigt], ball4[_PitcWait], 0);
+//		  }
+//		  while((zmanualRxPacket[0] != 'D')&&btn_D!=0)	//chờ manual nhấn nút
+//		  {
+//			  roR_Pit_Yaw_GoTo(ball4[_Rigt], ball4[_PitcWait], 0);
+//		  }
+//		  brake();
+//		  passArm(PASSARM_UP);
+//		  HAL_Delay(1000);
+//		  passArm(PASSARM_DOWN);
+//		  passHand(PASSHAND_OPEN);
+//		  startMode = 0;
+	  }
+	  else if(startMode == LOAD_BALL)
+	  {
+		  while(btn_Sel!=0)//chưa nhấn nút sel->về vị trí ban đầu
+			  ;
+	  }
 /////////////test shoot/////////////////////////////////////////////
 //	for(int i = 0; i< 2600; ++i)
 //	{
@@ -214,98 +409,6 @@ int main(void)
 //	  }
 //	  while(1);
 ///////////////////////////////////////////////////////////////////////
-
-//////////////////////test xoay la bàn////////////////////////////////
-//	  startTime = HAL_GetTick();
-//	  while(HAL_GetTick()-startTime < 10000)
-//	  {
-//		  HAL_GPIO_WritePin(GPIOB,GPIO_PIN_0,GPIO_PIN_SET);
-//		  PIDyaw(compassData, 0);
-//		  controlMotor1(yawPID);
-//		  controlMotor2(yawPID);
-//		  controlMotor3(yawPID);
-//		  controlMotor4(yawPID);
-//		  spinalCordTrans();
-//		  tracking++;
-//	  }
-//	  startTime = HAL_GetTick();
-//	  while(HAL_GetTick()-startTime < 10000)
-//	  {
-//		  HAL_GPIO_WritePin(GPIOB,GPIO_PIN_0,GPIO_PIN_SET);
-//		  PIDyaw(900, compassData);
-//		  controlMotor1(yawPID);
-//		  controlMotor2(yawPID);
-//		  controlMotor3(yawPID);
-//		  controlMotor4(yawPID);
-//		  spinalCordTrans();
-//		  tracking++;
-//	  }
-//	  startTime = HAL_GetTick();
-//	  while(HAL_GetTick()-startTime < 10000)
-//	  {
-//		  HAL_GPIO_WritePin(GPIOB,GPIO_PIN_0,GPIO_PIN_SET);
-//		  PIDyaw(-900, compassData);
-//		  controlMotor1(yawPID);
-//		  controlMotor2(yawPID);
-//		  controlMotor3(yawPID);
-//		  controlMotor4(yawPID);
-//		  spinalCordTrans();
-//		  tracking++;
-//	  }
-//	  startTime = HAL_GetTick();
-//	  while(HAL_GetTick()-startTime < 10000)
-//	  {
-//		  HAL_GPIO_WritePin(GPIOB,GPIO_PIN_0,GPIO_PIN_SET);
-//		  PIDyaw(900, compassData);
-//		  controlMotor1(yawPID);
-//		  controlMotor2(yawPID);
-//		  controlMotor3(yawPID);
-//		  controlMotor4(yawPID);
-//		  spinalCordTrans();
-//		  tracking++;
-//	  }
-//	  startTime = HAL_GetTick();
-//	  while(HAL_GetTick()-startTime < 10000)
-//	  {
-//		  HAL_GPIO_WritePin(GPIOB,GPIO_PIN_0,GPIO_PIN_SET);
-//		  PIDyaw(-900, compassData);
-//		  controlMotor1(yawPID);
-//		  controlMotor2(yawPID);
-//		  controlMotor3(yawPID);
-//		  controlMotor4(yawPID);
-//		  spinalCordTrans();
-//		  tracking++;
-//	  }
-//	  startTime = HAL_GetTick();
-//	  while(HAL_GetTick()-startTime < 10000)
-//	  {
-//		  HAL_GPIO_WritePin(GPIOB,GPIO_PIN_0,GPIO_PIN_SET);
-//		  PIDyaw(900, compassData);
-//		  controlMotor1(yawPID);
-//		  controlMotor2(yawPID);
-//		  controlMotor3(yawPID);
-//		  controlMotor4(yawPID);
-//		  spinalCordTrans();
-//		  tracking++;
-//	  }
-//	  while(1);
-//////////////////////////////////////////////////////////////////////
-
-/////////////////PID left////////////////////////////////
-//	  readADC();
-//	  PIDpit(0, 0);
-//	  PIDroL(leftRawDistance, 200);
-////	  PIDroL(_roLValue, _roLSetpoint)
-//	  PIDyaw(0, 0);
-//	  roL_pit_yaw_mixSpeed();
-////////////////////////////////////////////////////
-
-/////////////////PID left////////////////////////////////
-//	  readADC();
-//	  PIDpit(0, 0);
-//	  PIDroL(0,200);
-//	  PIDyaw(compassData, 0);
-//	  roL_pit_yaw_mixSpeed();
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -690,6 +793,9 @@ static void MX_DMA_Init(void)
   __HAL_RCC_DMA2_CLK_ENABLE();
 
   /* DMA interrupt init */
+  /* DMA1_Stream0_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA1_Stream0_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(DMA1_Stream0_IRQn);
   /* DMA1_Stream2_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(DMA1_Stream2_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(DMA1_Stream2_IRQn);
@@ -712,8 +818,8 @@ static void MX_GPIO_Init(void)
   GPIO_InitTypeDef GPIO_InitStruct = {0};
 
   /* GPIO Ports Clock Enable */
-  __HAL_RCC_GPIOF_CLK_ENABLE();
   __HAL_RCC_GPIOC_CLK_ENABLE();
+  __HAL_RCC_GPIOF_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
   __HAL_RCC_GPIOB_CLK_ENABLE();
   __HAL_RCC_GPIOG_CLK_ENABLE();
@@ -721,17 +827,18 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOD_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_2|GPIO_PIN_8|GPIO_PIN_9|GPIO_PIN_10, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOA, passArm_Pin|GPIO_PIN_8|GPIO_PIN_9|passHand_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOC, GPIO_PIN_4, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0|GPIO_PIN_1|GPIO_PIN_2|GPIO_PIN_13 
-                          |GPIO_PIN_5|GPIO_PIN_6, GPIO_PIN_RESET);
+                          |GPIO_PIN_5|GPIO_PIN_6|GPIO_PIN_7, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOG, GPIO_PIN_0|GPIO_PIN_2|GPIO_PIN_3|leftArmDir_Pin 
+  HAL_GPIO_WritePin(GPIOG, GPIO_PIN_0|GPIO_PIN_2|GPIO_PIN_3|GPIO_PIN_4 
+                          |GPIO_PIN_5|GPIO_PIN_6|GPIO_PIN_8|leftArmDir_Pin 
                           |rigtArmEn_Pin|rigtArmPul_Pin|leftArmEn_Pin|rigtArmDir_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
@@ -740,8 +847,20 @@ static void MX_GPIO_Init(void)
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOD, GPIO_PIN_8|GPIO_PIN_10|legDir_Pin|legPul_Pin, GPIO_PIN_RESET);
 
-  /*Configure GPIO pins : PA2 PA8 PA9 PA10 */
-  GPIO_InitStruct.Pin = GPIO_PIN_2|GPIO_PIN_8|GPIO_PIN_9|GPIO_PIN_10;
+  /*Configure GPIO pin : flashButton_Pin */
+  GPIO_InitStruct.Pin = flashButton_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
+  HAL_GPIO_Init(flashButton_GPIO_Port, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : PA0 */
+  GPIO_InitStruct.Pin = GPIO_PIN_0;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+  /*Configure GPIO pins : passArm_Pin PA8 PA9 passHand_Pin */
+  GPIO_InitStruct.Pin = passArm_Pin|GPIO_PIN_8|GPIO_PIN_9|passHand_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
@@ -755,9 +874,9 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
   /*Configure GPIO pins : PB0 PB1 PB2 PB13 
-                           PB5 PB6 */
+                           PB5 PB6 PB7 */
   GPIO_InitStruct.Pin = GPIO_PIN_0|GPIO_PIN_1|GPIO_PIN_2|GPIO_PIN_13 
-                          |GPIO_PIN_5|GPIO_PIN_6;
+                          |GPIO_PIN_5|GPIO_PIN_6|GPIO_PIN_7;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
@@ -777,6 +896,12 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(legEn_GPIO_Port, &GPIO_InitStruct);
 
+  /*Configure GPIO pin : flashSwitch_Pin */
+  GPIO_InitStruct.Pin = flashSwitch_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
+  HAL_GPIO_Init(flashSwitch_GPIO_Port, &GPIO_InitStruct);
+
   /*Configure GPIO pins : PD8 PD10 legDir_Pin */
   GPIO_InitStruct.Pin = GPIO_PIN_8|GPIO_PIN_10|legDir_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
@@ -790,6 +915,13 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
   HAL_GPIO_Init(legPul_GPIO_Port, &GPIO_InitStruct);
+
+  /*Configure GPIO pins : PG4 PG5 PG6 PG8 */
+  GPIO_InitStruct.Pin = GPIO_PIN_4|GPIO_PIN_5|GPIO_PIN_6|GPIO_PIN_8;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+  HAL_GPIO_Init(GPIOG, &GPIO_InitStruct);
 
   /*Configure GPIO pins : leftArmDir_Pin rigtArmEn_Pin rigtArmPul_Pin leftArmEn_Pin 
                            rigtArmDir_Pin */

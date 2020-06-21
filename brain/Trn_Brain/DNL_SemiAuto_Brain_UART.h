@@ -2,7 +2,7 @@
 #define SPINAL_CORD_MODE_ONEWAY
 
 #ifdef SPINAL_CORD_MODE_ONEWAY
-#define INIT_TIME 4000
+#define INIT_TIME 500
 #endif
 #ifndef SPINAL_CORD_MODE_ONEWAY
 #define INIT_TIME 2000
@@ -40,6 +40,24 @@ void PS2DeInit(void);
 void PS2Init(void);
 uint8_t PS2CheckbyteCount = 0, PS2Data[6], PS2DataIndex;
 int16_t PS2Button, PS2JoyLeft,PS2JoyRigt;
+int16_t joyLeftMidVer=127;
+int16_t joyLeftMidHor=127;
+int16_t joyRigtMidVer=127;
+int16_t joyRigtMidHor=127;
+int16_t joyLeftHor;
+int16_t joyLeftVer;
+int16_t joyRigtHor;
+int16_t joyRigtVer;
+int16_t leftVer;
+int16_t leftHor;
+int16_t _motor1Speed;
+int16_t _motor2Speed;
+int16_t _motor3Speed;
+int16_t _motor4Speed;
+uint8_t btn_leftLeft, btn_leftRigt, btn_leftUp, btn_leftDown;
+uint8_t btn_Sta, btn_joyLeft, btn_joyRigt, btn_Sel;
+uint8_t btn_A, btn_X, btn_D, btn_W, btn_E, btn_Q, btn_C, btn_Z;
+
 char* controlData;
 ////////////////////////////////////////////////////////////////
 #define spinalCord huart6
@@ -52,7 +70,7 @@ uint8_t spinalCordRxCplt_Flag;
 #define motor1Speed 	4
 #define motor2Speed 	5
 #define motor3Speed 	6
-#define motor4Speed 	7
+#define motor4Speed		7
 #define motorDir		8
 #define motor1Dir		9
 #define motor2Dir		10
@@ -99,6 +117,7 @@ void peripheralUART_Init()
 	HAL_UART_Receive_IT(&spinalCord, spinalCordRxPacket, 1);
 	HAL_UART_Receive_DMA(&PS2, PS2RxPacket, 1);
 	HAL_UART_Receive_DMA(&compass, compassRxPacket, 2);
+	HAL_UART_Receive_DMA(&zmanual, zmanualRxPacket, 1);
 }
 #endif
 #ifndef SPINAL_CORD_MODE_ONEWAY

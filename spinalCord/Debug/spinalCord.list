@@ -39,9 +39,9 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING
  17 .debug_line   00008697  00000000  00000000  0004ef73  2**0
                   CONTENTS, READONLY, DEBUGGING
- 18 .debug_str    000c8f9f  00000000  00000000  0005760a  2**0
+ 18 .debug_str    000c8f9c  00000000  00000000  0005760a  2**0
                   CONTENTS, READONLY, DEBUGGING
- 19 .comment      0000007b  00000000  00000000  001205a9  2**0
+ 19 .comment      0000007b  00000000  00000000  001205a6  2**0
                   CONTENTS, READONLY
  20 .debug_frame  00003364  00000000  00000000  00120624  2**2
                   CONTENTS, READONLY, DEBUGGING
@@ -635,62 +635,63 @@ int main(void)
   peripheralUART_Init();
  8000664:	f7ff ff30 	bl	80004c8 <peripheralUART_Init>
   HAL_Delay(INIT_TIME);
- 8000668:	f44f 60fa 	mov.w	r0, #2000	; 0x7d0
- 800066c:	f000 fdc2 	bl	80011f4 <HAL_Delay>
+ 8000668:	2000      	movs	r0, #0
+ 800066a:	f000 fdc3 	bl	80011f4 <HAL_Delay>
 //	  controlMotor2(brainRxPacket[1], brainRxPacket[5]);
 //	  controlMotor3(brainRxPacket[2], brainRxPacket[6]);
 //	  controlMotor4(brainRxPacket[3], brainRxPacket[7]);
 
 	  //OFFICIAL//////////////////////////////
 	  controlMotor1(motor1Speed, motor1Dir);
- 8000670:	4b16      	ldr	r3, [pc, #88]	; (80006cc <main+0x90>)
- 8000672:	781b      	ldrb	r3, [r3, #0]
- 8000674:	461a      	mov	r2, r3
- 8000676:	4b16      	ldr	r3, [pc, #88]	; (80006d0 <main+0x94>)
- 8000678:	f993 3000 	ldrsb.w	r3, [r3]
- 800067c:	4619      	mov	r1, r3
- 800067e:	4610      	mov	r0, r2
- 8000680:	f7ff ff4c 	bl	800051c <controlMotor1>
+ 800066e:	4b17      	ldr	r3, [pc, #92]	; (80006cc <main+0x90>)
+ 8000670:	781b      	ldrb	r3, [r3, #0]
+ 8000672:	461a      	mov	r2, r3
+ 8000674:	4b16      	ldr	r3, [pc, #88]	; (80006d0 <main+0x94>)
+ 8000676:	f993 3000 	ldrsb.w	r3, [r3]
+ 800067a:	4619      	mov	r1, r3
+ 800067c:	4610      	mov	r0, r2
+ 800067e:	f7ff ff4d 	bl	800051c <controlMotor1>
 	  controlMotor2(motor2Speed, motor2Dir);
- 8000684:	4b13      	ldr	r3, [pc, #76]	; (80006d4 <main+0x98>)
- 8000686:	781b      	ldrb	r3, [r3, #0]
- 8000688:	461a      	mov	r2, r3
- 800068a:	4b13      	ldr	r3, [pc, #76]	; (80006d8 <main+0x9c>)
- 800068c:	f993 3000 	ldrsb.w	r3, [r3]
- 8000690:	4619      	mov	r1, r3
- 8000692:	4610      	mov	r0, r2
- 8000694:	f7ff ff5a 	bl	800054c <controlMotor2>
+ 8000682:	4b14      	ldr	r3, [pc, #80]	; (80006d4 <main+0x98>)
+ 8000684:	781b      	ldrb	r3, [r3, #0]
+ 8000686:	461a      	mov	r2, r3
+ 8000688:	4b13      	ldr	r3, [pc, #76]	; (80006d8 <main+0x9c>)
+ 800068a:	f993 3000 	ldrsb.w	r3, [r3]
+ 800068e:	4619      	mov	r1, r3
+ 8000690:	4610      	mov	r0, r2
+ 8000692:	f7ff ff5b 	bl	800054c <controlMotor2>
 	  controlMotor3(motor3Speed, motor3Dir);
- 8000698:	4b10      	ldr	r3, [pc, #64]	; (80006dc <main+0xa0>)
- 800069a:	781b      	ldrb	r3, [r3, #0]
- 800069c:	461a      	mov	r2, r3
- 800069e:	4b10      	ldr	r3, [pc, #64]	; (80006e0 <main+0xa4>)
- 80006a0:	f993 3000 	ldrsb.w	r3, [r3]
- 80006a4:	4619      	mov	r1, r3
- 80006a6:	4610      	mov	r0, r2
- 80006a8:	f7ff ff68 	bl	800057c <controlMotor3>
+ 8000696:	4b11      	ldr	r3, [pc, #68]	; (80006dc <main+0xa0>)
+ 8000698:	781b      	ldrb	r3, [r3, #0]
+ 800069a:	461a      	mov	r2, r3
+ 800069c:	4b10      	ldr	r3, [pc, #64]	; (80006e0 <main+0xa4>)
+ 800069e:	f993 3000 	ldrsb.w	r3, [r3]
+ 80006a2:	4619      	mov	r1, r3
+ 80006a4:	4610      	mov	r0, r2
+ 80006a6:	f7ff ff69 	bl	800057c <controlMotor3>
 	  controlMotor4(motor4Speed, motor4Dir);
- 80006ac:	4b0d      	ldr	r3, [pc, #52]	; (80006e4 <main+0xa8>)
- 80006ae:	781b      	ldrb	r3, [r3, #0]
- 80006b0:	461a      	mov	r2, r3
- 80006b2:	4b0d      	ldr	r3, [pc, #52]	; (80006e8 <main+0xac>)
- 80006b4:	f993 3000 	ldrsb.w	r3, [r3]
- 80006b8:	4619      	mov	r1, r3
- 80006ba:	4610      	mov	r0, r2
- 80006bc:	f7ff ff76 	bl	80005ac <controlMotor4>
+ 80006aa:	4b0e      	ldr	r3, [pc, #56]	; (80006e4 <main+0xa8>)
+ 80006ac:	781b      	ldrb	r3, [r3, #0]
+ 80006ae:	461a      	mov	r2, r3
+ 80006b0:	4b0d      	ldr	r3, [pc, #52]	; (80006e8 <main+0xac>)
+ 80006b2:	f993 3000 	ldrsb.w	r3, [r3]
+ 80006b6:	4619      	mov	r1, r3
+ 80006b8:	4610      	mov	r0, r2
+ 80006ba:	f7ff ff77 	bl	80005ac <controlMotor4>
 //	  debugTxPacket[4] = motor1Dir;
 //	  debugTxPacket[5] = motor2Dir;
 //	  debugTxPacket[6] = motor3Dir;
 //	  debugTxPacket[7] = motor4Dir;
 //	  HAL_UART_Transmit(&huart4, debugTxPacket, 9, 50);
 	  tracking++;
- 80006c0:	4b0a      	ldr	r3, [pc, #40]	; (80006ec <main+0xb0>)
- 80006c2:	681b      	ldr	r3, [r3, #0]
- 80006c4:	3301      	adds	r3, #1
- 80006c6:	4a09      	ldr	r2, [pc, #36]	; (80006ec <main+0xb0>)
- 80006c8:	6013      	str	r3, [r2, #0]
+ 80006be:	4b0b      	ldr	r3, [pc, #44]	; (80006ec <main+0xb0>)
+ 80006c0:	681b      	ldr	r3, [r3, #0]
+ 80006c2:	3301      	adds	r3, #1
+ 80006c4:	4a09      	ldr	r2, [pc, #36]	; (80006ec <main+0xb0>)
+ 80006c6:	6013      	str	r3, [r2, #0]
 	  controlMotor1(motor1Speed, motor1Dir);
- 80006ca:	e7d1      	b.n	8000670 <main+0x34>
+ 80006c8:	e7d1      	b.n	800066e <main+0x32>
+ 80006ca:	bf00      	nop
  80006cc:	20000085 	.word	0x20000085
  80006d0:	200001e1 	.word	0x200001e1
  80006d4:	200001e0 	.word	0x200001e0

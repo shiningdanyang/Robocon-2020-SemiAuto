@@ -46,33 +46,41 @@ extern void compassRequest(void);
 extern uint8_t compassGetDataPeriod;
 extern uint8_t compassRxPacket[2];
 extern int16_t compassData;
+
 extern uint8_t PS2RxPacket[8];
 extern uint8_t PS2CheckbyteCount, PS2Data[6], PS2DataIndex;
 extern int16_t PS2Button, PS2JoyLeft, PS2JoyRigt;
+extern int16_t joyLeftMidVer;
+extern int16_t joyLeftMidHor;
+extern int16_t joyRigtMidVer;
+extern int16_t joyRigtMidHor;
+extern int16_t joyLeftHor;
+extern int16_t joyLeftVer;
+extern int16_t joyRigtHor;
+extern int16_t joyRigtVer;
+extern uint8_t btn_leftLeft, btn_leftRigt, btn_leftUp, btn_leftDown;
+extern uint8_t btn_Sta, btn_joyLeft, btn_joyRigt, btn_Sel;
+extern uint8_t btn_A, btn_X, btn_D, btn_W, btn_E, btn_Q, btn_C, btn_Z;
 
 extern uint16_t adc3Value[3];
-extern uint16_t pitchRawValue[3];
-extern uint16_t pitchRawADC;
-extern uint16_t leftRawADC;
-extern uint16_t rigtRawADC;
 extern double leftRawDistance;
 extern double rigtRawDistance;
 extern double pitchRawDistance;
 extern double leftDistance;
 extern double rigtDistance;
 extern double pitchDistance;
-//extern double aPitch_Linear;
-//extern double bPitch_Linear;
-//extern double aLeft_Linear;
-//extern double bLeft_Linear;
-//extern double aRigt_Linear;
-//extern double bRigt_Linear;
-#define aPitch_Linear 	1
-#define bPitch_Linear 	0
-#define aLeft_Linear 	0.7140957447
-#define bLeft_Linear 	145.2393617
-#define aRigt_Linear 	0.7168784029
-#define bRigt_Linear 	141.1651543
+extern double aPitch_Linear;
+extern double bPitch_Linear;
+extern double aLeft_Linear;
+extern double bLeft_Linear;
+extern double aRigt_Linear;
+extern double bRigt_Linear;
+//#define aPitch_Linear 	1
+//#define bPitch_Linear 	0
+//#define aLeft_Linear 	0.7140957447
+//#define bLeft_Linear 	145.2393617
+//#define aRigt_Linear 	0.7168784029
+//#define bRigt_Linear 	141.1651543
 
 #define k 1
 
@@ -137,6 +145,7 @@ double kalmanFilter_Rigt(double mea)
 /* External variables --------------------------------------------------------*/
 extern DMA_HandleTypeDef hdma_adc3;
 extern TIM_HandleTypeDef htim7;
+extern DMA_HandleTypeDef hdma_uart7_rx;
 extern DMA_HandleTypeDef hdma_usart1_rx;
 extern DMA_HandleTypeDef hdma_usart3_rx;
 extern UART_HandleTypeDef huart7;
@@ -288,6 +297,20 @@ void SysTick_Handler(void)
 /******************************************************************************/
 
 /**
+  * @brief This function handles DMA1 stream0 global interrupt.
+  */
+void DMA1_Stream0_IRQHandler(void)
+{
+  /* USER CODE BEGIN DMA1_Stream0_IRQn 0 */
+
+  /* USER CODE END DMA1_Stream0_IRQn 0 */
+  HAL_DMA_IRQHandler(&hdma_uart7_rx);
+  /* USER CODE BEGIN DMA1_Stream0_IRQn 1 */
+
+  /* USER CODE END DMA1_Stream0_IRQn 1 */
+}
+
+/**
   * @brief This function handles DMA1 stream2 global interrupt.
   */
 void DMA1_Stream2_IRQHandler(void)
@@ -295,8 +318,8 @@ void DMA1_Stream2_IRQHandler(void)
   /* USER CODE BEGIN DMA1_Stream2_IRQn 0 */
 
 	rigtRawDistance = aRigt_Linear*adc3Value[0] + bRigt_Linear;
-	pitchRawDistance = aPitch_Linear*adc3Value[1] + bPitch_Linear;
-	leftRawDistance = aLeft_Linear*adc3Value[2] + bLeft_Linear;
+	leftRawDistance = aLeft_Linear*adc3Value[1] + bLeft_Linear;
+	pitchRawDistance = aPitch_Linear*adc3Value[2] + bPitch_Linear;
 	rigtDistance = kalmanFilter_Rigt(rigtRawDistance);
 	pitchDistance = kalmanFilter_Pitch(pitchRawDistance);
 	leftDistance = kalmanFilter_Left(leftRawDistance);
@@ -364,8 +387,26 @@ void DMA2_Stream2_IRQHandler(void)
 			PS2DataIndex = 0;
 			PS2CheckbyteCount = 0;
 			PS2Button = (PS2Data[0]<<8) | PS2Data[1];
-			PS2JoyRigt = (PS2Data[2]<<8) | PS2Data[3];
-			PS2JoyLeft = (PS2Data[4]<<8) | PS2Data[5];
+			joyRigtHor = PS2Data[2] - joyRigtMidHor;
+			joyRigtVer = PS2Data[3] - joyRigtMidVer;
+			joyLeftHor = PS2Data[4] - joyLeftMidHor;
+			joyLeftVer = PS2Data[5] - joyLeftMidVer;
+			btn_leftLeft = (PS2Button >> 15) & 1U;
+			btn_leftDown = (PS2Button >> 14) & 1U;
+			btn_leftRigt = (PS2Button >> 13) & 1U;
+			btn_leftUp   = (PS2Button >> 12) & 1U;
+			btn_Sta		 = (PS2Button >> 11) & 1U;
+			btn_joyRigt  = (PS2Button >> 10) & 1U;
+			btn_joyLeft  = (PS2Button >>  9) & 1U;
+			btn_Sel  	 = (PS2Button >>  8) & 1U;
+			btn_A  		 = (PS2Button >>  7) & 1U;
+			btn_X  		 = (PS2Button >>  6) & 1U;
+			btn_D  		 = (PS2Button >>  5) & 1U;
+			btn_W  		 = (PS2Button >>  4) & 1U;
+			btn_E  		 = (PS2Button >>  3) & 1U;
+			btn_Q  		 = (PS2Button >>  2) & 1U;
+			btn_C  		 = (PS2Button >>  1) & 1U;
+			btn_Z  		 = (PS2Button >>  0) & 1U;
 		}
 	}
 	if(PS2RxPacket[0] == 0xAA)

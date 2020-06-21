@@ -1,18 +1,18 @@
 /* wiring
- * A5 ---------> SCLK (EN)	//B0
- * A6 ---------> CS (RS)	//G0
- * A7 ---------> SID (RW)	//G2
- * B0 ---------> RST (RST)	//G3
+ * A5 ---------> SCLK (EN)	//G6
+ * A6 ---------> CS (RS)	//G8
+ * A7 ---------> SID (RW)	//G5
+ * B0 ---------> RST (RST)	//G4
  *
  */
 
-#define SCLK_PIN GPIO_PIN_0
-#define SCLK_PORT GPIOB
-#define CS_PIN GPIO_PIN_0	//RS
+#define SCLK_PIN GPIO_PIN_6
+#define SCLK_PORT GPIOG
+#define CS_PIN GPIO_PIN_8	//RS
 #define CS_PORT GPIOG
-#define SID_PIN GPIO_PIN_2
+#define SID_PIN GPIO_PIN_5
 #define SID_PORT GPIOG
-#define RST_PIN GPIO_PIN_3
+#define RST_PIN GPIO_PIN_4
 #define RST_PORT GPIOG
 
 uint8_t image[(128 * 64)/8];

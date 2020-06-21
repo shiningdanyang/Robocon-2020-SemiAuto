@@ -1,6 +1,12 @@
 uint32_t pos1[2];
 uint32_t pos2[2];
 
+
+uint16_t posBall1[2] = {};
+uint16_t posBall2[2] = {};
+uint16_t posBall3[2] = {};
+uint16_t posBall4[2] = {};
+uint16_t posBall5[2] = {};
 //void roL_Pit_Yaw_GoTo(uint32_t posRoL, uint32_t posPit, uint32_t posYaw)
 //{
 //	PIDyaw(compassData, posYaw);
@@ -13,7 +19,7 @@ void roL_Pit_Yaw_GoTo(uint32_t posRoL, uint32_t posPit, uint32_t posYaw)
 {
 	PIDyaw(compassData, posYaw);
 	PIDroL(leftDistance, posRoL);
-	PIDpit(adc3Value[0], posPit);
+	PIDpit(pitchDistance, posPit);
 	roL_pit_yaw_mixSpeed();
 }
 

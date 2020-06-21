@@ -15,38 +15,42 @@
 #define MIN_YAW_PID -MAX_YAW_PID
 int16_t yawError, yawPreError;
 double yawP, yawI, yawD;
-double yawKp = 0.5;
-double yawKd = 0;
-double yawKi = 0.0000000001;
+double yawKp = 0.17;
+double yawKd = 0.5;
+double yawKi = 0.0000000007;
 double yawPID;
 
 #define MAX_ROR_PID 100
 #define MIN_ROR_PID -MAX_ROR_PID
 int16_t roRError, roRPreError;
 double roRP, roRI, roRD;
-double roRKp = 5;
+double roRKp = 0.2;
 double roRKd;
-double roRKi;
+double roRKi = 0.0000001;
 double roRPID;
 
 #define MAX_ROL_PID 255
 #define MIN_ROL_PID -MAX_ROL_PID
 int16_t roLError, roLPreError;
 double roLP, roLI, roLD;
-double roLKp = 0.8;
+double roLKp = 0.2;
 double roLKd;
-double roLKi;
+double roLKi = 0.0000001;
 double roLPID;
 
 #define MAX_PIT_PID 255
 #define MIN_PIT_PID -MAX_PIT_PID
 double pitError, pitPreError;
 double pitP, pitI, pitD;
-double pitKp = 0.8;
+double pitKp = 0.2;
 double pitKd;
-double pitKi;
+double pitKi = 0.0000001;
 double pitPID;
 
+double factorSpeed = 150.0;
+double factorYawPID = 3.0;
+double _controlSpeed;
+double _dir;
 double motor1Speed_;
 double motor2Speed_;
 double motor3Speed_;
@@ -64,6 +68,8 @@ void testPWM(void);
 void roL_pit_yaw_mixSpeed(void);
 void roR_pit_yaw_mixSpeed(void);
 void brake(void);
+
+
 
 #ifdef SPINAL_CORD_MODE_ONEWAY
 
@@ -292,7 +298,7 @@ double PIDyaw(int _yawValue, int _yawSetpoint)
 
 double PIDroR(int _roRValue, int _roRSetpoint)
 {
-	roRError = -_roRSetpoint + _roRValue;
+	roRError = _roRSetpoint - _roRValue;
 	roRP = roRError;
 	roRD = roRError - roRPreError;
 	roRI = roRError + roRI;
@@ -369,12 +375,12 @@ void roL_pit_yaw_mixSpeed(void)
 	double _motor4Speed = yawPID +  _roL_pit_speed *cos(    M_PI/4.0 - _roL_pit_dir) - 0.0;
 
 
-	a = 1.0 - _motor1Speed;
-	b = 1.0 - _motor3Speed;
-	absSpeed = _roL_pit_speed;
-	dir = _roL_pit_dir;
-	cos_ = cos(3*M_PI/4 - _roL_pit_dir);
-	motor1_debug = absSpeed*cos_;
+//	a = 1.0 - _motor1Speed;
+//	b = 1.0 - _motor3Speed;
+//	absSpeed = _roL_pit_speed;
+//	dir = _roL_pit_dir;
+//	cos_ = cos(3*M_PI/4 - _roL_pit_dir);
+//	motor1_debug = absSpeed*cos_;
 	motor1Speed_ = _motor1Speed;
 	motor2Speed_ = _motor2Speed;
 	motor3Speed_ = _motor3Speed;
@@ -401,12 +407,12 @@ void roR_pit_yaw_mixSpeed(void)
 	double _motor3Speed = yawPID +  _roR_pit_speed *cos(    M_PI/4.0 + _roR_pit_dir) + 0.0;
 	double _motor4Speed = yawPID +  _roR_pit_speed *cos(    M_PI/4.0 - _roR_pit_dir) - 0.0;
 
-	a = 1.0 - _motor1Speed;
-	b = 1.0 - _motor3Speed;
-	absSpeed = _roR_pit_speed;
-	dir = _roR_pit_dir;
-	cos_ = cos(3*M_PI/4 - _roR_pit_dir);
-	motor1_debug = absSpeed*cos_;
+//	a = 1.0 - _motor1Speed;
+//	b = 1.0 - _motor3Speed;
+//	absSpeed = _roR_pit_speed;
+//	dir = _roR_pit_dir;
+//	cos_ = cos(3*M_PI/4 - _roR_pit_dir);
+//	motor1_debug = absSpeed*cos_;
 	motor1Speed_ = _motor1Speed;
 	motor2Speed_ = _motor2Speed;
 	motor3Speed_ = _motor3Speed;

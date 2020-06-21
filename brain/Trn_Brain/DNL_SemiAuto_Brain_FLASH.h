@@ -1,5 +1,6 @@
-#define FLASH_USER_START_ADDR   ADDR_FLASH_SECTOR_6_BANK2      /* Start @ of user Flash area Bank1 */
-#define FLASH_USER_END_ADDR     (ADDR_FLASH_SECTOR_7_BANK2 - 1)  /* End @ of user Flash area Bank1*/
+#include <stdio.h>
+#define FLASH_USER_START_ADDR   ADDR_FLASH_SECTOR_7_BANK2      /* Start @ of user Flash area Bank1 */
+#define FLASH_USER_END_ADDR     (FLASH_END_ADDR - 1)  /* End @ of user Flash area Bank1*/
 
 
 uint32_t FirstSector = 0, NbOfSectors = 0;
@@ -15,6 +16,13 @@ uint16_t DT50Rigt_1000;
 uint16_t DT50Rigt_2000;
 uint16_t DT50Pitc_1000;
 uint16_t DT50Pitc_2000;
+
+extern double aPitch_Linear;
+extern double bPitch_Linear;
+extern double aLeft_Linear;
+extern double bLeft_Linear;
+extern double aRigt_Linear;
+extern double bRigt_Linear;
 
 //uint64_t FlashWord[4] = { 0x1020304050607080,
 //                          0x1121314151617181,
@@ -32,6 +40,10 @@ uint16_t adcRigt_2000 = 3100;
 uint64_t FlashWord[4];
 
 FLASH_EraseInitTypeDef EraseInitStruct;
+
+void solveDT50_Left(uint16_t a1, uint16_t a2);
+void solveDT50_Rigt(uint16_t a1, uint16_t a2);
+void solveDT50_Pitch(uint16_t a1, uint16_t a2);
 
 uint32_t GetSector(uint32_t Address)
 {
@@ -90,7 +102,7 @@ void writeFLASH()
 	FlashWord[0] = (adcLeft_2000<<0)|(adcLeft_1000<<16);
 	FlashWord[1] = (adcPitc_2000<<0)|(adcPitc_1000<<16);
 	FlashWord[2] = (adcRigt_2000<<0)|(adcRigt_1000<<16);
-
+	FlashWord[3] = 0xFFFFFFFF;
 //	FlashWord[0] = 0;
 //	FlashWord[1] = 0;
 //	FlashWord[2] = 0;
@@ -117,6 +129,8 @@ void writeFLASH()
 	/* Infinite loop */
 		while (1)
 		{
+			HAL_GPIO_TogglePin(GPIOE, GPIO_PIN_1);
+			HAL_Delay(100);
 		}
 	}
 
@@ -134,6 +148,8 @@ void writeFLASH()
 			 User can add here some code to deal with this error */
 		  while (1)
 		  {
+			HAL_GPIO_TogglePin(GPIOE, GPIO_PIN_1);
+			HAL_Delay(100);
 		  }
 		}
 	}
@@ -157,6 +173,10 @@ void readFLASH()
 	DT50Rigt_2000 = (DT50Rigt>>0)&0xFFFF;
 	DT50Rigt_1000 = (DT50Rigt>>16)&0xFFFF;
 	__DSB();
+
+	solveDT50_Left(DT50Left_1000, DT50Left_2000);
+	solveDT50_Pitch(DT50Pitc_1000, DT50Pitc_2000);
+	solveDT50_Rigt(DT50Rigt_1000, DT50Rigt_2000);
 //	word4 = *(uint64_t*) (FLASH_USER_START_ADDR+24);
 //	__DSB();
 //	while (Address < FLASH_USER_END_ADDR)
@@ -175,83 +195,208 @@ void readFLASH()
 //		}
 //	}
 }
-
 void getSample()
 {
 	int sumADC_Left, sumADC_Pitc, sumADC_Rigt;
 
 	//lấy mẫu left 1000
 	sumADC_Left = 0;
-	while(0)	//chờ nhấn nút
-	{}
-	HAL_Delay(100);
+	while(HAL_GPIO_ReadPin(flashSwitch_GPIO_Port, flashSwitch_Pin) == 0)	//chờ gạt phải
+	{
+		ST7920_SendString(0,4, "LEFT 1");
+		HAL_GPIO_WritePin(GPIOE, GPIO_PIN_1,GPIO_PIN_RESET);
+		HAL_Delay(100);
+		HAL_GPIO_WritePin(GPIOE, GPIO_PIN_1,GPIO_PIN_SET);
+		HAL_Delay(100);
+	}
+	//đã gạt phải
 	for(int i = 0; i < 100; ++i)
 	{
+		HAL_Delay(10);
+		HAL_GPIO_WritePin(GPIOE, GPIO_PIN_1,GPIO_PIN_SET);
 		sumADC_Left += adc3Value[_left];
 	}
 	adcLeft_1000 = sumADC_Left/100;
+	char snum_left1000[5];
+	sprintf(snum_left1000, "%d", adcLeft_1000);
+//	itoa(adcLeft_1000, snum_left1000, 5);
+	ST7920_SendString(1,0, snum_left1000);
 
 	//lấy mẫu left 2000
 	sumADC_Left = 0;
-	while(0)	//chờ nhấn nút
-	{}
+	while(HAL_GPIO_ReadPin(flashSwitch_GPIO_Port, flashSwitch_Pin) == 1)	//chờ gạt trái
+	{
+		ST7920_SendString(0,4, "LEFT 2");
+		HAL_GPIO_WritePin(GPIOE, GPIO_PIN_1,GPIO_PIN_RESET);
+	}
+	//đã gạt trái
 	HAL_Delay(100);
 	for(int i = 0; i < 100; ++i)
 	{
+		HAL_Delay(10);
+		HAL_GPIO_WritePin(GPIOE, GPIO_PIN_1,GPIO_PIN_SET);
 		sumADC_Left += adc3Value[_left];
 	}
 	adcLeft_2000 = sumADC_Left/100;
+	char snum_left2000[5];
+	sprintf(snum_left2000, "%d", adcLeft_2000);
+//	itoa(adcLeft_2000, snum_left2000, 5);
+	ST7920_SendString(1,5, snum_left2000);
 
 	//lấy mẫu pitc 1000
 	sumADC_Pitc = 0;
-	while(0)	//chờ nhấn nút
-	{}
+	while(HAL_GPIO_ReadPin(flashSwitch_GPIO_Port, flashSwitch_Pin) == 0)	//chờ gạt phải
+	{
+		ST7920_SendString(0,4, "PITC 1");
+		HAL_GPIO_WritePin(GPIOE, GPIO_PIN_1,GPIO_PIN_RESET);
+	}
+	//đã gạt phải
 	HAL_Delay(100);
 	for(int i = 0; i < 100; ++i)
 	{
+		HAL_Delay(10);
+		HAL_GPIO_WritePin(GPIOE, GPIO_PIN_1,GPIO_PIN_SET);
 		sumADC_Pitc += adc3Value[_pitc];
 	}
 	adcPitc_1000 = sumADC_Pitc/100;
+	char snum_pitc1000[5];
+	sprintf(snum_pitc1000, "%d", adcPitc_1000);
+//	itoa(adcPitc_1000, snum_pitc1000, 5);
+	ST7920_SendString(2,0, snum_pitc1000);
 
 	//lấy mẫu pitc 2000
 	sumADC_Pitc = 0;
-	while(0)	//chờ nhấn nút
-	{}
+	while(HAL_GPIO_ReadPin(flashSwitch_GPIO_Port, flashSwitch_Pin) == 1)	//chờ gạt trái
+	{
+		ST7920_SendString(0,4, "PITC 2");
+		HAL_GPIO_WritePin(GPIOE, GPIO_PIN_1,GPIO_PIN_RESET);
+	}
+	//đã gạt trái
 	HAL_Delay(100);
 	for(int i = 0; i < 100; ++i)
 	{
+		HAL_Delay(10);
+		HAL_GPIO_WritePin(GPIOE, GPIO_PIN_1,GPIO_PIN_SET);
 		sumADC_Pitc += adc3Value[_pitc];
 	}
 	adcPitc_2000 = sumADC_Pitc/100;
+	char snum_pitc2000[5];
+	sprintf(snum_pitc2000, "%d", adcPitc_2000);
+//	itoa(adcPitc_1000, snum_pitc2000, 5);
+	ST7920_SendString(2,5, snum_pitc2000);
 
 	//lấy mẫu rigt 1000
 	sumADC_Rigt = 0;
-	while(0)	//chờ nhấn nút
-	{}
+	while(HAL_GPIO_ReadPin(flashSwitch_GPIO_Port, flashSwitch_Pin) == 0)	//chờ gạt phải
+	{
+		ST7920_SendString(0,4, "RIGT 1");
+		HAL_GPIO_WritePin(GPIOE, GPIO_PIN_1,GPIO_PIN_RESET);
+	}
+	//đã gạt phải
 	HAL_Delay(100);
 	for(int i = 0; i < 100; ++i)
 	{
-		sumADC_Rigt += adc3Value[_pitc];
+		HAL_Delay(10);
+		HAL_GPIO_WritePin(GPIOE, GPIO_PIN_1,GPIO_PIN_SET);
+		sumADC_Rigt += adc3Value[_rigt];
 	}
-	adcPitc_1000 = sumADC_Rigt/100;
+	adcRigt_1000 = sumADC_Rigt/100;
+	char snum_rigt1000[5];
+	sprintf(snum_rigt1000, "%d", adcRigt_1000);
+//	itoa(adcRigt_1000, snum_rigt1000, 5);
+	ST7920_SendString(3,0, snum_rigt1000);
+
 
 	//lấy mẫu rigt 2000
 	sumADC_Rigt = 0;
-	while(0)	//chờ nhấn nút
-	{}
+	while(HAL_GPIO_ReadPin(flashSwitch_GPIO_Port, flashSwitch_Pin) == 1)	//chờ gạt trái
+	{
+		ST7920_SendString(0,4, "RIGT 2");
+		HAL_GPIO_WritePin(GPIOE, GPIO_PIN_1,GPIO_PIN_RESET);
+	}
 	HAL_Delay(100);
 	for(int i = 0; i < 100; ++i)
 	{
-		sumADC_Rigt += adc3Value[_pitc];
+		HAL_Delay(10);
+		HAL_GPIO_WritePin(GPIOE, GPIO_PIN_1,GPIO_PIN_SET);
+		sumADC_Rigt += adc3Value[_rigt];
 	}
-	adcPitc_2000 = sumADC_Rigt/100;
+	adcRigt_2000 = sumADC_Rigt/100;
+	char snum_rigt2000[5];
+	sprintf(snum_rigt2000, "%d", adcRigt_2000);
+//	itoa(adcRigt_2000, snum_rigt2000, 5);
+	ST7920_SendString(3,5, snum_rigt2000);
 
+	HAL_Delay(500);
 	//ghi vào flash
 	writeFLASH();
 }
 
+void solveDT50_Left(uint16_t a1, uint16_t a2)
+{
+  const uint16_t b1 = 1;
+  const uint16_t b2 = 1;
+  const uint16_t c1 = 1000;
+  const uint16_t c2 = 2000;
+  if ( a1 != 0 )
+  {
+    double y = (c2 * a1 - a2 * c1) / (b2 * a1 - a2 * b1) ;
+    double x = (c1 - b1 * y) / a1 ;
+    aLeft_Linear = x;	//
+    bLeft_Linear = y;	//
+  }
+  else if ( a2 != 0 )
+  {
+    double y = (c1 * a2 - a1 * c2) / (b1 * a2 - a1 * b2) ;
+    double x = (c2 - b2 * y) / a2 ;
+    aLeft_Linear = x;	//
+    bLeft_Linear = y;	//
+  }
+}
 
+void solveDT50_Pitch(uint16_t a1, uint16_t a2)
+{
+  const uint16_t b1 = 1;
+  const uint16_t b2 = 1;
+  const uint16_t c1 = 1000;
+  const uint16_t c2 = 2000;
+  if ( a1 != 0 )
+  {
+    double y = (c2 * a1 - a2 * c1) / (b2 * a1 - a2 * b1) ;
+    double x = (c1 - b1 * y) / a1 ;
+    aPitch_Linear = x;	//
+    bPitch_Linear = y;	//
+  }
+  else if ( a2 != 0 )
+  {
+    double y = (c1 * a2 - a1 * c2) / (b1 * a2 - a1 * b2) ;
+    double x = (c2 - b2 * y) / a2 ;
+    aPitch_Linear = x;	//
+    bPitch_Linear = y;	//
+  }
+}
 
+void solveDT50_Rigt(uint16_t a1, uint16_t a2)
+{
+  const uint16_t b1 = 1;
+  const uint16_t b2 = 1;
+  const uint16_t c1 = 1000;
+  const uint16_t c2 = 2000;
+  if ( a1 != 0 )
+  {
+    double y = (c2 * a1 - a2 * c1) / (b2 * a1 - a2 * b1) ;
+    double x = (c1 - b1 * y) / a1 ;
+    aRigt_Linear = x;	//
+    bRigt_Linear = y;	//
+  }
+  else if ( a2 != 0 )
+  {
+    double y = (c1 * a2 - a1 * c2) / (b1 * a2 - a1 * b2) ;
+    double x = (c2 - b2 * y) / a2 ;
+    aRigt_Linear = x;	//
+    bRigt_Linear = y;	//
+  }
+}
 
 
 

@@ -4,30 +4,35 @@
 #define pitc 2
 #define left 1
 #define rigt 0
-#define _pitc 0
+#define _pitc 2
 #define _left 1
-#define _rigt 2
+#define _rigt 0
 #define k 1
 #define pitch hadc3
 //#define rollLeft hadc1
 //#define rollRigt hadc2
 #define rollLeft hadc3
 #define rollRigt hadc3
+
 uint16_t leftRawADC;
 uint16_t rigtRawADC;
 uint16_t pitchRawADC;
+
 double leftRawDistance;
 double rigtRawDistance;
 double pitchRawDistance;
+
 double leftDistance;
 double rigtDistance;
 double pitchDistance;
-double aPitch_Linear = 0.09007;
-double bPitch_Linear = 10.04528;
+
+double aPitch_Linear;
+double bPitch_Linear;
 double aLeft_Linear;
 double bLeft_Linear;
 double aRigt_Linear;
 double bRigt_Linear;
+
 uint16_t adc3Value[3];
 void peripheralADC_Init(void);
 void readADC(void);
@@ -54,12 +59,12 @@ double kalmanFilter_Rigt(double mea);
 uint16_t rollRawValue[2];
 uint16_t pitchRawValue[1];
 //uint16_t pitchRawValue[3];
-uint16_t _rollLeftFilterWindow[10] = {0,0,0,0,0,0,0,0,0,0};
-uint16_t _rollLeftFinalFilter;
-uint16_t _rollRigtFilterWindow[10] = {0,0,0,0,0,0,0,0,0,0};
-uint16_t _rollRigtFinalFilter;
-uint16_t _PitchFilterWindow[10] = {0,0,0,0,0,0,0,0,0,0};
-uint16_t _PitchFinalFilter;
+//uint16_t _rollLeftFilterWindow[10] = {0,0,0,0,0,0,0,0,0,0};
+//uint16_t _rollLeftFinalFilter;
+//uint16_t _rollRigtFilterWindow[10] = {0,0,0,0,0,0,0,0,0,0};
+//uint16_t _rollRigtFinalFilter;
+//uint16_t _PitchFilterWindow[10] = {0,0,0,0,0,0,0,0,0,0};
+//uint16_t _PitchFinalFilter;
 
 #ifndef ADC_CONTINOUS_MODE
 void peripheralADC_Init(void)
@@ -91,30 +96,30 @@ void peripheralADC_Init(void)
 //	pitchRawDistance = a_Linear *pitchRawADC + b_Linear;
 //}
 
-void filterADC(void)
-{
-	_rollLeftFilterWindow[0] = rollRawValue[left];
-	_rollRigtFilterWindow[0] = rollRawValue[rigt];
-	_PitchFilterWindow[0] = pitchRawValue[0];
-	int _sumRollRawLeft;
-	int _sumRollRawRigt;
-	int _sumPitchRaw;
-	for(int i = 0; i < 9; ++i)
-	{
-		_sumRollRawLeft += _rollLeftFilterWindow[i];
-		_sumRollRawRigt += _rollRigtFilterWindow[i];
-		_sumPitchRaw += _PitchFilterWindow[i];
-	}
-	_rollLeftFinalFilter = _sumRollRawLeft/10;
-	_rollRigtFinalFilter = _sumRollRawRigt/10;
-	_PitchFinalFilter = _sumPitchRaw/10;
-	for(int i = 9; i > 0; --i)
-	{
-		_rollLeftFilterWindow[i] = _rollLeftFilterWindow[i-1];
-		_rollRigtFilterWindow[i] = _rollRigtFilterWindow[i-1];
-		_PitchFilterWindow[i] = _PitchFilterWindow[i-1];
-	}
-}
+//void filterADC(void)
+//{
+//	_rollLeftFilterWindow[0] = rollRawValue[left];
+//	_rollRigtFilterWindow[0] = rollRawValue[rigt];
+//	_PitchFilterWindow[0] = pitchRawValue[0];
+//	int _sumRollRawLeft;
+//	int _sumRollRawRigt;
+//	int _sumPitchRaw;
+//	for(int i = 0; i < 9; ++i)
+//	{
+//		_sumRollRawLeft += _rollLeftFilterWindow[i];
+//		_sumRollRawRigt += _rollRigtFilterWindow[i];
+//		_sumPitchRaw += _PitchFilterWindow[i];
+//	}
+//	_rollLeftFinalFilter = _sumRollRawLeft/10;
+//	_rollRigtFinalFilter = _sumRollRawRigt/10;
+//	_PitchFinalFilter = _sumPitchRaw/10;
+//	for(int i = 9; i > 0; --i)
+//	{
+//		_rollLeftFilterWindow[i] = _rollLeftFilterWindow[i-1];
+//		_rollRigtFilterWindow[i] = _rollRigtFilterWindow[i-1];
+//		_PitchFilterWindow[i] = _PitchFilterWindow[i-1];
+//	}
+//}
 
 //double kalmanFilter_Pitch(double mea)
 //{
