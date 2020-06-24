@@ -130,15 +130,13 @@ int main(void)
   peripheralUART_Init();
   peripheralADC_Init();
   positionControl_Init();
+  cylinder_Init();
   ST7920_Init();
-
-
   brake();
   compassReset();
   HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_RESET);
   HAL_GPIO_WritePin(GPIOE, GPIO_PIN_1, GPIO_PIN_SET);
-  passArm(PASSARM_UP);
-  passHand(PASSHAND_OPEN);
+
   if(HAL_GPIO_ReadPin(flashSwitch_GPIO_Port, flashSwitch_Pin) == 0)	//nếu như gạt phải khởi động
   {
 	  ST7920_SendString(0,0, "SAMPLE:");
@@ -160,232 +158,354 @@ int main(void)
 		  HAL_Delay(500);
 	  }
   }
-  else	// nếu như gạt trái
+  else	// nếu như gạt trái HAL_Read == 1
   {
 	  ST7920_SendString(0,0, "FREE MODE");
 	  tracking = 148;
 	  readFLASH();
 	  tracking = 150;
   }
-//  HAL_GPIO_WritePin(GPIOE, GPIO_PIN_1, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOE, GPIO_PIN_1, GPIO_PIN_RESET);
   HAL_Delay(INIT_TIME);
+  if(btn_Sta == 0)
+  {
+	  while(1)
+	  {
+		  ST7920_SendString(0, 0, "disconBluetooth");
+		  ST7920_SendString(1, 0, "pleaseReset");
+		  HAL_Delay(500);
+		  ST7920_Clear();
+		  HAL_Delay(500);
+
+	  }
+  }
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	  wait4SelectMode();
 	  if(startMode == TO_SHOOT)
 	  {
+		  MAX_PIT_PID = 250;
+		  MAX_ROL_PID = 250;
+		  MAX_ROR_PID = 250;
+		  passArm(PASSARM_UP);
+		  passHand(PASSHAND_OPEN);
+		  startTime = HAL_GetTick();
+		  ST7920_SendString(0,0, "btn_Sel waiting");
+		  while((btn_Sel==1))	//khi còn thành
+		  {
+			  roR_Pit_Yaw_GoTo(700, 4000, -900);
+		  }
+		  ST7920_SendString(0,0, "btn_X   waiting");
+		  brake();
+//		  while(1);
+//		  while((btn_X==1))	//đi chéo
+//		  {
+//			  roR_Pit_Yaw_GoTo(500, 3000, -900);
+//		  }
+		  startTime = HAL_GetTick();
+//		  while(HAL_GetTick()-startTime < 3000)
+		  while((btn_X==1))	//đi chéo
+		  {
+			  roR_Pit_Yaw_GoTo(800, 2000, -900);
+		  }
+		  ST7920_Clear();
+		  ST7920_SendString(0, 0, "ready2Put Q");
+		  ST7920_SendString(1, 0, "AIMING");
+		  ST7920_SendString(2, 0, "btn_Q waiting");
+		  while(btn_Q!=0)	//khi chưa nhấn nút Q;
+		  {
+			  if((btn_leftLeft==1)&&(btn_leftRigt==1))	//khi chưa nhấn 2 nút < và >
+			  {
+				  brake();
+			  }
+			  else if((btn_leftLeft==0)&&(btn_leftRigt==0))	//khi nhấn < + >
+			  {
+				  brake();
+			  }
+			  else if((btn_leftLeft==0)&&(btn_leftRigt==1))	//khi nhấn <
+			  {
+				  controlMotor1(turnSpeed);
+				  controlMotor2(turnSpeed);
+				  controlMotor3(turnSpeed);
+				  controlMotor4(turnSpeed);
+				  spinalCordTrans();
+			  }
+			  else if((btn_leftLeft==1)&&(btn_leftRigt==0))	//khi nhấn >
+			  {
+				  controlMotor1(-turnSpeed);
+				  controlMotor2(-turnSpeed);
+				  controlMotor3(-turnSpeed);
+				  controlMotor4(-turnSpeed);
+				  spinalCordTrans();
+			  }
+		  }
+		  ST7920_SendString(2,0,"              ");
+		  ST7920_SendString(2,0,"PUTTING Q");
+		  putQ(PUTQ_DOWN);//hạ putQ
+		  HAL_Delay(1000);//ch�? ...s
+		  gripperQ(GRIPPERQ_OPEN);//mở gripperQ
+		  HAL_Delay(500);//ch�? ...s
+		  while((btn_A==1)&&(btn_E==1))
+		  {
+			  ST7920_SendString(1, 0, "                ");
+			  ST7920_SendString(2, 0, "                ");
+			  ST7920_SendString(2, 0, "A or E");
+		  }
+		  if(btn_A == 0)
+		  {
+			  ST7920_Clear();
+			  ST7920_SendString(0,0,"SHOOT!!!!");
+			  legShoot();//shoot
+			  HAL_Delay(500);
+		  }
+		  else if(btn_E == 0)
+		  {
+		  }
+		  putQ(PUTQ_UP);//nâng putQ
+		  HAL_Delay(500);
+		  gripperQ(GRIPPERQ_CLOSE);//đóng gripperQ
+//		  HAL_Delay(1000);//ch�? ...s
+		  ST7920_Clear();
+		  ST7920_SendString(0, 0, "ready2Put E");
+		  ST7920_SendString(1, 0, "AIMING");
+		  ST7920_SendString(2, 0, "btn_E waiting");
+		  while(btn_E==1)	//khi chưa nhấn E
+		  {
+
+			  if((btn_leftLeft==1)&&(btn_leftRigt==1))	//khi chưa nhấn 2 nút < và >
+			  {
+				  brake();
+			  }
+			  else if((btn_leftLeft==0)&&(btn_leftRigt==0))	//khi nhấn < + >
+			  {
+				  brake();
+			  }
+			  else if((btn_leftLeft==0)&&(btn_leftRigt==1))	//khi nhấn <
+			  {
+				  controlMotor1(turnSpeed);
+				  controlMotor2(turnSpeed);
+				  controlMotor3(turnSpeed);
+				  controlMotor4(turnSpeed);
+				  spinalCordTrans();
+			  }
+			  else if((btn_leftLeft==1)&&(btn_leftRigt==0))	//khi nhấn >
+			  {
+				  controlMotor1(-turnSpeed);
+				  controlMotor2(-turnSpeed);
+				  controlMotor3(-turnSpeed);
+				  controlMotor4(-turnSpeed);
+				  spinalCordTrans();
+			  }
+		  }
+		  ST7920_SendString(2,0,"              ");
+		  ST7920_SendString(2,0,"PUTTING E");
+	  	  putE(PUTE_DOWN);//hạ putE
+	  	  HAL_Delay(1000);//ch�? ...s
+	  	  gripperE(GRIPPERE_OPEN);//mở gripperE
+//		  HAL_Delay(500);//ch�? ...s
+	  	  while((btn_A == 1)&&(btn_Q == 1))
+	  	  {
+			  ST7920_SendString(1, 0, "                ");
+			  ST7920_SendString(2, 0, "                ");
+			  ST7920_SendString(2, 0, "A or E");
+	  	  }
+	  	  if(btn_A == 0)
+		  {
+	  		  ST7920_Clear();
+	  		  ST7920_SendString(0,0,"SHOOT!!!!");
+			  legShoot();//shoot
+			  HAL_Delay(500);
+		  }
+		  else if(btn_E == 0)
+		  {
+		  }
+	  	  ST7920_Clear();
+	  	  ST7920_SendString(0,0,"SHOOTED");
+		  putE(PUTE_UP);//nâng putE
+		  HAL_Delay(500);
+		  gripperE(GRIPPERE_CLOSE);//đóng gripperE
+		  while(btn_Sel==1)//khi chưa nhấn Sel
+		  {
+			  roL_Pit_Yaw_Goto(posRoL, posPit, -900);
+		  }
+		  MAX_PIT_PID = 100;
+		  MAX_ROL_PID = 100;
+		  MAX_ROR_PID = 100;
 	  }
 	  else if(startMode == BALL1)
 	  {
 		  goToBallRigt(ball1);
-//		  startTime = HAL_GetTick();
-//		  while(btn_Sel!=0)	//di chuyển tới vị trí BALL1
-//		  {
-//			  roR_Pit_Yaw_GoTo(ball1[_Rigt], ball1[_PitcWait], 0);
-//		  }
-//		  while(btn_X == 1)	//ch�? nhấn nút X -> tinh chỉnh
-//		  {
-//			  PIDyaw(compassData, 0);
-//			  leftVer = !btn_leftUp - !btn_leftDown;
-//			  leftHor = -!btn_leftLeft + !btn_leftRigt;
-//			  _dir = atan2(leftHor, -leftVer);
-//			  _controlSpeed = sqrt(leftVer*leftVer + leftHor*leftHor);
-//			  _motor1Speed = yawPID*factorYawPID + (factorSpeed*_controlSpeed *cos(3*M_PI/4 - _dir) + 0);
-//			  _motor2Speed = yawPID*factorYawPID + (factorSpeed*_controlSpeed *cos(3*M_PI/4 + _dir) - 0);
-//			  _motor3Speed = yawPID*factorYawPID +  factorSpeed*_controlSpeed *cos(  M_PI/4 + _dir) + 0;
-//			  _motor4Speed = yawPID*factorYawPID +  factorSpeed*_controlSpeed *cos(  M_PI/4 - _dir) - 0;
-//			  controlMotor1(_motor1Speed);
-//			  controlMotor2(_motor2Speed);
-//			  controlMotor3(_motor3Speed);
-//			  controlMotor4(_motor4Speed);
-//			  spinalCordTrans();
-//		  }
-//		  ball1[_Rigt] = rigtDistance;
-//		  startTime = HAL_GetTick();
-//		  while(HAL_GetTick()-startTime<750)	//di chuyển vào vị trí lấy ball1
-//		  {
-//			  roR_Pit_Yaw_GoTo(ball1[_Rigt], ball1[_Pitc], 0);
-//		  }
-//		  brake();
-//		  HAL_Delay(500);
-//		  passHand(PASSHAND_CLOSE);	//gắp bóng
-//		  HAL_Delay(500);
-//		  startTime = HAL_GetTick();
-//		  while(HAL_GetTick()-startTime<20)	//di chuyển ra vị trí chuẩn bị chuyển
-//		  {
-//			  roR_Pit_Yaw_GoTo(ball1[_Rigt], ball1[_PitcWait], 0);
-//		  }
-//		  while(zmanualRxPacket[0] != 'D'&&btn_D!=0)	//chờ manual nhấn nút
-//		  {
-//			  roR_Pit_Yaw_GoTo(ball1[_Rigt], ball1[_PitcWait], 0);
-//		  }
-//		  brake();
-//		  passArm(PASSARM_UP);
-//		  HAL_Delay(1000);
-//		  passArm(PASSARM_DOWN);
-//		  passHand(PASSHAND_OPEN);
-//		  startMode = 0;
 	  }
 	  else if(startMode == BALL2)
 	  {
 		  goToBallRigt(ball2);
-//		  startTime = HAL_GetTick();
-//		  while(btn_Sel!=0)	//di chuyển tới vị trí BALL2
-//		  {
-//			  roR_Pit_Yaw_GoTo(ball2[_Rigt], ball2[_PitcWait], 0);
-//		  }
-//		  while(btn_X == 1)	//chờ nhấn nút X -> tinh chỉnh
-//		  {
-//			  PIDyaw(compassData, 0);
-//			  leftVer = !btn_leftUp - !btn_leftDown;
-//			  leftHor = -!btn_leftLeft + !btn_leftRigt;
-//			  _dir = atan2(leftHor, -leftVer);
-//			  _controlSpeed = sqrt(leftVer*leftVer + leftHor*leftHor);
-//			  _motor1Speed = yawPID*factorYawPID + (factorSpeed*_controlSpeed *cos(3*M_PI/4 - _dir) + 0);
-//			  _motor2Speed = yawPID*factorYawPID + (factorSpeed*_controlSpeed *cos(3*M_PI/4 + _dir) - 0);
-//			  _motor3Speed = yawPID*factorYawPID +  factorSpeed*_controlSpeed *cos(  M_PI/4 + _dir) + 0;
-//			  _motor4Speed = yawPID*factorYawPID +  factorSpeed*_controlSpeed *cos(  M_PI/4 - _dir) - 0;
-//			  controlMotor1(_motor1Speed);
-//			  controlMotor2(_motor2Speed);
-//			  controlMotor3(_motor3Speed);
-//			  controlMotor4(_motor4Speed);
-//			  spinalCordTrans();
-//		  }
-//		  ball2[_Rigt] = rigtDistance;
-//		  startTime = HAL_GetTick();
-//		  while(HAL_GetTick()-startTime<3000)	//di chuyển vào vị trí lấy ball2
-//		  {
-//			  roR_Pit_Yaw_GoTo(ball2[_Rigt], ball2[_Pitc], 0);
-//		  }
-//		  passHand(PASSHAND_CLOSE);	//gắp bóng
-//		  startTime = HAL_GetTick();
-//		  while(HAL_GetTick()-startTime<1000)	//di chuyển ra vị trí chuẩn bị chuyển
-//		  {
-//			  roR_Pit_Yaw_GoTo(ball2[_Rigt], ball2[_PitcWait], 0);
-//		  }
-//		  while((zmanualRxPacket[0] != 'D')&&btn_D!=0)	//chờ manual nhấn nút
-//		  {
-//			  roR_Pit_Yaw_GoTo(ball2[_Rigt], ball2[_PitcWait], 0);
-//		  }
-//		  brake();
-//		  passArm(PASSARM_UP);
-//		  HAL_Delay(1000);
-//		  passArm(PASSARM_DOWN);
-//		  passHand(PASSHAND_OPEN);
-//		  startMode = 0;
 	  }
 	  else if(startMode == BALL3)
 	  {
 		  goToBallRigt(ball3);
-//		  startTime = HAL_GetTick();
-//		  while(btn_Sel!=0)	//di chuyển tới vị trí BALL3
-//		  {
-//			  roR_Pit_Yaw_GoTo(ball3[_Rigt], ball3[_PitcWait], 0);
-//		  }
-//		  while(btn_X == 1)	//chờ nhấn nút X -> tinh chỉnh
-//		  {
-//			  PIDyaw(compassData, 0);
-//			  leftVer = !btn_leftUp - !btn_leftDown;
-//			  leftHor = -!btn_leftLeft + !btn_leftRigt;
-//			  _dir = atan2(leftHor, -leftVer);
-//			  _controlSpeed = sqrt(leftVer*leftVer + leftHor*leftHor);
-//			  _motor1Speed = yawPID*factorYawPID + (factorSpeed*_controlSpeed *cos(3*M_PI/4 - _dir) + 0);
-//			  _motor2Speed = yawPID*factorYawPID + (factorSpeed*_controlSpeed *cos(3*M_PI/4 + _dir) - 0);
-//			  _motor3Speed = yawPID*factorYawPID +  factorSpeed*_controlSpeed *cos(  M_PI/4 + _dir) + 0;
-//			  _motor4Speed = yawPID*factorYawPID +  factorSpeed*_controlSpeed *cos(  M_PI/4 - _dir) - 0;
-//			  controlMotor1(_motor1Speed);
-//			  controlMotor2(_motor2Speed);
-//			  controlMotor3(_motor3Speed);
-//			  controlMotor4(_motor4Speed);
-//			  spinalCordTrans();
-//		  }
-//		  ball3[_Rigt] = rigtDistance;
-//		  startTime = HAL_GetTick();
-//		  while(HAL_GetTick()-startTime<3000)	//di chuyển vào vị trí lấy ball1
-//		  {
-//			  roR_Pit_Yaw_GoTo(ball3[_Rigt], ball3[_Pitc], 0);
-//		  }
-//		  passHand(PASSHAND_CLOSE);	//gắp bóng
-//		  startTime = HAL_GetTick();
-//		  while(HAL_GetTick()-startTime<1000)	//di chuyển ra vị trí chuẩn bị chuyển
-//		  {
-//			  roR_Pit_Yaw_GoTo(ball3[_Rigt], ball3[_PitcWait], 0);
-//		  }
-//		  while((zmanualRxPacket[0] != 'D')&&btn_D!=0)	//chờ manual nhấn nút
-//		  {
-//			  roR_Pit_Yaw_GoTo(ball3[_Rigt], ball3[_PitcWait], 0);
-//		  }
-//		  brake();
-//		  passArm(PASSARM_UP);
-//		  HAL_Delay(1000);
-//		  passArm(PASSARM_DOWN);
-//		  passHand(PASSHAND_OPEN);
-//		  startMode = 0;
 	  }
 	  else if(startMode == BALL4)
 	  {
 		  goToBallRigt(ball4);
-//		  startTime = HAL_GetTick();
-//		  while(btn_Sel!=0)	//di chuyển tới vị trí BALL4
-//		  {
-//			  roR_Pit_Yaw_GoTo(ball4[_Rigt], ball4[_PitcWait], 0);
-//		  }
-//		  while(btn_X == 1)	//chờ nhấn nút X -> tinh chỉnh
-//		  {
-//			  PIDyaw(compassData, 0);
-//			  leftVer = !btn_leftUp - !btn_leftDown;
-//			  leftHor = -!btn_leftLeft + !btn_leftRigt;
-//			  _dir = atan2(leftHor, -leftVer);
-//			  _controlSpeed = sqrt(leftVer*leftVer + leftHor*leftHor);
-//			  _motor1Speed = yawPID*factorYawPID + (factorSpeed*_controlSpeed *cos(3*M_PI/4 - _dir) + 0);
-//			  _motor2Speed = yawPID*factorYawPID + (factorSpeed*_controlSpeed *cos(3*M_PI/4 + _dir) - 0);
-//			  _motor3Speed = yawPID*factorYawPID +  factorSpeed*_controlSpeed *cos(  M_PI/4 + _dir) + 0;
-//			  _motor4Speed = yawPID*factorYawPID +  factorSpeed*_controlSpeed *cos(  M_PI/4 - _dir) - 0;
-//			  controlMotor1(_motor1Speed);
-//			  controlMotor2(_motor2Speed);
-//			  controlMotor3(_motor3Speed);
-//			  controlMotor4(_motor4Speed);
-//			  spinalCordTrans();
-//		  }
-//		  ball4[_Rigt] = rigtDistance;
-//		  startTime = HAL_GetTick();
-//		  while(HAL_GetTick()-startTime<3000)	//di chuyển vào vị trí lấy ball1
-//		  {
-//			  roR_Pit_Yaw_GoTo(ball4[_Rigt], ball4[_Pitc], 0);
-//		  }
-//		  passHand(PASSHAND_CLOSE);	//gắp bóng
-//		  startTime = HAL_GetTick();
-//		  while(HAL_GetTick()-startTime<1000)	//di chuyển ra vị trí chuẩn bị chuyển
-//		  {
-//			  roR_Pit_Yaw_GoTo(ball4[_Rigt], ball4[_PitcWait], 0);
-//		  }
-//		  while((zmanualRxPacket[0] != 'D')&&btn_D!=0)	//chờ manual nhấn nút
-//		  {
-//			  roR_Pit_Yaw_GoTo(ball4[_Rigt], ball4[_PitcWait], 0);
-//		  }
-//		  brake();
-//		  passArm(PASSARM_UP);
-//		  HAL_Delay(1000);
-//		  passArm(PASSARM_DOWN);
-//		  passHand(PASSHAND_OPEN);
-//		  startMode = 0;
 	  }
-	  else if(startMode == LOAD_BALL)
+	  else if(startMode == LOAD_BALL)	//v�? vị trí load ball
 	  {
-		  while(btn_Sel!=0)//chưa nhấn nút sel->về vị trí ban đầu
-			  ;
+		  passArm(PASSARM_UP);
+		  startTime = HAL_GetTick();
+		  while(HAL_GetTick()-startTime<2000)
+		  {
+			  roR_Pit_Yaw_GoTo(600, 500, 0);
+		  }
+		  ST7920_SendString(3, 0, "                ");
+		  ST7920_SendString(3, 0, "returning2-900d");
+		  startTime = HAL_GetTick();
+		  while(((compassData-(-900))>=10)&&((HAL_GetTick()-startTime)<800))//chưa đủ góc->hiệu chỉnh xoay đến -900
+		  {
+			  PIDyaw(compassData, -900);
+			  controlMotor1(yawPID);
+			  controlMotor2(yawPID);
+			  controlMotor3(yawPID);
+			  controlMotor4(yawPID);
+			  spinalCordTrans();
+			  if(abs(compassData-(-900))<10)
+			  {
+				  brake();
+				  HAL_Delay(DEBOUNCE_MOVING_TIME);
+			  }
+		  }
+		  ST7920_Clear();
+
+		  ST7920_SendString(2, 0, "Sel");
+		  ST7920_SendString(3, 0, "autTningStaPoint");
+		  while(btn_Sel!= 0)//chưa nhấn nút Sel -> hiệu chỉnh tự động
+		  {
+			  roR_Pit_Yaw_GoTo(350, 250, -900);
+		  }
+		  ST7920_Clear();
+		  ST7920_SendString(2, 0, "btnX ");
+		  ST7920_SendString(3, 0, "manualTuning");
+		  while(btn_X!=0)//chưa nhấn nút X	->hiệu chỉnh vị trí
+		  {
+			  PIDyaw(compassData, -900);
+			  leftVer = !btn_leftUp - !btn_leftDown;
+			  leftHor = -!btn_leftLeft + !btn_leftRigt;
+			  _dir = atan2(leftHor, -leftVer);
+			  _controlSpeed = sqrt(leftVer*leftVer + leftHor*leftHor);
+			  _motor1Speed = yawPID*factorYawPID + (factorSpeed*_controlSpeed *cos(3*M_PI/4 - _dir) + 0);
+			  _motor2Speed = yawPID*factorYawPID + (factorSpeed*_controlSpeed *cos(3*M_PI/4 + _dir) - 0);
+			  _motor3Speed = yawPID*factorYawPID +  factorSpeed*_controlSpeed *cos(  M_PI/4 + _dir) + 0;
+			  _motor4Speed = yawPID*factorYawPID +  factorSpeed*_controlSpeed *cos(  M_PI/4 - _dir) - 0;
+			  controlMotor1(_motor1Speed);
+			  controlMotor2(_motor2Speed);
+			  controlMotor3(_motor3Speed);
+			  controlMotor4(_motor4Speed);
+			  spinalCordTrans();
+		  }
+		  brake();
+		  ST7920_Clear();
+		  ST7920_SendString(2, 0, "Sel");
+		  ST7920_SendString(3, 0, "loadingBall");
+	  	  while(btn_Sel == 1)	//khi chưa nhấn nút Sel
+	  	  {
+	  		  gripperE(GRIPPERE_CLOSE);
+	  		  gripperQ(GRIPPERQ_CLOSE);
+	  	  }
 	  }
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//test PLC pins
+
+////	  HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_6);	//putQ
+////	  HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_9);	//gripperQ//
+////	  HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_8);	//putE
+////	  HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_5);	//gripperE
+////	  HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_10);
+////	  HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_2);
+////	  HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_2);
+////	  HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_1);
+////	  HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_13);
+////	  HAL_GPIO_TogglePin(GPIOG, GPIO_PIN_13);
+////	  HAL_GPIO_TogglePin(GPIOG, GPIO_PIN_11);
+//	  HAL_Delay(1000);
+//	  passHand(PASSHAND_CLOSE);
+//	  passArm(PASSARM_UP);
+//	  putQ(PUTQ_UP);
+//	  putE(PUTE_DOWN);
+//	  gripperQ(GRIPPERQ_CLOSE);
+//	  gripperE(GRIPPERE_OPEN);
+//	  HAL_Delay(1000);
+//	  passHand(PASSHAND_OPEN);
+//	  passArm(PASSARM_DOWN);
+//	  putQ(PUTQ_DOWN);
+//	  putE(PUTE_UP);
+//	  gripperQ(GRIPPERQ_OPEN);
+//	  gripperE(GRIPPERE_CLOSE);
+//	  gripperE(GRIPPERE_CLOSE);
+//	  HAL_Delay(2000);
+//	  putE(PUTE_UP);
+//	  gripperE(GRIPPERE_CLOSE);
+//	  HAL_Delay(500);
+//	  putE(PUTE_DOWN);
+//	  gripperE(GRIPPERE_OPEN);
+////////////////////////////////////////////////////////////
+
+
+//	  else if(startMode == GET_BALL_AREA)
+//	  {
+//		  while(abs(compassData-0)>10)	//ch�? quay v�? góc 0
+//		  {
+//			  PIDyaw(compassData,0);
+//			  controlMotor1(yawPID);
+//			  controlMotor2(yawPID);
+//			  controlMotor3(yawPID);
+//			  controlMotor4(yawPID);
+//			  spinalCordTrans();
+//			  if(abs(compassData-(-900))<10)
+//			  {
+//				  brake();
+//				  HAL_Delay(DEBOUNCE_MOVING_TIME);
+//			  }
+//		  }
+//		  //di chuyển v�? khu vực lấy bóng (còn thiếu)
+//	  }
+
+//	  while(abs(compassData-(-1800))>10)
+//	  {
+//		  ST7920_SendString(0, 0, "TURNING");
+//		  PIDyaw(compassData, -1800);
+//		  controlMotor1(yawPID);
+//		  controlMotor2(yawPID);
+//		  controlMotor3(yawPID);
+//		  controlMotor4(yawPID);
+//		  spinalCordTrans();
+//		  if(abs(compassData-(-1800))<10)
+//		  {
+//			  HAL_Delay(DEBOUNCE_MOVING_TIME);
+//			  brake();
+//		  }
+//	  }
+//	  ST7920_SendString(0,0,"             ");
+//	  ST7920_SendString(0,0,"FINISH");
+//	  while(1);
 /////////////test shoot/////////////////////////////////////////////
+//	while(HAL_GPIO_ReadPin(flashSwitch_GPIO_Port, flashSwitch_Pin)==preFlashSwitch)	//trong khi còn gạt trái
+//	{
+////		tracking=423;
+//	}
 //	for(int i = 0; i< 2600; ++i)
 //	{
 //		HAL_GPIO_WritePin(legEn_GPIO_Port, legEn_Pin, GPIO_PIN_RESET);
 //		HAL_GPIO_TogglePin(legPul_GPIO_Port, legPul_Pin);
-//		delayUs(50);
+//		delayUs(8);
+//		tracking++;
 //	}
+//	tracking++;
+//	preFlashSwitch = HAL_GPIO_ReadPin(flashSwitch_GPIO_Port, flashSwitch_Pin);
 //	  legControl(LEG_STATUS_RUNUP);
 //	  HAL_Delay(5000);
 //	  while(1);
@@ -407,7 +527,7 @@ int main(void)
 //		  delayUs(120);
 //		  trackingLegShoot++;
 //	  }
-//	  while(1);
+
 ///////////////////////////////////////////////////////////////////////
     /* USER CODE END WHILE */
 
@@ -606,7 +726,7 @@ static void MX_UART7_Init(void)
 
   /* USER CODE END UART7_Init 1 */
   huart7.Instance = UART7;
-  huart7.Init.BaudRate = 9600;
+  huart7.Init.BaudRate = 115200;
   huart7.Init.WordLength = UART_WORDLENGTH_8B;
   huart7.Init.StopBits = UART_STOPBITS_1;
   huart7.Init.Parity = UART_PARITY_NONE;
@@ -827,14 +947,14 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOD_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, passArm_Pin|GPIO_PIN_8|GPIO_PIN_9|passHand_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOA, passArm_Pin|gripperQ_Pin|gripperE_Pin|passHand_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOC, GPIO_PIN_4, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0|GPIO_PIN_1|GPIO_PIN_2|GPIO_PIN_13 
-                          |GPIO_PIN_5|GPIO_PIN_6|GPIO_PIN_7, GPIO_PIN_RESET);
+                          |putQ_Pin|putE_Pin|GPIO_PIN_7, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOG, GPIO_PIN_0|GPIO_PIN_2|GPIO_PIN_3|GPIO_PIN_4 
@@ -859,8 +979,8 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_PULLUP;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : passArm_Pin PA8 PA9 passHand_Pin */
-  GPIO_InitStruct.Pin = passArm_Pin|GPIO_PIN_8|GPIO_PIN_9|passHand_Pin;
+  /*Configure GPIO pins : passArm_Pin gripperQ_Pin gripperE_Pin passHand_Pin */
+  GPIO_InitStruct.Pin = passArm_Pin|gripperQ_Pin|gripperE_Pin|passHand_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
@@ -874,9 +994,9 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
   /*Configure GPIO pins : PB0 PB1 PB2 PB13 
-                           PB5 PB6 PB7 */
+                           putQ_Pin putE_Pin PB7 */
   GPIO_InitStruct.Pin = GPIO_PIN_0|GPIO_PIN_1|GPIO_PIN_2|GPIO_PIN_13 
-                          |GPIO_PIN_5|GPIO_PIN_6|GPIO_PIN_7;
+                          |putQ_Pin|putE_Pin|GPIO_PIN_7;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;

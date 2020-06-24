@@ -2,6 +2,7 @@ int tracking;
 int trackingA0;
 int trackingC13;
 uint32_t startTime;
+uint8_t preFlashSwitch;
 //double motor1Speed_;
 //double motor2Speed_;
 //double motor3Speed_;

@@ -40,8 +40,8 @@ spinalCord.bin \
 all: spinalCord.elf secondary-outputs
 
 # Tool invocations
-spinalCord.elf: $(OBJS) $(USER_OBJS) D:\STM32CubeIDE_DefaultWorkspace\OFFICIAL_SRC\Robocon-2020-SemiAuto\spinalCord\STM32F407VETX_FLASH.ld
-	arm-none-eabi-gcc -o "spinalCord.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"D:\STM32CubeIDE_DefaultWorkspace\OFFICIAL_SRC\Robocon-2020-SemiAuto\spinalCord\STM32F407VETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="spinalCord.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+spinalCord.elf: $(OBJS) $(USER_OBJS) D:\Robocon\SemiAuto\Robocon-2020-SemiAuto\spinalCord\STM32F407VETX_FLASH.ld
+	arm-none-eabi-gcc -o "spinalCord.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"D:\Robocon\SemiAuto\Robocon-2020-SemiAuto\spinalCord\STM32F407VETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="spinalCord.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 

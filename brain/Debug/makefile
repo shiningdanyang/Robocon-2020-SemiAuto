@@ -40,8 +40,8 @@ brain.bin \
 all: brain.elf secondary-outputs
 
 # Tool invocations
-brain.elf: $(OBJS) $(USER_OBJS) D:\STM32CubeIDE_DefaultWorkspace\OFFICIAL_SRC\Robocon-2020-SemiAuto\brain\STM32H743ZITX_FLASH.ld
-	arm-none-eabi-gcc -o "brain.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m7 -T"D:\STM32CubeIDE_DefaultWorkspace\OFFICIAL_SRC\Robocon-2020-SemiAuto\brain\STM32H743ZITX_FLASH.ld" --specs=nosys.specs -Wl,-Map="brain.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+brain.elf: $(OBJS) $(USER_OBJS) D:\Robocon\SemiAuto\Robocon-2020-SemiAuto\brain\STM32H743ZITX_FLASH.ld
+	arm-none-eabi-gcc -o "brain.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m7 -T"D:\Robocon\SemiAuto\Robocon-2020-SemiAuto\brain\STM32H743ZITX_FLASH.ld" --specs=nosys.specs -Wl,-Map="brain.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 

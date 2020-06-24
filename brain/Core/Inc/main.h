@@ -113,6 +113,10 @@ void Error_Handler(void);
 #define mainBoard_TX_GPIO_Port GPIOC
 #define mainBoard_RX_Pin GPIO_PIN_7
 #define mainBoard_RX_GPIO_Port GPIOC
+#define gripperQ_Pin GPIO_PIN_8
+#define gripperQ_GPIO_Port GPIOA
+#define gripperE_Pin GPIO_PIN_9
+#define gripperE_GPIO_Port GPIOA
 #define passHand_Pin GPIO_PIN_10
 #define passHand_GPIO_Port GPIOA
 #define leftArmDir_Pin GPIO_PIN_9
@@ -125,6 +129,10 @@ void Error_Handler(void);
 #define leftArmEn_GPIO_Port GPIOG
 #define rigtArmDir_Pin GPIO_PIN_13
 #define rigtArmDir_GPIO_Port GPIOG
+#define putQ_Pin GPIO_PIN_5
+#define putQ_GPIO_Port GPIOB
+#define putE_Pin GPIO_PIN_6
+#define putE_GPIO_Port GPIOB
 #define leftArmPul_Pin GPIO_PIN_1
 #define leftArmPul_GPIO_Port GPIOE
 /* USER CODE BEGIN Private defines */

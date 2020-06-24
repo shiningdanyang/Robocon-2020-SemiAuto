@@ -15,40 +15,40 @@
 #define MIN_YAW_PID -MAX_YAW_PID
 int16_t yawError, yawPreError;
 double yawP, yawI, yawD;
-double yawKp = 0.17;
+double yawKp = 0.3;
 double yawKd = 0.5;
-double yawKi = 0.0000000007;
+double yawKi = 0.000007;
 double yawPID;
 
-#define MAX_ROR_PID 100
+uint16_t MAX_ROR_PID=100;
 #define MIN_ROR_PID -MAX_ROR_PID
 int16_t roRError, roRPreError;
 double roRP, roRI, roRD;
-double roRKp = 0.2;
+double roRKp = 0.3;
 double roRKd;
-double roRKi = 0.0000001;
+double roRKi = 0.00001;
 double roRPID;
 
-#define MAX_ROL_PID 255
+uint16_t MAX_ROL_PID=100;
 #define MIN_ROL_PID -MAX_ROL_PID
 int16_t roLError, roLPreError;
 double roLP, roLI, roLD;
-double roLKp = 0.2;
+double roLKp = 0.3;
 double roLKd;
-double roLKi = 0.0000001;
+double roLKi = 0.00001;
 double roLPID;
 
-#define MAX_PIT_PID 255
+uint16_t MAX_PIT_PID=100;
 #define MIN_PIT_PID -MAX_PIT_PID
 double pitError, pitPreError;
 double pitP, pitI, pitD;
-double pitKp = 0.2;
+double pitKp = 0.3;
 double pitKd;
-double pitKi = 0.0000001;
+double pitKi = 0.00001;
 double pitPID;
 
 double factorSpeed = 150.0;
-double factorYawPID = 3.0;
+double factorYawPID = 2.2;
 double _controlSpeed;
 double _dir;
 double motor1Speed_;
@@ -369,10 +369,10 @@ void roL_pit_yaw_mixSpeed(void)
 	double _roL_pit_speed = sqrt(roLPID*roLPID + pitPID*pitPID);
 	double _roL_pit_dir = atan2(roLPID, pitPID);
 
-	double _motor1Speed = yawPID + (_roL_pit_speed *cos(3.0*M_PI/4.0 - _roL_pit_dir) + 0.0);
-	double _motor2Speed = yawPID + (_roL_pit_speed *cos(3.0*M_PI/4.0 + _roL_pit_dir) - 0.0);
-	double _motor3Speed = yawPID +  _roL_pit_speed *cos(    M_PI/4.0 + _roL_pit_dir) + 0.0;
-	double _motor4Speed = yawPID +  _roL_pit_speed *cos(    M_PI/4.0 - _roL_pit_dir) - 0.0;
+	double _motor1Speed = yawPID*factorYawPID + (_roL_pit_speed *cos(3.0*M_PI/4.0 - _roL_pit_dir) + 0.0);
+	double _motor2Speed = yawPID*factorYawPID + (_roL_pit_speed *cos(3.0*M_PI/4.0 + _roL_pit_dir) - 0.0);
+	double _motor3Speed = yawPID*factorYawPID +  _roL_pit_speed *cos(    M_PI/4.0 + _roL_pit_dir) + 0.0;
+	double _motor4Speed = yawPID*factorYawPID +  _roL_pit_speed *cos(    M_PI/4.0 - _roL_pit_dir) - 0.0;
 
 
 //	a = 1.0 - _motor1Speed;
@@ -402,10 +402,10 @@ void roR_pit_yaw_mixSpeed(void)
 //	double _motor3Speed = yawPID +   _roR_pit_speed *sin(_roR_pit_dir + M_PI/4) + 0;
 //	double _motor4Speed = yawPID +   _roR_pit_speed *cos(_roR_pit_dir + M_PI/4) - 0;
 
-	double _motor1Speed = yawPID + (_roR_pit_speed *cos(3.0*M_PI/4.0 - _roR_pit_dir) + 0.0);
-	double _motor2Speed = yawPID + (_roR_pit_speed *cos(3.0*M_PI/4.0 + _roR_pit_dir) - 0.0);
-	double _motor3Speed = yawPID +  _roR_pit_speed *cos(    M_PI/4.0 + _roR_pit_dir) + 0.0;
-	double _motor4Speed = yawPID +  _roR_pit_speed *cos(    M_PI/4.0 - _roR_pit_dir) - 0.0;
+	double _motor1Speed = yawPID*factorYawPID + (_roR_pit_speed *cos(3.0*M_PI/4.0 - _roR_pit_dir) + 0.0);
+	double _motor2Speed = yawPID*factorYawPID + (_roR_pit_speed *cos(3.0*M_PI/4.0 + _roR_pit_dir) - 0.0);
+	double _motor3Speed = yawPID*factorYawPID +  _roR_pit_speed *cos(    M_PI/4.0 + _roR_pit_dir) + 0.0;
+	double _motor4Speed = yawPID*factorYawPID +  _roR_pit_speed *cos(    M_PI/4.0 - _roR_pit_dir) - 0.0;
 
 //	a = 1.0 - _motor1Speed;
 //	b = 1.0 - _motor3Speed;
