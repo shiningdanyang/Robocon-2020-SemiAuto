@@ -45,3 +45,41 @@ void roR_Pit_Goto(uint32_t posRoR, uint32_t posPit)
 	PIDpit(pitchDistance, posPit);
 	roR_pit_yaw_mixSpeed();
 }
+
+
+void goCross(uint8_t _speed, int cross, int posYaw)
+{
+	if(cross == 1)
+	{
+		PIDyaw(compassData, posYaw);
+		controlMotor1(_speed+yawPID);
+		controlMotor2(yawPID);
+		controlMotor3(-_speed + yawPID);
+		controlMotor4(yawPID);
+	}
+	else if(cross == 2)
+	{
+		PIDyaw(compassData, posYaw);
+		controlMotor1(yawPID);
+		controlMotor2(_speed+yawPID);
+		controlMotor3(yawPID);
+		controlMotor4(-_speed + yawPID);
+	}
+	else if(cross == 3)
+	{
+		PIDyaw(compassData, posYaw);
+		controlMotor1(-_speed + yawPID);
+		controlMotor2(yawPID);
+		controlMotor3(_speed + yawPID);
+		controlMotor4(yawPID);
+	}
+	else if(cross == 4)
+	{
+		PIDyaw(compassData, posYaw);
+		controlMotor1(yawPID);
+		controlMotor2(-_speed+yawPID);
+		controlMotor3(yawPID);
+		controlMotor4(_speed + yawPID);
+	}
+	spinalCordTrans();
+}

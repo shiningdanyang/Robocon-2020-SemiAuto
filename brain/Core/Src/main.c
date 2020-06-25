@@ -136,7 +136,6 @@ int main(void)
   compassReset();
   HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_RESET);
   HAL_GPIO_WritePin(GPIOE, GPIO_PIN_1, GPIO_PIN_SET);
-
   if(HAL_GPIO_ReadPin(flashSwitch_GPIO_Port, flashSwitch_Pin) == 0)	//nếu như gạt phải khởi động
   {
 	  ST7920_SendString(0,0, "SAMPLE:");
@@ -169,15 +168,15 @@ int main(void)
   HAL_Delay(INIT_TIME);
   if(btn_Sta == 0)
   {
-	  while(1)
-	  {
-		  ST7920_SendString(0, 0, "disconBluetooth");
-		  ST7920_SendString(1, 0, "pleaseReset");
-		  HAL_Delay(500);
-		  ST7920_Clear();
-		  HAL_Delay(500);
-
-	  }
+//	  while(1)
+//	  {
+//		  ST7920_SendString(0, 0, "disconBluetooth");
+//		  ST7920_SendString(1, 0, "pleaseReset");
+//		  HAL_Delay(500);
+//		  ST7920_Clear();
+//		  HAL_Delay(500);
+//
+//	  }
   }
   /* USER CODE END 2 */
 
@@ -186,6 +185,22 @@ int main(void)
   while (1)
   {
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	  startTime = HAL_GetTick();
+
+	  while(HAL_GetTick()- startTime <3000)
+	  {
+		  roR_Pit_Yaw_GoTo(1000, 1000, 0);
+	  }
+	  while(1)
+	  {
+		  PIDyaw(compassData, -900);
+		  controlMotor1(yawPID);
+		  controlMotor2(yawPID);
+		  controlMotor3(yawPID);
+		  controlMotor4(yawPID);
+		  spinalCordTrans();
+	  }
+
 	  wait4SelectMode();
 	  if(startMode == TO_SHOOT)
 	  {
@@ -329,10 +344,10 @@ int main(void)
 		  putE(PUTE_UP);//nâng putE
 		  HAL_Delay(500);
 		  gripperE(GRIPPERE_CLOSE);//đóng gripperE
-		  while(btn_Sel==1)//khi chưa nhấn Sel
-		  {
-			  roL_Pit_Yaw_Goto(posRoL, posPit, -900);
-		  }
+//		  while(btn_Sel==1)//khi chưa nhấn Sel
+//		  {
+//			  roL_Pit_Yaw_Goto(posRoL, posPit, -900);
+//		  }
 		  MAX_PIT_PID = 100;
 		  MAX_ROL_PID = 100;
 		  MAX_ROR_PID = 100;

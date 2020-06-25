@@ -11,7 +11,7 @@
 #define LEG_PUL_RUNUP2 1400
 #define LEG_PUL_END 450
 #define LEG_PUL_SHOOT 2600
-#define LEG_DELAYUS_SHOOT 100
+#define LEG_DELAYUS_SHOOT 5
 
 int trackingLeg;
 int trackingLegShoot;
