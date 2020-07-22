@@ -8,46 +8,51 @@
 #define CCW 0
 #define FCW 1
 
-#define BRAKE_SPEED 3
+#define BRAKE_SPEED 1
+//#define BRAKE_SPEED 3
 
 //#define MAX_YAW_PID 120
 #define MAX_YAW_PID 120
 #define MIN_YAW_PID -MAX_YAW_PID
 int16_t yawError, yawPreError;
 double yawP, yawI, yawD;
-double yawKp = 0.3;
-double yawKd = 0.5;
-double yawKi = 0.000007;
+//double yawKp = 0.3;//spkt
+double yawKp = 0.1;
+double yawKd = 0.05;
+double yawKi = 0.000001;
 double yawPID;
 
-uint16_t MAX_ROR_PID=200;
+uint16_t MAX_ROR_PID=100;
 #define MIN_ROR_PID -MAX_ROR_PID
 int16_t roRError, roRPreError;
 double roRP, roRI, roRD;
-double roRKp = 0.3;
+double roRKp = 0.1;
 double roRKd;
-double roRKi = 0.00001;
+//double roRKi = 0.000001;
+double roRKi = 0.00;
 double roRPID;
 
-uint16_t MAX_ROL_PID=200;
+uint16_t MAX_ROL_PID=100;
 #define MIN_ROL_PID -MAX_ROL_PID
 int16_t roLError, roLPreError;
 double roLP, roLI, roLD;
-double roLKp = 0.3;
+double roLKp = 0.1;
 double roLKd;
-double roLKi = 0.00001;
+//double roLKi = 0.000001;
+double roLKi = 0.00;
 double roLPID;
 
-uint16_t MAX_PIT_PID=200;
+uint16_t MAX_PIT_PID=100;
 #define MIN_PIT_PID -MAX_PIT_PID
 double pitError, pitPreError;
 double pitP, pitI, pitD;
-double pitKp = 0.3;
+double pitKp = 0.1;
 double pitKd;
-double pitKi = 0.00001;
+//double pitKi = 0.000001;
+double pitKi = 0.00;
 double pitPID;
 
-double factorSpeed = 150.0;
+double factorSpeed = 30.0;
 double factorYawPID = 2.2;
 double _controlSpeed;
 double _dir;
@@ -81,67 +86,69 @@ void controlMotor1(int _speed)
 		_speed = 250;
 	else if(_speed<-250)
 		_speed = -250;
-	else if((_speed<3)&&(_speed>-3))
-		_speed = 3;
+	else if((_speed<1)&&(_speed>-1))
+		_speed = 0;
 
 	spinalCordTxPacket[motor1Speed] = abs(_speed);
 	if(_speed>=0)
-		spinalCordTxPacket[motorDir] &= ~(1UL << 0);
-//		spinalCordTxPacket[motor1Dir] = 0;
-	else
 		spinalCordTxPacket[motorDir] |= (1UL << 0);
-//		spinalCordTxPacket[motor1Dir] = 1;
+//		spinalCordTxPacket[motorDir] &= ~(1UL << 0);
+	else
+		spinalCordTxPacket[motorDir] &= ~(1UL << 0);
+//		spinalCordTxPacket[motorDir] |= (1UL << 0);
 }
 void controlMotor2(int _speed)
 {
 	if(_speed>250)
-		_speed = 250;
-	else if(_speed<-250)
-		_speed = -250;
-	else if((_speed<3)&&(_speed>-3))
-		_speed = 3;
+			_speed = 250;
+		else if(_speed<-250)
+			_speed = -250;
+		else if((_speed<1)&&(_speed>-1))
+			_speed = 0;
 
 	spinalCordTxPacket[motor2Speed] = abs(_speed);
 	if(_speed>=0)
-		spinalCordTxPacket[motorDir] &= ~(1UL << 1);
-//		spinalCordTxPacket[motor2Dir] = 0;
-	else
 		spinalCordTxPacket[motorDir] |= (1UL << 1);
-//		spinalCordTxPacket[motor2Dir] = 1;
+//		spinalCordTxPacket[motorDir] &= ~(1UL << 1);
+	else
+		spinalCordTxPacket[motorDir] &= ~(1UL << 1);
+//		spinalCordTxPacket[motorDir] |= (1UL << 1);
+
 }
 void controlMotor3(int _speed)
 {
 	if(_speed>250)
-		_speed = 250;
-	else if(_speed<-250)
-		_speed = -250;
-	else if((_speed<3)&&(_speed>-3))
-		_speed = 3;
+			_speed = 250;
+		else if(_speed<-250)
+			_speed = -250;
+		else if((_speed<1)&&(_speed>-1))
+			_speed = 0;
 
 	spinalCordTxPacket[motor3Speed] = abs(_speed);
 	if(_speed>=0)
-		spinalCordTxPacket[motorDir] &= ~(1UL << 2);
-//		spinalCordTxPacket[motor3Dir] = 0;
-	else
 		spinalCordTxPacket[motorDir] |= (1UL << 2);
-//		spinalCordTxPacket[motor3Dir] = 1;
+//		spinalCordTxPacket[motorDir] &= ~(1UL << 2);
+
+	else
+		spinalCordTxPacket[motorDir] &= ~(1UL << 2);
+//		spinalCordTxPacket[motorDir] |= (1UL << 2);
 }
 void controlMotor4(int _speed)
 {
 	if(_speed>250)
-		_speed = 250;
-	else if(_speed<-250)
-		_speed = -250;
-	else if((_speed<3)&&(_speed>-3))
-		_speed = 3;
+			_speed = 250;
+		else if(_speed<-250)
+			_speed = -250;
+		else if((_speed<1)&&(_speed>-1))
+			_speed = 0;
 
 	spinalCordTxPacket[motor4Speed] = abs(_speed);
 	if(_speed>=0)
-		spinalCordTxPacket[motorDir] &= ~(1UL << 3);
-//		spinalCordTxPacket[motor4Dir] = 0;
-	else
 		spinalCordTxPacket[motorDir] |= (1UL << 3);
-//		spinalCordTxPacket[motor4Dir] = 1;
+//		spinalCordTxPacket[motorDir] &= ~(1UL << 3);
+	else
+		spinalCordTxPacket[motorDir] &= ~(1UL << 3);
+//		spinalCordTxPacket[motorDir] |= (1UL << 3);
 }
 void testPWM(void)
 {
@@ -459,5 +466,31 @@ void brake(void)
 	controlMotor2(-BRAKE_SPEED);
 	controlMotor3(BRAKE_SPEED);
 	controlMotor4(-BRAKE_SPEED);
+	spinalCordTrans();
+}
+
+void freeMotor(void)
+{
+	controlMotor1(0);
+	controlMotor2(0);
+	controlMotor3(0);
+	controlMotor4(0);
+	spinalCordTrans();
+}
+
+void roL_yaw_mixSpeed()
+{
+	double _roL_pit_speed = sqrt(roLPID*roLPID + 0*0);
+	double _roL_pit_dir = atan2(-roLPID, 0);
+
+	double _motor1Speed = yawPID*factorYawPID + (_roL_pit_speed *cos(3.0*M_PI/4.0 - _roL_pit_dir) + 0.0);
+	double _motor2Speed = yawPID*factorYawPID + (_roL_pit_speed *cos(3.0*M_PI/4.0 + _roL_pit_dir) - 0.0);
+	double _motor3Speed = yawPID*factorYawPID +  _roL_pit_speed *cos(    M_PI/4.0 + _roL_pit_dir) + 0.0;
+	double _motor4Speed = yawPID*factorYawPID +  _roL_pit_speed *cos(    M_PI/4.0 - _roL_pit_dir) - 0.0;
+
+	controlMotor1(_motor1Speed);
+	controlMotor2(_motor2Speed);
+	controlMotor3(_motor3Speed);
+	controlMotor4(_motor4Speed);
 	spinalCordTrans();
 }

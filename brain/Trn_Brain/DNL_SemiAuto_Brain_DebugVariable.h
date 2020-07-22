@@ -7,6 +7,7 @@ double motor1Speed_;
 double motor2Speed_;
 double motor3Speed_;
 double motor4Speed_;
+uint8_t preButtonX;
 //double dir;
 //double absSpeed;
 //double cos_;
